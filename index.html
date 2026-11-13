@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<!-- ==========================================================================
+     [SECTION 01] DOCUMENT HEAD, PWA META TAGS & TAILWIND CONFIGURATION
+     ========================================================================== -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <title>Jyotish &amp; Samudrika AI | Vedic Horoscope &amp; Palm Analyzer</title>
+  <meta name="description" content="Multimodal Vedic Astrology (Parashara, Jaimini, Varahamihira, Kalidasa) &amp; Samudrika Shastra Palm Analyzer powered by Gemini AI." />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link id="dynamicCanonicalLink" rel="canonical" href="https://danny-code-2029.github.io/jyotish-ai/" />
+  <link id="dynamicManifestLink" rel="manifest" href="" />
+
+  <!-- 1.1 Typography: Plus Jakarta Sans, Source Serif 4 & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+
+  <!-- 1.2 Tailwind CSS CDN & Theme Configuration -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+<!-- ==========================================================================
+     [SECTION 02] CUSTOM CSS STYLESHEET
+     (BEAD RING, RAIL CABINETS, KUNDALI GRIDS, PALM SCANNER & POPUP BLUR)
+     ========================================================================== -->
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      letter-spacing: -0.01em;
+      overflow-x: hidden;
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
+    .font-jyotish-serif { font-family: 'Source Serif 4', Georgia, serif; }
+    .font-jyotish-mono { font-family: 'JetBrains Mono', monospace; }
+    details > summary { list-style: none; cursor: default !important; user-select: none; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* GPU-Accelerated Revolving Colored Beads Around Top-Right Profile Avatar */
+    @keyframes revolveColoredBeads {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+      100% { transform: translate3d(0, 0, 0) rotate(360deg); }
+    }
+    .google-avatar-ring {
+      position: relative; padding: 4px; border-radius: 50%;
+      display: inline-grid; place-items: center; aspect-ratio: 1 / 1;
+      contain: layout style; transition: transform 0.2s ease;
+    }
+    .google-avatar-ring::before {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='%23ea4335'><circle cx='93' cy='50' r='5.2'/><circle cx='89.7' cy='66.5' r='5.2'/><circle cx='80.4' cy='80.4' r='5.2'/><circle cx='66.5' cy='89.7' r='5.2'/></g><g fill='%23fbbc05'><circle cx='50' cy='93' r='5.2'/><circle cx='33.5' cy='89.7' r='5.2'/><circle cx='19.6' cy='80.4' r='5.2'/><circle cx='10.3' cy='66.5' r='5.2'/></g><g fill='%2334a853'><circle cx='7' cy='50' r='5.2'/><circle cx='10.3' cy='33.5' r='5.2'/><circle cx='19.6' cy='19.6' r='5.2'/><circle cx='33.5' cy='10.3' r='5.2'/></g><g fill='%234285f4'><circle cx='50' cy='7' r='5.2'/><circle cx='66.5' cy='10.3' r='5.2'/><circle cx='80.4' cy='19.6' r='5.2'/><circle cx='89.7' cy='33.5' r='5.2'/></g></svg>");
+      background-size: 100% 100%; will-change: transform;
+      animation: revolveColoredBeads 4.5s linear infinite; pointer-events: none;
+    }
+    .google-avatar-inner {
+      position: relative; z-index: 1; display: block;
+      border: 2px solid #0f172a; border-radius: 50%; object-fit: cover;
+      aspect-ratio: 1 / 1; background-color: #1e293b;
+    }
+    .chrome-pill-btn {
+      border-radius: 9999px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chrome-pill-btn:active { transform: scale(0.97); }
+    .gemini-jyotish-fab {
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 55%, #d97706 100%);
+      box-shadow: 0 8px 24px -4px rgba(124, 58, 237, 0.55);
+    }
+    .save-3d-blue-btn {
+      background: linear-gradient(180deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%) !important;
+      border: 2px solid #000000 !important;
+      box-shadow: 0 4px 0 #000000, 0 6px 14px rgba(0,0,0,0.6), inset 0 1.5px 0 rgba(255,255,255,0.4) !important;
+      color: #ffffff !important; font-weight: 800 !important;
+    }
+    .logout-crisp-btn {
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%) !important;
+      border: 2px solid #000000 !important; color: #ffffff !important; font-weight: 700 !important;
+    }
+
+    /* Orbit Section Cards & Right Vertical Slider Rail */
+    main details.orbit-section-card { display: none; opacity: 0; pointer-events: none; }
+    main details.orbit-section-card.orbit-active { display: block; opacity: 1; pointer-events: auto; }
+    #rightRailSliderTrack {
+      position: fixed; top: 58px; right: 4px; width: 5px; height: calc(100vh - 130px);
+      background: rgba(255,255,255,0.55); border-left: 1.5px solid #fff; border-right: 1.5px solid #fff;
+      border-radius: 9999px; z-index: 46;
+    }
+    #rightRailSliderThumb {
+      position: absolute; top: 0; left: -1px; right: -1px; height: 36px;
+      border-radius: 9999px; background: #3b82f6; transition: transform 0.22s ease;
+    }
+    #rightSectionRail {
+      position: fixed !important; top: 58px !important; right: 9px !important; width: 280px !important;
+      max-height: calc(100vh - 130px) !important; z-index: 45 !important;
+      background-color: #1e293b !important; border: 1px solid #334155 !important;
+      box-shadow: -12px 12px 32px rgba(2,6,23,0.75) !important;
+      transform: translateX(calc(100% + 16px)); opacity: 0; pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+    }
+    #rightSectionRail.rail-open { transform: none; opacity: 1; pointer-events: auto; }
+    .rail-item-btn {
+      background-color: #0f172a !important; border: 1.5px solid #60a5fa !important;
+      color: #ffffff !important; font-weight: 600 !important; border-radius: 9999px !important;
+      padding: 0.5rem 1rem !important; transition: transform 0.14s ease, border-color 0.14s ease;
+    }
+    .rail-item-btn:hover, .rail-item-btn.rail-kb-focus {
+      border-color: #ffffff !important; transform: translateX(-7px) scale(1.03);
+    }
+    .rail-item-btn.rail-active {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
+      border-color: #bfdbfe !important; transform: translateX(-4px);
+    }
+    #headerCaseSearch { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+    body.popup-blur-active > header, body.popup-blur-active > main, body.popup-blur-active > #rightRailSliderTrack, body.popup-blur-active > #rightSectionRail {
+      filter: blur(9px) brightness(0.55); pointer-events: none; user-select: none;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen selection:bg-blue-600 selection:text-white">
+<!-- ==========================================================================
+     [SECTION 03] STICKY TOP HEADER (EXTREME LEFT MORE, SEARCH BAR & PROFILE)
+     ========================================================================== -->
+  <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-md border-b border-slate-800 w-full">
+    <div class="w-full px-2 sm:px-3 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+
+      <!-- 3.1 Extreme Left: More Menu Button + Title -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <button onclick="toggleSidebar()" class="p-2 rounded-full hover:bg-slate-800 active:bg-slate-700 transition-colors focus:outline-none" title="More Menu (Ctrl+Left)">
+          <svg class="w-6 h-6 text-slate-100" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-sm sm:text-base font-extrabold tracking-tight leading-tight">Jyotish &amp; Samudrika AI</h1>
+          <p class="text-[10px] text-amber-400/90 hidden sm:block">Parashara • Jaimini • Varahamihira • Kalidasa • Palm Vision</p>
+        </div>
+      </div>
+
+      <!-- 3.2 Center: Omnibox Horoscope History Search Bar (Type "codes" for Shortcuts) -->
+      <div class="relative flex-1 max-w-md">
+        <div class="flex items-center bg-slate-800/90 hover:bg-slate-800 focus-within:ring-2 focus-within:ring-blue-500 rounded-full px-3.5 py-1.5 border border-slate-700 transition-all">
+          <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+          </svg>
+          <input id="headerCaseSearch" type="text" oninput="handleChartSearch(this.value)" placeholder="Search saved horoscopes or type 'codes'..." class="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none" />
+          <button id="clearSearchBtn" onclick="clearChartSearch()" class="hidden text-slate-400 hover:text-white text-xs ml-1">&times;</button>
+        </div>
+        <div id="searchResultsDropdown" class="hidden absolute left-0 right-0 mt-2 bg-slate-800 text-slate-100 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
+      </div>
+
+      <!-- 3.3 Extreme Right: Save Chart + API Key Vault + Revolving Bead Avatar -->
+      <div class="flex items-center gap-2 shrink-0 relative">
+        <button onclick="saveCurrentChartToStorage(true)" class="chrome-pill-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 border border-slate-700 hidden md:inline-flex" title="Save Horoscope (Ctrl+S)">
+          <span>💾</span> <span>Save Chart</span>
+        </button>
+        <button onclick="toggleApiVaultModal()" id="headerKeyBtn" class="chrome-pill-btn text-xs bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 px-3 py-1.5">
+          <span>🔑</span> <span id="headerKeyStatusText">API Key</span>
+        </button>
+        <button id="headerAvatarBtn" onclick="toggleAccountPopup(event)" class="inline-flex items-center justify-center p-0 rounded-full focus:outline-none" title="Daivagya Profile">
+          <span class="google-avatar-ring">
+            <img id="headerAvatarImg" src="" alt="Profile" class="w-8 h-8 google-avatar-inner" />
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <!-- ==========================================================================
+     [SECTION 04] ACCOUNT POPUP & SLIDE-OUT LEFT "MORE" SIDEBAR DRAWER
+     ========================================================================== -->
+  <!-- 4.1 Upper-Right Daivagya Account Popup Window -->
+  <div id="accountPopup" class="hidden fixed right-3 top-14 w-72 bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-700 p-4 z-50">
+    <div class="flex justify-between items-center mb-2">
+      <span id="popupUserEmail" class="text-[11px] text-slate-300 truncate font-medium">daivagya@jyotish.ai</span>
+      <button onclick="closeAccountPopup()" class="text-slate-400 hover:text-white text-base leading-none">&times;</button>
+    </div>
+    <div class="flex flex-col items-center text-center py-2">
+      <div class="mb-2 cursor-pointer" onclick="closeAccountPopup(); openProfileModal();">
+        <img id="popupAvatarImg" src="" alt="Profile" class="w-16 h-16 rounded-full object-cover border-2 border-slate-700 bg-slate-800" />
+      </div>
+      <div id="popupUserName" class="font-bold text-sm">Acharya Danny</div>
+      <div id="popupUserMeta" class="text-[11px] text-slate-400 mt-0.5">Jyotish &amp; Samudrika Researcher</div>
+      <span id="deviceLockBadge" class="mt-2 inline-flex items-center gap-1 text-[10px] bg-emerald-950/90 text-emerald-300 border border-emerald-700/60 px-2.5 py-0.5 rounded-full font-jyotish-mono">
+        🛡️ Local-First Protected Vault
+      </span>
+      <button onclick="closeAccountPopup(); openProfileModal();" class="mt-2.5 text-xs border border-slate-600 hover:bg-slate-800 text-blue-300 px-4 py-1 rounded-full font-medium transition-colors">
+        Manage Astrologer Profile
+      </button>
+    </div>
+    <div class="border-t border-slate-800 my-3"></div>
+    <div class="space-y-1.5 text-xs">
+      <button onclick="closeAccountPopup(); toggleApiVaultModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
+        <span>🔑</span> <span>Gemini AI API Key Vault</span>
+      </button>
+      <button onclick="closeAccountPopup(); toggleSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
+        <span>⚙️</span> <span>Ayanamsa &amp; Display Settings</span>
+      </button>
+    </div>
+    <div class="pt-3 mt-2 border-t border-slate-800 flex justify-center">
+      <button onclick="closeAccountPopup(); handleVaultLock();" class="chrome-pill-btn logout-crisp-btn justify-center px-7 py-2 rounded-full text-xs">
+        <span>Log out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 4.2 Left Sidebar Backdrop & Slide-Out Drawer -->
+  <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-slate-950/60 z-40 transition-opacity"></div>
+
+  <aside id="leftSidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-slate-900 shadow-2xl border-r border-slate-800 z-50 transform -translate-x-full transition-transform duration-200 flex flex-col justify-between">
+    <div>
+      <div class="px-5 py-3.5 bg-slate-950/40 border-b border-slate-800 flex items-center justify-between">
+        <span class="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">More Menu</span>
+        <button onclick="toggleSidebar()" class="w-7 h-7 rounded-full flex items-center justify-center hover:bg-slate-800 text-slate-400 hover:text-white text-lg leading-none">&times;</button>
+      </div>
+
+      <!-- Astrologer Profile Card (No Bead Ring) -->
+      <div class="p-4 border-b border-slate-800">
+        <div onclick="toggleSidebar(); openProfileModal();" class="group cursor-pointer bg-slate-800/60 hover:bg-slate-800 p-3.5 rounded-2xl border border-slate-700/80 hover:border-blue-500/50 transition-all flex items-center gap-3.5">
+          <div class="p-0.5 rounded-full bg-slate-800 border-2 border-slate-600 group-hover:border-blue-400 shrink-0">
+            <img id="sidebarAvatarImg" src="" alt="Profile" class="w-12 h-12 rounded-full object-cover block bg-slate-900" />
+          </div>
+          <div class="overflow-hidden flex-1">
+            <div id="sidebarProfileName" class="font-extrabold text-sm text-white truncate group-hover:text-blue-400">Acharya Profile</div>
+            <div id="sidebarProfileCourse" class="text-[11px] text-slate-400 truncate mt-0.5">Tap to edit Name &amp; Lineage</div>
+            <span class="inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
+              ✎ View / Edit Profile
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation: Saved Charts -> Settings -> About (Blue Hollow Circle 'i') -->
+      <nav class="p-3.5 space-y-1.5 text-sm font-semibold">
+        <button onclick="toggleSidebar(); openStorageModal();" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-transparent hover:border-slate-700 hover:bg-slate-800/90 text-slate-200 transition-all">
+          <div class="flex items-center gap-3">
+            <span class="w-5 h-5 inline-flex items-center justify-center text-base">🗄️</span>
+            <span>Saved Horoscopes</span>
+          </div>
+          <span id="sidebarCaseCount" class="text-[11px] bg-blue-600/20 text-blue-400 border border-blue-500/40 px-2.5 py-0.5 rounded-full font-bold font-jyotish-mono">0</span>
+        </button>
+
+        <button onclick="toggleSidebar(); toggleSettingsModal();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-transparent hover:border-slate-700 hover:bg-slate-800/90 text-slate-200 transition-all">
+          <span class="w-5 h-5 inline-flex items-center justify-center text-base">⚙️</span>
+          <span>Settings &amp; Ayanamsa</span>
+        </button>
+
+        <button onclick="toggleSidebar(); openAboutModal();" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-transparent hover:border-slate-700 hover:bg-slate-800/90 text-slate-200 transition-all">
+          <span class="w-5 h-5 inline-flex items-center justify-center text-blue-500 shrink-0">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" fill="none" />
+              <line x1="12" y1="16" x2="12" y2="11" />
+              <circle cx="12" cy="8" r="0.6" fill="currentColor" />
+            </svg>
+          </span>
+          <span>Classical Texts &amp; About</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-4 border-t border-slate-800 flex justify-center">
+      <button onclick="toggleSidebar(); handleVaultLock();" class="chrome-pill-btn logout-crisp-btn justify-center px-8 py-2 rounded-full text-xs">
+        <span>Log out</span>
+      </button>
+    </div>
+  </aside>
+
+<!-- ==========================================================================
+     [SECTION 05] MAIN WORKSPACE — SECTIONS 1 (BIRTH DATA) & 2 (PALM SCANNER)
+     ========================================================================== -->
+  <main class="max-w-7xl mx-auto px-2 sm:px-4 pt-3 space-y-3 pb-20 lg:pb-8">
+    <div class="flex items-center justify-between gap-3 px-1">
+      <span id="ephemerisStatusBadge" class="text-[11px] text-amber-400 font-jyotish-mono">✨ Nirayana Ephemeris Ready</span>
+      <div class="flex items-center gap-3">
+        <span id="autoSaveBadge" class="text-[11px] text-emerald-400 font-medium">✓ Auto-saved locally</span>
+        <button onclick="resetForm()" class="text-[11px] text-rose-400 hover:underline font-semibold">Reset Form</button>
+      </div>
+    </div>
+
+    <!-- 5.1 SECTION 1: Birth Details, Place Coordinates & Ayanamsa -->
+    <details open class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>1. Birth &amp; Terrestrial Data</span>
+      </summary>
+      <div class="p-4 space-y-4">
+        <div class="bg-blue-950/40 border-l-4 border-blue-500 p-2.5 rounded-r-xl text-xs text-blue-200">
+          <strong>Ganita Siddhanta Rule:</strong> Enter Date, Time, and Place of Birth to compute exact LMT, Suryodayadi Ishtakala Ghatis, Lagna Sphuta, and Shadvargas. If birth time is unknown, switch to <em>Surya Lagna / Prasna Mode</em>.
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Native's Full Name</label>
+            <input id="nativeName" type="text" placeholder="e.g., Satyapriya Srinivash" oninput="computeFullHoroscope()" class="w-full border border-slate-700 rounded-xl p-2 text-sm bg-slate-950 text-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Gender</label>
+            <select id="nativeGender" onchange="computeFullHoroscope()" class="w-full border border-slate-700 rounded-xl p-2 text-sm bg-slate-950 text-white">
+              <option value="Male (Purusha Jataka)">Male (Purusha Jataka)</option>
+              <option value="Female (Stri Jataka)">Female (Stri Jataka)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Date of Birth (DOB)</label>
+            <input id="birthDate" type="date" value="2003-07-07" onchange="computeFullHoroscope()" class="w-full border border-slate-700 rounded-xl p-2 text-sm bg-slate-950 text-white font-jyotish-mono" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Time of Birth (Standard Time)</label>
+            <input id="birthTime" type="time" step="1" value="10:30:00" onchange="computeFullHoroscope()" class="w-full border border-slate-700 rounded-xl p-2 text-sm bg-slate-950 text-white font-jyotish-mono" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Place of Birth (Select City or Type Custom)</label>
+            <div class="flex gap-2">
+              <select id="cityPresetSelect" onchange="applyCityCoordinates(this.value)" class="w-1/2 border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white">
+                <option value="Bhubaneswar, Odisha|20.2961|85.8245|5.5">Bhubaneswar, Odisha (20°18'N, 85°49'E)</option>
+                <option value="Puri, Odisha|19.8135|85.8312|5.5">Puri, Odisha (19°49'N, 85°50'E)</option>
+                <option value="Cuttack, Odisha|20.4625|85.8830|5.5">Cuttack, Odisha (20°28'N, 85°53'E)</option>
+                <option value="Bhilai / Durg, Chhattisgarh|21.1938|81.3509|5.5">Bhilai / Durg, CG (21°12'N, 81°21'E)</option>
+                <option value="Raipur, Chhattisgarh|21.2514|81.6296|5.5">Raipur, CG (21°15'N, 81°38'E)</option>
+                <option value="New Delhi, India|28.6139|77.2090|5.5">New Delhi (28°37'N, 77°13'E)</option>
+                <option value="Bangalore, Karnataka|12.9716|77.5946|5.5">Bangalore (12°58'N, 77°35'E)</option>
+                <option value="Mumbai, Maharashtra|18.9388|72.8354|5.5">Mumbai (18°56'N, 72°50'E)</option>
+                <option value="Kolkata, West Bengal|22.5726|88.3639|5.5">Kolkata (22°34'N, 88°22'E)</option>
+                <option value="Chennai, Tamil Nadu|13.0827|80.2707|5.5">Chennai (13°05'N, 80°16'E)</option>
+                <option value="Varanasi, UP|25.3176|82.9739|5.5">Varanasi (25°19'N, 82°58'E)</option>
+                <option value="Ujjain (Prime Meridian)|23.1765|75.7885|5.5">Ujjain (23°11'N, 75°47'E)</option>
+              </select>
+              <input id="birthPlaceName" type="text" value="Bhubaneswar, Odisha" placeholder="City, State" class="w-1/2 border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Akshamsa (Lat °N) &amp; Rekhamsa (Lon °E)</label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <input id="birthLat" type="number" step="0.01" value="20.30" oninput="computeFullHoroscope()" class="border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white font-jyotish-mono" title="Latitude (+N)" />
+              <input id="birthLon" type="number" step="0.01" value="85.82" oninput="computeFullHoroscope()" class="border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white font-jyotish-mono" title="Longitude (+E)" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Ayanamsa &amp; Birth Time Mode</label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <select id="ayanamsaMode" onchange="computeFullHoroscope()" class="border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white">
+                <option value="LAHIRI">Chitrapaksha (Lahiri)</option>
+                <option value="RAMAN">Dr. B.V. Raman</option>
+              </select>
+              <select id="timeAccuracyMode" onchange="computeFullHoroscope()" class="border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white">
+                <option value="EXACT">Exact TOB Known</option>
+                <option value="SURYA">TOB Unknown (Surya Lagna)</option>
+                <option value="PRASNA">Prasna (Query Moment)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Computed Astronomical Telemetry Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-jyotish-mono">
+          <div><span class="text-slate-400 block text-[10px]">Ayanamsa</span><strong id="outAyanamsa" class="text-amber-400">--</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Local Mean Time (LMT)</span><strong id="outLMT" class="text-blue-300">--</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Local Sunrise</span><strong id="outSunrise" class="text-emerald-300">--</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Ishtakala (Ghati-Vighati)</span><strong id="outIshtakala" class="text-purple-300">--</strong></div>
+          <div class="col-span-2 sm:col-span-1"><span class="text-slate-400 block text-[10px]">Vighati Graha &amp; Kunda</span><strong id="outKunda" class="text-rose-300">--</strong></div>
+        </div>
+      </div>
+    </details>
+
+    <!-- 5.2 SECTION 2: Palm Image Vision Scanner & Samudrika Shastra Checklist -->
+    <details class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>2. Palm Vision &amp; Samudrika</span>
+      </summary>
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          <!-- Left 5 Cols: Palm Photo Upload & Interactive Canvas Preview -->
+          <div class="lg:col-span-5 bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-3 text-center">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-amber-400">🖐️ Upload Clear Palm Photo</span>
+              <select id="palmHandType" class="border border-slate-700 rounded-lg px-2 py-1 bg-slate-900 text-[11px]">
+                <option value="Right Palm (Active Karmic Hand)">Right Palm (Active Hand)</option>
+                <option value="Left Palm (Inherited Prarabdha Hand)">Left Palm (Passive Hand)</option>
+              </select>
+            </div>
+            <div id="palmPreviewBox" class="relative w-full h-64 rounded-xl border-2 border-dashed border-slate-700 bg-slate-900/60 flex flex-col items-center justify-center overflow-hidden">
+              <img id="palmPreviewImg" src="" alt="Palm Preview" class="hidden w-full h-full object-contain" />
+              <div id="palmPlaceholderText" class="p-4 text-xs text-slate-400 space-y-1">
+                <div class="text-3xl">📷</div>
+                <div class="font-semibold text-slate-200">Tap below to capture or upload your palm</div>
+                <div class="text-[11px] text-slate-500">Gemini Vision AI will inspect mounts (Graha Parvata), major lines (Rekhas) &amp; auspicious marks</div>
+              </div>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2">
+              <label class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 shadow">
+                <span>📤 Select / Capture Palm Photo</span>
+                <input id="palmFileInput" type="file" accept="image/*" onchange="handlePalmImageUpload(this)" class="hidden" />
+              </label>
+              <button type="button" onclick="clearPalmImage()" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 border border-slate-700">Clear</button>
+            </div>
+          </div>
+
+          <!-- Right 7 Cols: Samudrika Shastra Mounts, Lines & Chihna Overrides -->
+          <div class="lg:col-span-7 space-y-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">Karatala (Palm Shape &amp; Tattva)</label>
+                <select id="palmElementShape" class="w-full border border-slate-700 rounded-xl p-2 bg-slate-950 text-white">
+                  <option value="Auto-detect from Palm Photo via Gemini Vision">🤖 Auto-Detect from Photo via AI</option>
+                  <option value="Agni Tattva (Fire Hand: Long palm, shorter fingers, energetic)">Agni Tattva (Fire: Long palm, short fingers)</option>
+                  <option value="Prithvi Tattva (Earth Hand: Square palm, square fingers, practical)">Prithvi Tattva (Earth: Square palm &amp; fingers)</option>
+                  <option value="Vayu Tattva (Air Hand: Square palm, long fingers, intellectual)">Vayu Tattva (Air: Square palm, long fingers)</option>
+                  <option value="Jala Tattva (Water Hand: Long oval palm, long conical fingers, intuitive)">Jala Tattva (Water: Oval palm, long fingers)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-semibold text-slate-300 mb-1">Prominent Graha Parvata (Mounts)</label>
+                <input id="palmMountsNotes" type="text" placeholder="Auto-scanned (or note e.g., Elevated Guru &amp; Surya mount)" class="w-full border border-slate-700 rounded-xl p-2 bg-slate-950 text-white" />
+              </div>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+              <div class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">🔍 Major Rekhas &amp; Brihat Samhita Lakshana Focus</div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Jeevan Rekha (Life Line & Ayurdaya correlation)" /> Jeevan Rekha (Longevity)</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Mastishka Rekha (Head Line & Dhimantah Yoga)" /> Mastishka Rekha (Mind)</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Hridaya Rekha (Heart Line & Kalatra/Upapada)" /> Hridaya Rekha (Emotion)</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Bhagya Rekha (Fate Line & Dashama Karma)" /> Bhagya Rekha (Career)</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Surya & Budha Rekha (Fame, Wealth & Vidya)" /> Surya/Budha Rekha</label>
+                <label class="flex items-center gap-1.5"><input type="checkbox" checked class="palm-focus-check accent-blue-500" value="Matsya, Padma, Chakra, Yava & Shankha Chihnas" /> Special Marks (Chihnas)</label>
+              </div>
+              <input id="palmCustomQuestion" type="text" placeholder="Optional specific question for AI (e.g., Career timing, medical specialization, marriage, wealth)..." class="w-full border border-slate-700 rounded-xl p-2 text-xs bg-slate-900 text-white mt-2" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ==========================================================================
+     [SECTION 06] SECTION 3: GRAHA SPHUTAS, SHADVARGAS & SPECIAL ASCENDANTS
+     (PARASHARA SHADVARGA TABLE, 10 AVASTHAS, 8 CHARA KARAKAS & ARUDHA PADAS)
+     ========================================================================== -->
+    <details class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>3. Graha Sphutas &amp; Shadvargas</span>
+      </summary>
+      <div class="p-4 space-y-4">
+
+        <!-- 6.1 Special Ascendants (Lagna, Hora, Ghatika, Shri, Arudha AL, Upapada UL & Darapada A7) -->
+        <div class="bg-indigo-950/35 border border-indigo-800/60 rounded-2xl p-3 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-indigo-300">🔱 Special Ascendants &amp; Arudha Padas (Jaimini &amp; Parashara)</span>
+            <span id="yogadaSummaryBadge" class="text-[11px] bg-indigo-500/20 text-indigo-200 border border-indigo-500/40 px-2.5 py-0.5 rounded-full font-jyotish-mono">Yogada: Calculating...</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-xs font-jyotish-mono">
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Udaya Lagna (D-1)</span>
+              <strong id="spUdayaLagna" class="text-white">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Hora Lagna (HL)</span>
+              <strong id="spHoraLagna" class="text-amber-400">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Ghatika Lagna (GL)</span>
+              <strong id="spGhatikaLagna" class="text-purple-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Shri Lagna (SL)</span>
+              <strong id="spShriLagna" class="text-emerald-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Arudha Lagna (AL)</span>
+              <strong id="spArudhaLagna" class="text-blue-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800">
+              <span class="text-[10px] text-slate-400 block font-sans">Upapada (UL - A12)</span>
+              <strong id="spUpapada" class="text-rose-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2 rounded-xl border border-slate-800 col-span-2 sm:col-span-1">
+              <span class="text-[10px] text-slate-400 block font-sans">Darapada (A7) &amp; A5</span>
+              <strong id="spDaraMantraPada" class="text-cyan-300">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6.2 Complete Graha Sphuta, Nakshatra Pada, Chara Karaka, Shadvarga & Avastha Table -->
+        <div class="border border-slate-800 rounded-2xl overflow-hidden bg-slate-950">
+          <div class="bg-slate-900 px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span class="font-bold text-slate-200">📐 Nirayana Graha Sphutas, Nakshatra Padas, 8 Chara Karakas &amp; Shadvarga Lords</span>
+            <span class="text-[11px] text-slate-400">D-1 Rasi • D-2 Hora • D-3 Drekkana • D-9 Navamsa • D-12 Dwadasamsa • D-30 Trimsamsa</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-slate-900/90 text-blue-300 border-b border-slate-800 font-semibold">
+                  <th class="py-2 px-2.5">Graha</th>
+                  <th class="py-2 px-2">Nirayana Sphuta</th>
+                  <th class="py-2 px-2">Nakshatra (Pada)</th>
+                  <th class="py-2 px-2">Chara Karaka</th>
+                  <th class="py-2 px-2">Rasi (D-1)</th>
+                  <th class="py-2 px-2">Hora (D-2)</th>
+                  <th class="py-2 px-2">Drek (D-3)</th>
+                  <th class="py-2 px-2">Navamsa (D-9)</th>
+                  <th class="py-2 px-2">Dwad (D-12)</th>
+                  <th class="py-2 px-2">Trim (D-30)</th>
+                  <th class="py-2 px-2.5">Avastha / Dignity</th>
+                </tr>
+              </thead>
+              <tbody id="grahaSphutaTableBody" class="divide-y divide-slate-800/80 font-jyotish-mono text-[11px]"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 6.3 Panchadha Maitri (Combined Permanent + Tatkalika Friendship) & Shadbala Summary -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+            <div class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">☀️ Ayana,Digbala &amp; Kalabala Highlights (Brihat Jataka Ch. II)</div>
+            <p id="shadbalaSummaryText" class="text-slate-300 leading-relaxed text-[11px]">Computing directional (Digbala), temporal (Kalabala), and motional (Chestabala) strengths...</p>
+          </div>
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+            <div class="font-bold text-emerald-400 uppercase tracking-wider text-[11px]">🤝 Key Benefics, Yogakaraka, Badhakesh &amp; Marakas</div>
+            <p id="functionalLordsSummaryText" class="text-slate-300 leading-relaxed text-[11px]">Computing functional Soumyas, Kruras, Yogakaraka, Badhakesh (Vighneswara), and 2nd/7th Marakas...</p>
+          </div>
+        </div>
+      </div>
+    </details>
+
+<!-- ==========================================================================
+     [SECTION 07] SECTION 4: INTERACTIVE RASI (D-1), NAVAMSA (D-9) & SUDARSHAN CHAKRA
+     (SOUTH INDIAN / NORTH INDIAN KUNDALI SWITCHER + 3-RING SUDARSHAN WHEEL)
+     ========================================================================== -->
+    <details class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>4. Kundali &amp; Sudarshan Chakra</span>
+      </summary>
+      <div class="p-4 space-y-4">
+
+        <!-- 7.1 Chart Style Switcher (South Indian Rasi-Fixed vs. North Indian Bhava-Diamond) -->
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs">
+          <div>
+            <span class="font-bold text-slate-200">🗺️ Zodiacal Diagram (Kundali) Style:</span>
+            <span class="text-slate-400 ml-1 hidden sm:inline">Includes Lagna, Arudha Lagna (AL), Upapada (UL) &amp; Hora Lagna (HL) markers</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btnStyleSouth" onclick="setKundaliChartStyle('SOUTH')" class="chrome-pill-btn bg-blue-600 text-white px-3.5 py-1.5 text-xs shadow">
+              South Indian (Rasi Fixed)
+            </button>
+            <button type="button" id="btnStyleNorth" onclick="setKundaliChartStyle('NORTH')" class="chrome-pill-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-3.5 py-1.5 text-xs border border-slate-700">
+              North Indian (Diamond)
+            </button>
+          </div>
+        </div>
+
+        <!-- 7.2 Three-Chart Visual Grid: Rasi (D-1), Navamsa (D-9) & Concentric Sudarshan Chakra -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
+
+          <!-- Chart A: Janma Rasi Kundali (D-1) -->
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex flex-col items-center">
+            <div class="w-full flex justify-between items-center mb-2 px-1 text-xs">
+              <span class="font-bold text-blue-400">1. Rasi Kundali (D-1 Physical)</span>
+              <span id="rasiLagnaBadge" class="text-[10px] bg-blue-950 text-blue-300 border border-blue-800 px-2 py-0.5 rounded-full font-jyotish-mono">Lagna</span>
+            </div>
+            <div id="rasiKundaliSvgBox" class="w-full max-w-[310px] aspect-square flex items-center justify-center"></div>
+          </div>
+
+          <!-- Chart B: Navamsa Kundali (D-9) -->
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex flex-col items-center">
+            <div class="w-full flex justify-between items-center mb-2 px-1 text-xs">
+              <span class="font-bold text-purple-400">2. Navamsa Chakra (D-9 Dharma/Spouse)</span>
+              <span id="navamsaLagnaBadge" class="text-[10px] bg-purple-950 text-purple-300 border border-purple-800 px-2 py-0.5 rounded-full font-jyotish-mono">D-9</span>
+            </div>
+            <div id="navamsaKundaliSvgBox" class="w-full max-w-[310px] aspect-square flex items-center justify-center"></div>
+          </div>
+
+          <!-- Chart C: Concentric 3-Circle Sudarshan Chakra (Lagna Inner, Moon Middle, Sun Outer) -->
+          <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex flex-col items-center">
+            <div class="w-full flex justify-between items-center mb-2 px-1 text-xs">
+              <span class="font-bold text-amber-400">3. Sudarshan Chakra (Lagna • Moon • Sun)</span>
+              <span id="sudarshanYearBadge" class="text-[10px] bg-amber-950 text-amber-300 border border-amber-800 px-2 py-0.5 rounded-full font-jyotish-mono">Age Yr</span>
+            </div>
+            <div id="sudarshanChakraSvgBox" class="w-full max-w-[310px] aspect-square flex items-center justify-center"></div>
+          </div>
+
+        </div>
+
+        <!-- 7.3 Rasi Drishti (Sign Sight) & Argala (Intervention) Quick Inspector -->
+        <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 grid grid-cols-1 sm:grid-cols-12 gap-3 items-center text-xs">
+          <div class="sm:col-span-4">
+            <label class="block font-bold text-slate-300 mb-1">🔍 Inspect House Argala &amp; Rasi Drishti:</label>
+            <select id="inspectBhavaSelect" onchange="renderArgalaAndDrishtiInspector()" class="w-full border border-slate-700 rounded-xl p-2 bg-slate-900 text-white">
+              <option value="1">1st House (Tanu Bhava / Ascendant)</option>
+              <option value="2">2nd House (Dhana / Speech / Sustenance)</option>
+              <option value="3">3rd House (Bhratru / Valour / Skills)</option>
+              <option value="4">4th House (Sukha / Mother / Education / Home)</option>
+              <option value="5">5th House (Putra / Intellect / Mantra / Authority)</option>
+              <option value="6">6th House (Satru / Roga / Service)</option>
+              <option value="7">7th House (Kalatra / Spouse / Partnerships)</option>
+              <option value="8">8th House (Ayur / Inheritance / Occult)</option>
+              <option value="9">9th House (Dharma / Fortune / Father / Guru)</option>
+              <option value="10">10th House (Karma / Profession / Fame)</option>
+              <option value="11">11th House (Labha / Gains / Elder Co-borns)</option>
+              <option value="12">12th House (Vyaya / Moksha / Foreign Residence)</option>
+            </select>
+          </div>
+          <div class="sm:col-span-8 space-y-1 text-[11px] font-jyotish-mono">
+            <div id="outArgalaDirect" class="text-emerald-300">Direct Argala (2nd, 4th, 11th): --</div>
+            <div id="outArgalaObstruction" class="text-rose-300">Virodhargala Obstruction (12th, 10th, 3rd): --</div>
+            <div id="outRasiGrahaDrishti" class="text-blue-300">Rasi Drishti &amp; Graha Drishti on House: --</div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
+    <!-- ==========================================================================
+     [SECTION 08] SECTION 5: VIMSHOTTARI DASA, LONGEVITY (AYURDAYA) & YOGAS
+     (JAIMINI 3-PAIRS LONGEVITY, VIMSHOTTARI BHUKTIS, SAHAMS & CLASSICAL YOGAS)
+     ========================================================================== -->
+    <details class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>5. Dasa, Ayurdaya &amp; Yogas</span>
+      </summary>
+      <div class="p-4 space-y-4">
+
+        <!-- 8.1 Jaimini 3-Pairs Longevity (Ayurdaya) Estimator & Jagannath's 8th-Lord Rule -->
+        <div class="bg-emerald-950/30 border border-emerald-800/60 rounded-2xl p-3.5 space-y-2.5 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-extrabold uppercase tracking-wider text-emerald-300">⏳ Ayurdaya (Longevity Compartment — Jaimini 3-Pairs &amp; Parashara)</span>
+            <span id="outAyurCompartmentBadge" class="text-[11px] bg-emerald-500/20 text-emerald-200 border border-emerald-500/40 px-3 py-0.5 rounded-full font-jyotish-mono font-bold">Calculating...</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 font-jyotish-mono text-[11px]">
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block text-[10px] font-sans">Pair 1: Lagna Lord + 8th Lord</span>
+              <strong id="outAyurPair1" class="text-white">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block text-[10px] font-sans">Pair 2: Lagna + Hora Lagna</span>
+              <strong id="outAyurPair2" class="text-amber-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block text-[10px] font-sans">Pair 3: Moon + Saturn</span>
+              <strong id="outAyurPair3" class="text-blue-300">--</strong>
+            </div>
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <span class="text-slate-400 block text-[10px] font-sans">8th Lord &amp; Atmakaraka Check</span>
+              <strong id="outAyurJagannath" class="text-purple-300">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8.2 Vimshottari Mahadasa & Interactive Bhukti (Sub-Period) Explorer -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          <div class="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden">
+            <div class="bg-slate-900 px-3.5 py-2 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span class="font-bold text-slate-200">🗓️ Vimshottari Mahadasa (120-Yr Cycle)</span>
+              <span id="outDasaBalanceBadge" class="text-[11px] text-amber-400 font-jyotish-mono">Balance at Birth: --</span>
+            </div>
+            <div class="max-h-64 overflow-y-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead class="bg-slate-900/90 text-slate-300 sticky top-0 border-b border-slate-800">
+                  <tr>
+                    <th class="py-1.5 px-3">Mahadasa Lord</th>
+                    <th class="py-1.5 px-2">Duration</th>
+                    <th class="py-1.5 px-2">Start Date</th>
+                    <th class="py-1.5 px-2">End Date</th>
+                    <th class="py-1.5 px-2 text-right">Bhuktis</th>
+                  </tr>
+                </thead>
+                <tbody id="vimshottariTableBody" class="divide-y divide-slate-800/80 font-jyotish-mono text-[11px]"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Selected Mahadasa's 9 Bhuktis (Sub-Periods) -->
+          <div class="lg:col-span-5 bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden">
+            <div class="bg-slate-900 px-3.5 py-2 border-b border-slate-800 flex items-center justify-between text-xs">
+              <span id="selectedDasaHeader" class="font-bold text-blue-400">🔍 Antardasas (Bhuktis)</span>
+              <span class="text-[10px] text-slate-400">Tap any Mahadasa row</span>
+            </div>
+            <div class="max-h-64 overflow-y-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead class="bg-slate-900/90 text-slate-300 sticky top-0 border-b border-slate-800">
+                  <tr>
+                    <th class="py-1.5 px-3">Bhukti (Sub-Lord)</th>
+                    <th class="py-1.5 px-2">Y-M-D</th>
+                    <th class="py-1.5 px-2">Ends On</th>
+                  </tr>
+                </thead>
+                <tbody id="bhuktiTableBody" class="divide-y divide-slate-800/80 font-jyotish-mono text-[11px]"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8.3 Classical Yogas Detected & 5 Key Sahams (Punya, Vidya, Karma, Artha, Vivaha) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 text-xs">
+          <div class="lg:col-span-7 bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+            <div class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">👑 Classical Yogas Detected (Uttara Kalamrita, Brihat Jataka &amp; Raman)</div>
+            <div id="detectedYogasContainer" class="space-y-1.5 max-h-44 overflow-y-auto pr-1 text-[11px]"></div>
+          </div>
+          <div class="lg:col-span-5 bg-slate-950 p-3.5 rounded-2xl border border-slate-800 space-y-2">
+            <div class="font-bold text-purple-400 uppercase tracking-wider text-[11px]">🎯 Key Sahams (Tajaka / Rath Mathematical Points)</div>
+            <div id="computedSahamsContainer" class="space-y-1.5 font-jyotish-mono text-[11px]"></div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+<!-- ==========================================================================
+     [SECTION 09] SECTION 6: MULTIMODAL AI SYNTHESIS (JYOTISH + PALM) & MODALS
+     ========================================================================== -->
+    <details class="bg-slate-900 rounded-2xl shadow-lg border border-slate-800 overflow-hidden">
+      <summary class="bg-slate-950 px-4 py-3 font-bold text-slate-100 border-b border-slate-800 flex justify-between items-center">
+        <span>6. AI Jyotish &amp; Palm Synthesis</span>
+      </summary>
+      <div class="p-4 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs">
+          <div class="flex flex-wrap items-center gap-2">
+            <label class="font-bold text-slate-300">Reading Focus:</label>
+            <select id="aiReadingFocus" class="border border-slate-700 rounded-xl px-3 py-1.5 bg-slate-900 text-white text-xs">
+              <option value="COMPLETE">Complete Horoscope + Palm Vision Synthesis (All 12 Bhavas, Yogas, Dasa &amp; Rekhas)</option>
+              <option value="CAREER_FINANCE">Career, Karma (10th), Dhana/Sudasa (2nd/11th) &amp; Bhagya/Surya Rekha</option>
+              <option value="MARRIAGE_CHILDREN">Marriage (7th/Upapada/Navamsa), Progeny (5th/Saptamsa) &amp; Hridaya Rekha</option>
+              <option value="LONGEVITY_HEALTH">Longevity (Ayurdaya 3-Pairs), Medical Jyotish, Jeevan Rekha &amp; Vedic Remedies</option>
+            </select>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="triggerFinalGenerateAndPopup()" id="mainAiGenerateBtn" class="chrome-pill-btn gemini-jyotish-fab text-white text-xs px-4 py-2 shadow-lg font-bold">
+              <span>✨ Generate AI Jyotish + Palm Reading</span>
+            </button>
+            <button type="button" onclick="copyReadingOutput('inlineReadingOutput')" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3.5 py-2 border border-slate-700">
+              <span>📋 Copy</span>
+            </button>
+            <button type="button" onclick="shareReadingWhatsApp()" class="chrome-pill-btn bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3.5 py-2">
+              <span>📲 WhatsApp</span>
+            </button>
+          </div>
+        </div>
+
+        <textarea id="inlineReadingOutput" rows="14" class="w-full border border-slate-800 rounded-2xl p-4 text-sm leading-relaxed font-jyotish-serif bg-slate-950 text-slate-100" placeholder="Tap 'Generate' to synthesize your Nirayana Kundali, Navamsa, Sudarshan Chakra, Vimshottari Dasa, and uploaded Palm Photo..."></textarea>
+      </div>
+    </details>
+
+    <!-- Store-Compliant Academic & Traditional Jyotish Disclaimer Footer -->
+    <footer class="text-center text-[11px] text-slate-400 pt-4 pb-2 space-y-1 max-w-3xl mx-auto px-3">
+      <div class="font-semibold text-slate-300">Jyotish &amp; Samudrika AI • Acharya Danny (danny-code-2029)</div>
+      <p class="text-[10px] text-slate-500 leading-relaxed">
+        🪐 <strong>Traditional Shastra &amp; Educational Reference Disclaimer:</strong> Calculations and multimodal palm interpretations are based on classical Sanskrit treatises (<em>Brihat Jataka</em>, <em>Uttara Kalamrita</em>, <em>Brihat Samhita</em>, <em>Daivagya Kamadhenu</em>, Dr. B.V. Raman &amp; Pt. Sanjay Rath) strictly for cultural, educational, and self-reflective study.
+      </p>
+    </footer>
+  </main>
+
+  <!-- 9.1 Modal 0: Centered Full AI Jyotish & Samudrika Synthesis Popup -->
+  <div id="summaryPopupModal" class="hidden fixed inset-0 z-50 bg-slate-950/75 flex items-center justify-center p-3 sm:p-5">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-4xl w-full overflow-hidden border-2 border-blue-600/80 flex flex-col max-h-[92vh]">
+      <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
+        <div>
+          <h2 class="text-sm sm:text-base font-extrabold flex items-center gap-2">
+            <span>📜 Complete Jyotish &amp; Samudrika Shastra Synthesis</span>
+            <span id="popupSaveBadge" class="text-[10px] bg-emerald-600/30 border border-emerald-400/40 text-emerald-200 px-2.5 py-0.5 rounded-full font-jyotish-mono">✓ Saved</span>
+          </h2>
+          <p class="text-[11px] text-slate-400">Cross-verified Kundali (D-1/D-9), Vimshottari Dasa &amp; Multimodal Palm Vision Analysis</p>
+        </div>
+        <button onclick="closeSummaryPopupModal()" class="text-slate-400 hover:text-white text-2xl font-bold px-2 leading-none">&times;</button>
+      </div>
+      <div class="p-4 sm:p-5 space-y-3 overflow-y-auto flex-1">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+          <span id="aiStatusBanner" class="text-xs text-amber-400 font-jyotish-mono">✨ Ready</span>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="runMultimodalGeminiAnalysis()" id="popupRegenBtn" class="chrome-pill-btn gemini-jyotish-fab text-white text-xs px-4 py-2 shadow">
+              <span>🔄 Re-Analyze with Gemini Vision AI</span>
+            </button>
+            <button onclick="copyReadingOutput('outputParagraphs')" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3.5 py-2 border border-slate-700">📋 Copy</button>
+            <button onclick="window.print()" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-2">🖨️ Print / PDF</button>
+          </div>
+        </div>
+        <textarea id="outputParagraphs" rows="16" class="w-full border border-slate-800 rounded-2xl p-4 text-sm leading-relaxed font-jyotish-serif bg-slate-950 text-slate-100"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.2 Modal 1: Acharya Profile Modal (Clean Avatar + 3D Blue Save Button) -->
+  <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-700">
+      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+        <div>
+          <h3 class="font-extrabold text-sm">👤 Astrologer Profile</h3>
+          <p class="text-[11px] text-slate-400">Personalize your Daivagya details &amp; avatar</p>
+        </div>
+        <button onclick="closeProfileModal()" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 text-lg font-bold">&times;</button>
+      </div>
+      <div class="p-5 space-y-4 text-xs">
+        <div class="flex flex-col items-center gap-2.5 pb-3 border-b border-slate-800">
+          <div class="p-1 rounded-full bg-slate-800 border border-slate-600 shadow-lg">
+            <img id="profileModalAvatarPreview" src="" alt="Preview" class="w-20 h-20 rounded-full object-cover block bg-slate-900" />
+          </div>
+          <label class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 text-[11px] shadow-sm">
+            <span>📷 Upload Photo</span>
+            <input type="file" accept="image/*" onchange="handleProfilePicUpload(this)" class="hidden" />
+          </label>
+        </div>
+        <div class="space-y-3">
+          <div><label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Full Name</label><input id="profName" type="text" placeholder="e.g., Satyapriya Srinivash" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" /></div>
+          <div><label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Lineage / Institution</label><input id="profInstitution" type="text" placeholder="e.g., Jyotish &amp; Samudrika Shastra" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" /></div>
+        </div>
+        <div class="pt-3 border-t border-slate-800 flex justify-center">
+          <button onclick="saveAstrologerProfile()" class="chrome-pill-btn save-3d-blue-btn justify-center px-8 py-2 rounded-full text-xs"><span>Save</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.3 Modal 2: Saved Horoscopes Storage Directory -->
+  <div id="storageModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-700 flex flex-col max-h-[88vh]">
+      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+        <div>
+          <h3 class="font-bold text-sm">🗄️ Saved Horoscopes &amp; Palm Records</h3>
+          <p class="text-[11px] text-slate-400">Click any native's name to restore their Kundali &amp; AI reading</p>
+        </div>
+        <button onclick="closeStorageModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-5 overflow-y-auto flex-1 text-xs">
+        <div class="border border-slate-800 rounded-2xl overflow-hidden">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-950 text-slate-300 border-b border-slate-800 text-xs">
+                <th class="py-2.5 px-3.5 font-bold">Native Name (Click to Open)</th>
+                <th class="py-2.5 px-3 font-bold">DOB, Time &amp; Place</th>
+                <th class="py-2.5 px-3 font-bold">Lagna &amp; Rasi</th>
+                <th class="py-2.5 px-3 font-bold text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="storageTableBody" class="divide-y divide-slate-800 text-xs"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.4 Modal 3: Gemini AI API Key Vault -->
+  <div id="apiVaultModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-amber-500/40">
+      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+        <div>
+          <h3 class="font-bold text-sm">🔑 Gemini AI API Key Vault</h3>
+          <p class="text-[11px] text-slate-400">Powers Multimodal Palm Vision &amp; Classical Jyotish Synthesis</p>
+        </div>
+        <button onclick="toggleApiVaultModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-5 space-y-3.5 text-xs">
+        <div class="bg-amber-950/40 border border-amber-700/50 p-3 rounded-2xl text-amber-200 space-y-1.5">
+          <div class="font-bold">How to get your free Gemini API Key:</div>
+          <p class="text-[11px]">Create a free key in Google AI Studio and paste it below. Your key is stored encrypted in your browser vault.</p>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="chrome-pill-btn bg-amber-600 hover:bg-amber-500 text-white px-3 py-1 text-[11px] shadow mt-1">↗ Open Google AI Studio</a>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Paste Gemini API Key (`AIzaSy...`)</label>
+          <input id="apiKeyInput" type="password" placeholder="AIzaSy..." class="w-full border border-slate-700 rounded-xl p-2.5 text-sm bg-slate-950 text-white font-jyotish-mono" />
+        </div>
+        <div class="flex justify-center pt-2">
+          <button onclick="saveApiKeyToVault()" class="chrome-pill-btn save-3d-blue-btn justify-center px-8 py-2 rounded-full text-xs"><span>Save Key</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.5 Modal 4: Settings, Theme & Store-Compliant Data Deletion -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-700">
+      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+        <h3 class="font-bold text-sm">⚙️ Display &amp; Jyotish Settings</h3>
+        <button onclick="toggleSettingsModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-5 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold mb-2 text-slate-200">Color Theme</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="setTheme('dark')" id="themeBtnDark" class="border border-slate-700 rounded-2xl p-2.5 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800">🌙 Dark</button>
+            <button onclick="setTheme('light')" id="themeBtnLight" class="border border-slate-700 rounded-2xl p-2.5 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800">☀️ Light</button>
+          </div>
+        </div>
+        <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
+          <span class="text-slate-300">Manage Gemini API Key</span>
+          <button onclick="toggleSettingsModal(); toggleApiVaultModal();" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5">🔑 Open Vault</button>
+        </div>
+        <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
+          <div>
+            <div class="font-bold text-rose-400">Delete Account &amp; All Local Data</div>
+            <div class="text-[10px] text-slate-400">Erases profile, API vault &amp; saved horoscopes</div>
+          </div>
+          <button onclick="deleteAllUserData()" class="chrome-pill-btn bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-1.5 shrink-0">🗑️ Delete Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.6 Modal 5: Classical Texts & Citations (About Modal) -->
+  <div id="aboutModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-700">
+      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+        <h3 class="font-bold text-sm">ℹ️ Classical Jyotish &amp; Samudrika References</h3>
+        <button onclick="closeAboutModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-5 space-y-3 text-xs leading-relaxed text-slate-300">
+        <p><strong>Jyotish &amp; Samudrika AI</strong> synthesizes mathematical horoscopy with multimodal palm vision analysis based on authoritative classical and modern works:</p>
+        <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-300">
+          <li><strong>Mahakavi Kalidasa's Uttara Kalamrita:</strong> Vipareeta Rajyogas (Harsha, Sarala, Vimala), Bhavat Bhavam, Arudha Padas, and Special Karakatwas.</li>
+          <li><strong>Acharya Varahamihira's Brihat Jataka &amp; Brihat Samhita:</strong> Shadvargas, Graha Avasthas, Nabhasa/Chandra Yogas, and Purusha/Stri Samudrika Lakshanas (Ch. 68–70).</li>
+          <li><strong>Anavamadarsi Sangharaja's Daivagya Kamadhenu:</strong> Classical Dasa-Antardasa Phala, Gochara, and Ashtakavarga principles.</li>
+          <li><strong>Dr. B.V. Raman &amp; Pt. Sanjay Rath:</strong> Nirayana Sphuta &amp; Ayanamsa algorithms, 8-Planet Chara Karakas, Argala/Virodhargala, 3-Pairs Ayurdaya, Sudarshan Chakra, and Saptamsa/Drekkana timing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+<!-- ==========================================================================
+     [SECTION 10] JAVASCRIPT ASTRONOMICAL & VEDIC JYOTISH CALCULATION ENGINE
+     ========================================================================== -->
+  <script>
+    const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1d4ed8"/><circle cx="50" cy="36" r="18" fill="#ffffff"/><path d="M20 86c0-16.5 13.5-30 30-30s30 13.5 30 30" fill="#ffffff"/></svg>`
+    );
+
+    const RASIS = [
+      { id: 0, name: "Mesha", eng: "Aries", sym: "♈", lord: "Mars", mobility: "Movable", element: "Fire", odd: true },
+      { id: 1, name: "Vrishabha", eng: "Taurus", sym: "♉", lord: "Venus", mobility: "Fixed", element: "Earth", odd: false },
+      { id: 2, name: "Mithuna", eng: "Gemini", sym: "♊", lord: "Mercury", mobility: "Dual", element: "Air", odd: true },
+      { id: 3, name: "Kataka", eng: "Cancer", sym: "♋", lord: "Moon", mobility: "Movable", element: "Water", odd: false },
+      { id: 4, name: "Simha", eng: "Leo", sym: "♌", lord: "Sun", mobility: "Fixed", element: "Fire", odd: true },
+      { id: 5, name: "Kanya", eng: "Virgo", sym: "♍", lord: "Mercury", mobility: "Dual", element: "Earth", odd: false },
+      { id: 6, name: "Thula", eng: "Libra", sym: "♎", lord: "Venus", mobility: "Movable", element: "Air", odd: true },
+      { id: 7, name: "Vrischika", eng: "Scorpio", sym: "♏", lord: "Mars", mobility: "Fixed", element: "Water", odd: false },
+      { id: 8, name: "Dhanus", eng: "Sagittarius", sym: "♐", lord: "Jupiter", mobility: "Dual", element: "Fire", odd: true },
+      { id: 9, name: "Makara", eng: "Capricorn", sym: "♑", lord: "Saturn", mobility: "Movable", element: "Earth", odd: false },
+      { id: 10, name: "Kumbha", eng: "Aquarius", sym: "♒", lord: "Saturn", mobility: "Fixed", element: "Air", odd: true },
+      { id: 11, name: "Meena", eng: "Pisces", sym: "♓", lord: "Jupiter", mobility: "Dual", element: "Water", odd: false }
+    ];
+
+    const NAKSHATRAS = [
+      { name: "Aswini", lord: "Ketu", yrs: 7 }, { name: "Bharani", lord: "Venus", yrs: 20 }, { name: "Krittika", lord: "Sun", yrs: 6 },
+      { name: "Rohini", lord: "Moon", yrs: 10 }, { name: "Mrigasira", lord: "Mars", yrs: 7 }, { name: "Aridra", lord: "Rahu", yrs: 18 },
+      { name: "Punarvasu", lord: "Jupiter", yrs: 16 }, { name: "Pushyami", lord: "Saturn", yrs: 19 }, { name: "Aslesha", lord: "Mercury", yrs: 17 },
+      { name: "Makha", lord: "Ketu", yrs: 7 }, { name: "Pubba", lord: "Venus", yrs: 20 }, { name: "Uttara", lord: "Sun", yrs: 6 },
+      { name: "Hasta", lord: "Moon", yrs: 10 }, { name: "Chitta", lord: "Mars", yrs: 7 }, { name: "Swati", lord: "Rahu", yrs: 18 },
+      { name: "Visakha", lord: "Jupiter", yrs: 16 }, { name: "Anuradha", lord: "Saturn", yrs: 19 }, { name: "Jyeshta", lord: "Mercury", yrs: 17 },
+      { name: "Moola", lord: "Ketu", yrs: 7 }, { name: "Poorvashadha", lord: "Venus", yrs: 20 }, { name: "Uttarashadha", lord: "Sun", yrs: 6 },
+      { name: "Sravana", lord: "Moon", yrs: 10 }, { name: "Dhanishta", lord: "Mars", yrs: 7 }, { name: "Satabhisha", lord: "Rahu", yrs: 18 },
+      { name: "Poorvabhadra", lord: "Jupiter", yrs: 16 }, { name: "Uttarabhadra", lord: "Saturn", yrs: 19 }, { name: "Revati", lord: "Mercury", yrs: 17 }
+    ];
+
+    const VIMSHOTTARI_ORDER = [
+      { lord: "Ketu", yrs: 7 }, { lord: "Venus", yrs: 20 }, { lord: "Sun", yrs: 6 },
+      { lord: "Moon", yrs: 10 }, { lord: "Mars", yrs: 7 }, { lord: "Rahu", yrs: 18 },
+      { lord: "Jupiter", yrs: 16 }, { lord: "Saturn", yrs: 19 }, { lord: "Mercury", yrs: 17 }
+    ];
+
+    const GRAHA_META = {
+      Sun: { sym: "☉", exalt: 0, debil: 6, own: [4], moola: 4, friends: ["Moon", "Mars", "Jupiter"], enemies: ["Venus", "Saturn"] },
+      Moon: { sym: "☽", exalt: 1, debil: 7, own: [3], moola: 1, friends: ["Sun", "Mercury"], enemies: [] },
+      Mars: { sym: "♂", exalt: 9, debil: 3, own: [0, 7], moola: 0, friends: ["Sun", "Moon", "Jupiter"], enemies: ["Mercury"] },
+      Mercury: { sym: "☿", exalt: 5, debil: 11, own: [2, 5], moola: 5, friends: ["Sun", "Venus"], enemies: ["Moon"] },
+      Jupiter: { sym: "♃", exalt: 3, debil: 9, own: [8, 11], moola: 8, friends: ["Sun", "Moon", "Mars"], enemies: ["Mercury", "Venus"] },
+      Venus: { sym: "♀", exalt: 11, debil: 5, own: [1, 6], moola: 6, friends: ["Mercury", "Saturn"], enemies: ["Sun", "Moon"] },
+      Saturn: { sym: "♄", exalt: 6, debil: 0, own: [9, 10], moola: 10, friends: ["Mercury", "Venus"], enemies: ["Sun", "Moon", "Mars"] },
+      Rahu: { sym: "☊", exalt: 1, debil: 7, own: [10], moola: 4, friends: ["Venus", "Saturn", "Mercury"], enemies: ["Sun", "Moon", "Mars"] },
+      Ketu: { sym: "☋", exalt: 7, debil: 1, own: [7], moola: 8, friends: ["Mars", "Jupiter"], enemies: ["Sun", "Moon"] }
+    };
+
+    const CHARA_KARAKA_LABELS = ["Atmakaraka (AK)", "Amatyakaraka (AmK)", "Bhratrikaraka (BK)", "Matrikaraka (MK)", "Pitrikaraka (PK)", "Putrakaraka (PuK)", "Gnatikaraka (GK)", "Darakaraka (DK)"];
+
+    let currentHoroscopeState = null;
+    let currentKundaliStyle = 'SOUTH';
+    let palmImageBase64 = null;
+    let palmImageMime = null;
+
+    function norm360(deg) { return ((deg % 360) + 360) % 360; }
+    function dmsString(degInSign) {
+      const d = Math.floor(degInSign);
+      const mFloat = (degInSign - d) * 60;
+      const m = Math.floor(mFloat);
+      const s = Math.round((mFloat - m) * 60);
+      return `${String(d).padStart(2,'0')}°${String(m).padStart(2,'0')}'${String(s === 60 ? 59 : s).padStart(2,'0')}"`;
+    }
+
+    // Compute Shadvarga Rasi Index (0..11) for any Nirayana Longitude (0..360)
+    function computeShadvargas(lon) {
+      const rasiIdx = Math.floor(lon / 30) % 12;
+      const deg = lon % 30;
+      const isOdd = rasiIdx % 2 === 0;
+
+      // D-2 Hora (Sun = 4 Leo, Moon = 3 Cancer)
+      const horaRasi = isOdd ? (deg < 15 ? 4 : 3) : (deg < 15 ? 3 : 4);
+      // D-3 Drekkana (1st, 5th, 9th from Rasi)
+      const drekRasi = (rasiIdx + Math.floor(deg / 10) * 4) % 12;
+      // D-9 Navamsa (Fire->Aries 0, Earth->Cap 9, Air->Libra 6, Water->Cancer 3)
+      const navPart = Math.min(8, Math.floor(deg / (30 / 9)));
+      const navStart = [0, 9, 6, 3][rasiIdx % 4];
+      const navamsaRasi = (navStart + navPart) % 12;
+      // D-12 Dwadasamsa (2.5° each starting from Rasi itself)
+      const dwadRasi = (rasiIdx + Math.min(11, Math.floor(deg / 2.5))) % 12;
+      // D-30 Trimsamsa (Brihat Jataka Ch. 1 v. 7: Odd 5,5,8,7,5 / Even 5,7,8,5,5)
+      let trimLord = "Mars";
+      if (isOdd) {
+        if (deg < 5) trimLord = "Mars"; else if (deg < 10) trimLord = "Saturn"; else if (deg < 18) trimLord = "Jupiter"; else if (deg < 25) trimLord = "Mercury"; else trimLord = "Venus";
+      } else {
+        if (deg < 5) trimLord = "Venus"; else if (deg < 12) trimLord = "Mercury"; else if (deg < 20) trimLord = "Jupiter"; else if (deg < 25) trimLord = "Saturn"; else trimLord = "Mars";
+      }
+      return {
+        rasiIdx, deg,
+        d1: RASIS[rasiIdx].name, d1Lord: RASIS[rasiIdx].lord,
+        d2Lord: RASIS[horaRasi].lord,
+        d3Rasi: drekRasi, d3Lord: RASIS[drekRasi].lord,
+        d9Rasi: navamsaRasi, d9Name: RASIS[navamsaRasi].name, d9Lord: RASIS[navamsaRasi].lord,
+        d12Lord: RASIS[dwadRasi].lord,
+        d30Lord: trimLord
+      };
+    }
+
+    // Jaimini / Uttara Kalamrita Arudha Pada Calculator with 1st/7th Exception Rule
+    function calcArudhaPada(houseRasiIdx, planetRasiMap) {
+      const lord = RASIS[houseRasiIdx].lord;
+      const lordRasi = planetRasiMap[lord];
+      let dist = (lordRasi - houseRasiIdx + 12) % 12;
+      let pada = (lordRasi + dist) % 12;
+      const distFromHouse = (pada - houseRasiIdx + 12) % 12;
+      if (distFromHouse === 0 || distFromHouse === 6) {
+        pada = (pada + 9) % 12; // 10th from position if falling in 1st or 7th from Bhava
+      }
+      return pada;
+    }
+    
+    <!-- ==========================================================================
+     [SECTION 11] EPHEMERIS SOLVER, SVG KUNDALIS, MULTIMODAL AI & UI ENGINE
+     ========================================================================== -->
+    function applyCityCoordinates(val) {
+      if (!val) return;
+      const [name, lat, lon] = val.split('|');
+      document.getElementById('birthPlaceName').value = name;
+      document.getElementById('birthLat').value = parseFloat(lat).toFixed(2);
+      document.getElementById('birthLon').value = parseFloat(lon).toFixed(2);
+      computeFullHoroscope();
+    }
+
+    function computeFullHoroscope() {
+      const dobStr = document.getElementById('birthDate')?.value || '2003-07-07';
+      const tobStr = document.getElementById('birthTime')?.value || '10:30:00';
+      const lat = parseFloat(document.getElementById('birthLat')?.value || '20.30');
+      const lon = parseFloat(document.getElementById('birthLon')?.value || '85.82');
+      const ayanMode = document.getElementById('ayanamsaMode')?.value || 'LAHIRI';
+      const timeMode = document.getElementById('timeAccuracyMode')?.value || 'EXACT';
+
+      const [yr, mo, dy] = dobStr.split('-').map(Number);
+      const [hr, mn, sc] = (tobStr + ':00').split(':').map(Number);
+      const stdHours = hr + (mn / 60) + ((sc || 0) / 3600);
+      const lmtOffsetHrs = (lon - 82.5) / 15; // IST meridian 82°30'E
+      const lmtHours = ((stdHours + lmtOffsetHrs) % 24 + 24) % 24;
+      const utcHours = stdHours - 5.5;
+
+      // Julian Day & J2000 Century (T)
+      let Y = yr, M = mo;
+      if (M <= 2) { Y -= 1; M += 12; }
+      const A = Math.floor(Y / 100), B = 2 - A + Math.floor(A / 4);
+      const jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + dy + (utcHours / 24) + B - 1524.5;
+      const d = jd - 2451545.0;
+
+      // Ayanamsa: Raman ((Year - 397) * 50.333"/3600) vs Lahiri Chitrapaksha
+      const fracYear = yr + ((mo - 1) / 12) + (dy / 365.25);
+      const ayanamsa = ayanMode === 'RAMAN'
+        ? ((fracYear - 397) * (50.3333 / 3600))
+        : (23.853 + (fracYear - 2000) * (50.29 / 3600));
+
+      // Tropical Mean Longitudes & Equations of Center -> Nirayana Sphutas
+      const rad = Math.PI / 180;
+      const ms = norm360(357.5291 + 0.98560028 * d);
+      const ls = norm360(280.4665 + 0.98564736 * d + 1.9148 * Math.sin(ms * rad) + 0.02 * Math.sin(2 * ms * rad));
+      const mm = norm360(134.963 + 13.064993 * d);
+      const lm = norm360(218.316 + 13.176396 * d + 6.289 * Math.sin(mm * rad));
+      const rahuSayana = norm360(125.0445 - 0.05295376 * d);
+
+      const sayanaMap = {
+        Sun: ls,
+        Moon: lm,
+        Mars: norm360(355.433 + 0.524033 * d + 10.691 * Math.sin((19.373 + 0.524021 * d) * rad)),
+        Mercury: norm360(ls + 22.4 * Math.sin((252.25 + 4.09233 * d - ls) * rad)),
+        Jupiter: norm360(34.351 + 0.083091 * d + 5.555 * Math.sin((20.02 + 0.083085 * d) * rad)),
+        Venus: norm360(ls + 46.2 * Math.sin((181.98 + 1.60213 * d - ls) * rad)),
+        Saturn: norm360(50.077 + 0.033459 * d + 6.358 * Math.sin((317.02 + 0.033444 * d) * rad)),
+        Rahu: rahuSayana,
+        Ketu: norm360(rahuSayana + 180)
+      };
+
+      // Local Sunrise, Suryodayadi Ishtakala Ghatis & Ascendant (Udaya Lagna)
+      const decl = 23.44 * Math.sin(ls * rad);
+      const cosH = -Math.tan(lat * rad) * Math.tan(decl * rad);
+      const halfDayHrs = (Math.acos(Math.max(-0.98, Math.min(0.98, cosH))) / rad) / 15;
+      const sunriseLmt = 12 - halfDayHrs;
+      const hrsSinceSunrise = ((lmtHours - sunriseLmt) + 24) % 24;
+      const ishtakalaGhatis = hrsSinceSunrise * 2.5;
+      const totalVighatis = Math.round(ishtakalaGhatis * 60);
+
+      // Sidereal Time & Lagna Sphuta
+      const gmst = norm360(280.46061837 + 360.98564736629 * d + lon);
+      const obl = 23.4393 * rad;
+      const ramc = gmst * rad;
+      const ascSayana = norm360(Math.atan2(Math.cos(ramc), -Math.sin(ramc) * Math.cos(obl) - Math.tan(lat * rad) * Math.sin(obl)) / rad);
+      let lagnaNirayana = norm360(ascSayana - ayanamsa);
+      if (timeMode === 'SURYA') lagnaNirayana = norm360(sayanaMap.Sun - ayanamsa);
+
+      // Build Planet Objects & Rasi Map
+      const planets = {};
+      const planetRasiMap = {};
+      Object.keys(sayanaMap).forEach(p => {
+        const nir = norm360(sayanaMap[p] - ayanamsa);
+        const vargas = computeShadvargas(nir);
+        const nakIdx = Math.floor(nir / (360 / 27)) % 27;
+        const pada = Math.floor((nir % (360 / 27)) / (360 / 108)) + 1;
+        const meta = GRAHA_META[p];
+        let avastha = "Samana (Neutral)";
+        if (vargas.rasiIdx === meta.exalt) avastha = "Deeptha (Exalted)";
+        else if (vargas.rasiIdx === meta.debil) avastha = "Khala (Debilitated)";
+        else if (meta.own.includes(vargas.rasiIdx)) avastha = "Swastha (Own Sign)";
+        else if (meta.friends.includes(vargas.d1Lord)) avastha = "Muditha (Friendly)";
+        else if (meta.enemies.includes(vargas.d1Lord)) avastha = "Deena (Inimical)";
+        if (vargas.rasiIdx === vargas.d9Rasi) avastha += " • Vargottama";
+
+        planets[p] = { name: p, sym: meta.sym, lon: nir, degInSign: vargas.deg, nak: NAKSHATRAS[nakIdx], pada, vargas, avastha, karaka: "-" };
+        planetRasiMap[p] = vargas.rasiIdx;
+      });
+
+      // 8-Planet Chara Karaka Scheme (Sun to Rahu; Rahu measured from end of sign)
+      const ckList = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu"].map(p => ({
+        name: p, deg: p === "Rahu" ? (30 - planets[p].degInSign) : planets[p].degInSign
+      })).sort((a, b) => b.deg - a.deg);
+      ckList.forEach((item, idx) => { planets[item.name].karaka = CHARA_KARAKA_LABELS[idx]; });
+
+      // Special Ascendants (HL, GL, SL) & Arudha Padas (AL, UL, A7, A5)
+      const lagnaVargas = computeShadvargas(lagnaNirayana);
+      const sunNir = planets.Sun.lon;
+      const hlLon = norm360(sunNir + hrsSinceSunrise * 30);
+      const glLon = norm360(sunNir + ishtakalaGhatis * 30);
+      const moonArcInNak = planets.Moon.lon % (360 / 27);
+      const slLon = norm360(lagnaNirayana + (moonArcInNak / (360 / 27)) * 360);
+
+      const L = lagnaVargas.rasiIdx;
+      const alRasi = calcArudhaPada(L, planetRasiMap);
+      const ulRasi = calcArudhaPada((L + 11) % 12, planetRasiMap);
+      const a7Rasi = calcArudhaPada((L + 6) % 12, planetRasiMap);
+      const a5Rasi = calcArudhaPada((L + 4) % 12, planetRasiMap);
+
+      currentHoroscopeState = {
+        dobStr, tobStr, lat, lon, ayanamsa, lmtHours, sunriseLmt, ishtakalaGhatis, totalVighatis,
+        lagnaLon: lagnaNirayana, lagnaVargas, planets, planetRasiMap,
+        hlRasi: Math.floor(hlLon / 30) % 12, glRasi: Math.floor(glLon / 30) % 12, slRasi: Math.floor(slLon / 30) % 12,
+        alRasi, ulRasi, a7Rasi, a5Rasi, atmakaraka: ckList[0].name
+      };
+      renderAllHoroscopeSections();
+    }
+
+    function formatHrsToClock(h) {
+      const hr = Math.floor(h), mn = Math.floor((h - hr) * 60), sc = Math.round(((h - hr) * 60 - mn) * 60);
+      return `${String(hr).padStart(2,'0')}:${String(mn).padStart(2,'0')}:${String(sc === 60 ? 59 : sc).padStart(2,'0')}`;
+    }
+
+    function renderAllHoroscopeSections() {
+      const st = currentHoroscopeState;
+      if (!st) return;
+      const gh = Math.floor(st.ishtakalaGhatis), vig = Math.round((st.ishtakalaGhatis - gh) * 60);
+      const vighatiLords = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu", "Ketu"];
+      const vigLord = vighatiLords[(st.totalVighatis % 9 === 0 ? 9 : st.totalVighatis % 9) - 1];
+      const kundaLon = norm360(st.lagnaLon * 81);
+      const kundaNak = NAKSHATRAS[Math.floor(kundaLon / (360 / 27)) % 27].name;
+
+      document.getElementById('outAyanamsa').textContent = dmsString(st.ayanamsa);
+      document.getElementById('outLMT').textContent = formatHrsToClock(st.lmtHours);
+      document.getElementById('outSunrise').textContent = formatHrsToClock(st.sunriseLmt) + " AM";
+      document.getElementById('outIshtakala').textContent = `Gh ${gh} - Vig ${vig}`;
+      document.getElementById('outKunda').textContent = `${vigLord} • ${kundaNak}`;
+
+      document.getElementById('spUdayaLagna').textContent = `${RASIS[st.lagnaVargas.rasiIdx].name} ${dmsString(st.lagnaVargas.deg)}`;
+      document.getElementById('spHoraLagna').textContent = RASIS[st.hlRasi].name;
+      document.getElementById('spGhatikaLagna').textContent = RASIS[st.glRasi].name;
+      document.getElementById('spShriLagna').textContent = RASIS[st.slRasi].name;
+      document.getElementById('spArudhaLagna').textContent = RASIS[st.alRasi].name;
+      document.getElementById('spUpapada').textContent = RASIS[st.ulRasi].name;
+      document.getElementById('spDaraMantraPada').textContent = `A7:${RASIS[st.a7Rasi].name.slice(0,4)} • A5:${RASIS[st.a5Rasi].name.slice(0,4)}`;
+      document.getElementById('yogadaSummaryBadge').textContent = `Atmakaraka: ${st.atmakaraka} • Lagna Lord: ${st.lagnaVargas.d1Lord}`;
+
+      // Populate Graha Sphuta & Shadvarga Table
+      const lagRow = `<tr class="bg-blue-950/30 font-bold text-blue-200"><td class="py-1.5 px-2.5">Asc (Lagna)</td><td class="py-1.5 px-2">${dmsString(st.lagnaVargas.deg)}</td><td class="py-1.5 px-2">${NAKSHATRAS[Math.floor(st.lagnaLon/(360/27))%27].name}</td><td class="py-1.5 px-2">Lagna</td><td class="py-1.5 px-2">${st.lagnaVargas.d1} (${st.lagnaVargas.d1Lord})</td><td class="py-1.5 px-2">${st.lagnaVargas.d2Lord}</td><td class="py-1.5 px-2">${st.lagnaVargas.d3Lord}</td><td class="py-1.5 px-2">${st.lagnaVargas.d9Name} (${st.lagnaVargas.d9Lord})</td><td class="py-1.5 px-2">${st.lagnaVargas.d12Lord}</td><td class="py-1.5 px-2">${st.lagnaVargas.d30Lord}</td><td class="py-1.5 px-2.5">Udaya Lagna</td></tr>`;
+      const pRows = Object.values(st.planets).map(p => `
+        <tr class="hover:bg-slate-900/80">
+          <td class="py-1.5 px-2.5 font-bold text-white">${p.sym} ${p.name}</td>
+          <td class="py-1.5 px-2 text-amber-300">${dmsString(p.degInSign)}</td>
+          <td class="py-1.5 px-2">${p.nak.name} (${p.pada})</td>
+          <td class="py-1.5 px-2 text-purple-300">${p.karaka}</td>
+          <td class="py-1.5 px-2">${p.vargas.d1} (${p.vargas.d1Lord})</td>
+          <td class="py-1.5 px-2">${p.vargas.d2Lord}</td>
+          <td class="py-1.5 px-2">${p.vargas.d3Lord}</td>
+          <td class="py-1.5 px-2 text-emerald-300">${p.vargas.d9Name} (${p.vargas.d9Lord})</td>
+          <td class="py-1.5 px-2">${p.vargas.d12Lord}</td>
+          <td class="py-1.5 px-2">${p.vargas.d30Lord}</td>
+          <td class="py-1.5 px-2.5 text-blue-300">${p.avastha}</td>
+        </tr>`).join('');
+      document.getElementById('grahaSphutaTableBody').innerHTML = lagRow + pRows;
+
+      const L = st.lagnaVargas.rasiIdx;
+      const badhakMap = { Movable: (L + 10) % 12, Fixed: (L + 8) % 12, Dual: (L + 6) % 12 };
+      const badhakRasi = badhakMap[RASIS[L].mobility];
+      document.getElementById('shadbalaSummaryText').textContent = `Birth during ${st.lmtHours >= st.sunriseLmt && st.lmtHours <= (24 - st.sunriseLmt) ? 'Diurnal (Ahas — Sun/Jupiter/Venus strong)' : 'Nocturnal (Ratri — Moon/Mars/Saturn strong)'} period. Uttarayana/Dakshinayana & Digbala evaluated from ${RASIS[L].name} Lagna.`;
+      document.getElementById('functionalLordsSummaryText').textContent = `Lagna Lord: ${RASIS[L].lord} • 5th Trikona Lord: ${RASIS[(L+4)%12].lord} • 9th Dharma Lord: ${RASIS[(L+8)%12].lord} • Badhakesh: ${RASIS[badhakRasi].lord} (${RASIS[badhakRasi].name}) • Marakas (2nd/7th): ${RASIS[(L+1)%12].lord}, ${RASIS[(L+6)%12].lord}.`;
+
+      renderKundaliCharts();
+      renderArgalaAndDrishtiInspector();
+      renderLongevityDasaAndYogas();
+    }
+
+    function setKundaliChartStyle(style) {
+      currentKundaliStyle = style;
+      document.getElementById('btnStyleSouth').className = style === 'SOUTH' ? 'chrome-pill-btn bg-blue-600 text-white px-3.5 py-1.5 text-xs shadow' : 'chrome-pill-btn bg-slate-800 text-slate-300 px-3.5 py-1.5 text-xs border border-slate-700';
+      document.getElementById('btnStyleNorth').className = style === 'NORTH' ? 'chrome-pill-btn bg-blue-600 text-white px-3.5 py-1.5 text-xs shadow' : 'chrome-pill-btn bg-slate-800 text-slate-300 px-3.5 py-1.5 text-xs border border-slate-700';
+      renderKundaliCharts();
+    }
+
+    function buildSingleKundaliSvg(signOccupants, lagnaRasi, centerLabel) {
+      if (currentKundaliStyle === 'SOUTH') {
+        const pos = [[1,0],[2,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1],[0,0]];
+        let cells = `<rect x="2" y="2" width="296" height="296" rx="12" fill="#0f172a" stroke="#475569" stroke-width="2"/><rect x="76" y="76" width="148" height="148" fill="#1e293b" stroke="#334155" stroke-width="1.5"/><text x="150" y="154" text-anchor="middle" fill="#93c5fd" font-size="12" font-weight="bold">${centerLabel}</text>`;
+        pos.forEach(([cx, cy], rIdx) => {
+          const x = cx * 74 + 2, y = cy * 74 + 2;
+          const isLag = rIdx === lagnaRasi;
+          const items = signOccupants[rIdx] || [];
+          cells += `<rect x="${x}" y="${y}" width="74" height="74" fill="${isLag ? 'rgba(37,99,235,0.18)' : 'none'}" stroke="#334155" stroke-width="1.2"/><text x="${x+5}" y="${y+13}" fill="#64748b" font-size="9" font-weight="bold">${rIdx+1}.${RASIS[rIdx].name.slice(0,3)}</text><text x="${x+37}" y="${y+42}" text-anchor="middle" fill="#f8fafc" font-size="10" font-weight="bold">${items.slice(0,3).join(' ')}</text><text x="${x+37}" y="${y+58}" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-weight="bold">${items.slice(3).join(' ')}</text>`;
+        });
+        return `<svg viewBox="0 0 300 300" class="w-full h-full">${cells}</svg>`;
+      } else {
+        // North Indian Diamond Kundali
+        const hCenters = [[150,70],[75,32],[35,70],[75,150],[35,230],[75,268],[150,230],[225,268],[265,230],[225,150],[265,70],[225,32]];
+        let svg = `<rect x="2" y="2" width="296" height="296" rx="12" fill="#0f172a" stroke="#475569" stroke-width="2"/><line x1="2" y1="2" x2="298" y2="298" stroke="#334155" stroke-width="1.5"/><line x1="298" y1="2" x2="2" y2="298" stroke="#334155" stroke-width="1.5"/><polygon points="150,2 298,150 150,298 2,150" fill="none" stroke="#60a5fa" stroke-width="1.6"/>`;
+        hCenters.forEach(([hx, hy], hOffset) => {
+          const rIdx = (lagnaRasi + hOffset) % 12;
+          const items = (signOccupants[rIdx] || []).filter(t => t !== 'Asc');
+          svg += `<text x="${hx}" y="${hy - 8}" text-anchor="middle" fill="#94a3b8" font-size="9.5" font-weight="bold">${rIdx + 1}</text><text x="${hx}" y="${hy + 6}" text-anchor="middle" fill="#f8fafc" font-size="9.5" font-weight="bold">${items.slice(0,3).join(' ')}</text><text x="${hx}" y="${hy + 18}" text-anchor="middle" fill="#fbbf24" font-size="9">${items.slice(3).join(' ')}</text>`;
+        });
+        return `<svg viewBox="0 0 300 300" class="w-full h-full">${svg}</svg>`;
+      }
+    }
+
+    function renderKundaliCharts() {
+      const st = currentHoroscopeState;
+      if (!st) return;
+      const d1Map = Array.from({ length: 12 }, () => []);
+      const d9Map = Array.from({ length: 12 }, () => []);
+      d1Map[st.lagnaVargas.rasiIdx].push('Asc');
+      d1Map[st.alRasi].push('AL');
+      d1Map[st.ulRasi].push('UL');
+      d9Map[st.lagnaVargas.d9Rasi].push('Asc');
+
+      Object.values(st.planets).forEach(p => {
+        const short = p.name.slice(0, 2);
+        d1Map[p.vargas.rasiIdx].push(short);
+        d9Map[p.vargas.d9Rasi].push(short);
+      });
+
+      document.getElementById('rasiLagnaBadge').textContent = RASIS[st.lagnaVargas.rasiIdx].name;
+      document.getElementById('navamsaLagnaBadge').textContent = RASIS[st.lagnaVargas.d9Rasi].name;
+      document.getElementById('rasiKundaliSvgBox').innerHTML = buildSingleKundaliSvg(d1Map, st.lagnaVargas.rasiIdx, "RASI CHAKRA (D-1)");
+      document.getElementById('navamsaKundaliSvgBox').innerHTML = buildSingleKundaliSvg(d9Map, st.lagnaVargas.d9Rasi, "NAVAMSA (D-9)");
+
+      // 3-Ring Concentric Sudarshan Chakra SVG (Inner=Lagna, Middle=Moon, Outer=Sun)
+      const ageYrs = Math.max(1, new Date().getFullYear() - parseInt(st.dobStr.split('-')[0], 10));
+      const progHouse = ((ageYrs - 1) % 12) + 1;
+      document.getElementById('sudarshanYearBadge').textContent = `Age ${ageYrs} • House ${progHouse}`;
+      let sudSvg = `<circle cx="150" cy="150" r="142" fill="#0f172a" stroke="#475569" stroke-width="2"/><circle cx="150" cy="150" r="102" fill="none" stroke="#334155" stroke-width="1.4"/><circle cx="150" cy="150" r="64" fill="none" stroke="#334155" stroke-width="1.4"/><circle cx="150" cy="150" r="24" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/><text x="150" y="153" text-anchor="middle" fill="#93c5fd" font-size="8.5" font-weight="bold">SUDARSHAN</text>`;
+      for (let i = 0; i < 12; i++) {
+        const ang1 = (-105 - i * 30) * (Math.PI / 180);
+        const midAng = (-90 - i * 30) * (Math.PI / 180);
+        sudSvg += `<line x1="${150 + 24 * Math.cos(ang1)}" y1="${150 + 24 * Math.sin(ang1)}" x2="${150 + 142 * Math.cos(ang1)}" y2="${150 + 142 * Math.sin(ang1)}" stroke="#334155" stroke-width="1"/>`;
+        const rLag = (st.lagnaVargas.rasiIdx + i) % 12;
+        const rMoon = (st.planets.Moon.vargas.rasiIdx + i) % 12;
+        const rSun = (st.planets.Sun.vargas.rasiIdx + i) % 12;
+        sudSvg += `<text x="${150 + 44 * Math.cos(midAng)}" y="${153 + 44 * Math.sin(midAng)}" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="bold">${rLag+1}</text>`;
+        sudSvg += `<text x="${150 + 83 * Math.cos(midAng)}" y="${153 + 83 * Math.sin(midAng)}" text-anchor="middle" fill="#e2e8f0" font-size="8.5">${rMoon+1}</text>`;
+        sudSvg += `<text x="${150 + 122 * Math.cos(midAng)}" y="${153 + 122 * Math.sin(midAng)}" text-anchor="middle" fill="#fbbf24" font-size="8.5">${rSun+1}</text>`;
+      }
+      document.getElementById('sudarshanChakraSvgBox').innerHTML = `<svg viewBox="0 0 300 300" class="w-full h-full">${sudSvg}</svg>`;
+    }
+
+    function getRasiDrishtiSigns(rasiIdx) {
+      const mob = RASIS[rasiIdx].mobility;
+      if (mob === "Movable") return [1, 4, 7, 10].filter(r => r !== (rasiIdx + 1) % 12);
+      if (mob === "Fixed") return [0, 3, 6, 9].filter(r => r !== (rasiIdx + 11) % 12);
+      return [2, 5, 8, 11].filter(r => r !== rasiIdx);
+    }
+
+    function renderArgalaAndDrishtiInspector() {
+      const st = currentHoroscopeState;
+      if (!st) return;
+      const bhavaNum = parseInt(document.getElementById('inspectBhavaSelect')?.value || '1', 10);
+      const targetRasi = (st.lagnaVargas.rasiIdx + bhavaNum - 1) % 12;
+      const pInSign = (r) => Object.values(st.planets).filter(p => p.vargas.rasiIdx === r).map(p => p.name).join(', ') || 'None';
+      const a2 = (targetRasi + 1) % 12, a4 = (targetRasi + 3) % 12, a11 = (targetRasi + 10) % 12;
+      const o12 = (targetRasi + 11) % 12, o10 = (targetRasi + 9) % 12, o3 = (targetRasi + 2) % 12;
+      const drishtiSigns = getRasiDrishtiSigns(targetRasi);
+      const drishtiPlanets = drishtiSigns.map(r => `${RASIS[r].name}(${pInSign(r)})`).join(' • ');
+
+      document.getElementById('outArgalaDirect').textContent = `Direct Argala — 2nd ${RASIS[a2].name}: [${pInSign(a2)}] • 4th ${RASIS[a4].name}: [${pInSign(a4)}] • 11th ${RASIS[a11].name}: [${pInSign(a11)}]`;
+      document.getElementById('outArgalaObstruction').textContent = `Virodhargala — 12th ${RASIS[o12].name}: [${pInSign(o12)}] • 10th ${RASIS[o10].name}: [${pInSign(o10)}] • 3rd ${RASIS[o3].name}: [${pInSign(o3)}]`;
+      document.getElementById('outRasiGrahaDrishti').textContent = `Jaimini Rasi Drishti on ${RASIS[targetRasi].name}: ${drishtiPlanets}`;
+    }
+
+    function pairLongevityTerm(r1, r2) {
+      const m1 = RASIS[r1].mobility, m2 = RASIS[r2].mobility;
+      const map = { Movable: "Purnayu (72–108 yrs)", Dual: "Madhyayu (36–72 yrs)", Fixed: "Alpayu (0–36 yrs)" };
+      if (m1 === m2) return map[m1];
+      const remaining = ["Movable", "Dual", "Fixed"].find(m => m !== m1 && m !== m2);
+      return map[remaining];
+    }
+
+    function renderLongevityDasaAndYogas() {
+      const st = currentHoroscopeState;
+      const L = st.lagnaVargas.rasiIdx;
+      const lagLordRasi = st.planetRasiMap[RASIS[L].lord];
+      const eighthLordRasi = st.planetRasiMap[RASIS[(L + 7) % 12].lord];
+      const p1 = pairLongevityTerm(lagLordRasi, eighthLordRasi);
+      const p2 = pairLongevityTerm(L, st.hlRasi);
+      const p3 = pairLongevityTerm(st.planetRasiMap.Moon, st.planetRasiMap.Saturn);
+      const finalAyur = (p1 === p2 || p1 === p3) ? p1 : (p2 === p3 ? p2 : p2);
+      const eighthHousePos = ((eighthLordRasi - L + 12) % 12) + 1;
+
+      document.getElementById('outAyurPair1').textContent = p1;
+      document.getElementById('outAyurPair2').textContent = p2;
+      document.getElementById('outAyurPair3').textContent = p3;
+      document.getElementById('outAyurJagannath').textContent = `8th Lord in H${eighthHousePos} • AK ${st.atmakaraka}`;
+      document.getElementById('outAyurCompartmentBadge').textContent = `Primary Verdict: ${finalAyur}`;
+
+      // Vimshottari Mahadasa Calculation
+      const moonLon = st.planets.Moon.lon;
+      const nakSpan = 360 / 27;
+      const nakIdx = Math.floor(moonLon / nakSpan) % 27;
+      const fractionLeft = 1 - ((moonLon % nakSpan) / nakSpan);
+      const startCycleIdx = VIMSHOTTARI_ORDER.findIndex(v => v.lord === NAKSHATRAS[nakIdx].lord);
+      const balanceYrs = VIMSHOTTARI_ORDER[startCycleIdx].yrs * fractionLeft;
+      const by = Math.floor(balanceYrs), bm = Math.floor((balanceYrs - by) * 12), bd = Math.round(((balanceYrs - by) * 12 - bm) * 30);
+      document.getElementById('outDasaBalanceBadge').textContent = `Birth Nakshatra: ${NAKSHATRAS[nakIdx].name} (${NAKSHATRAS[nakIdx].lord} Bal: ${by}y ${bm}m ${bd}d)`;
+
+      const birthYrFloat = parseInt(st.dobStr.split('-')[0], 10) + (parseInt(st.dobStr.split('-')[1], 10) - 1) / 12;
+      let cursorYr = birthYrFloat;
+      const dasaList = [];
+      for (let i = 0; i < 9; i++) {
+        const entry = VIMSHOTTARI_ORDER[(startCycleIdx + i) % 9];
+        const dur = i === 0 ? balanceYrs : entry.yrs;
+        dasaList.push({ lord: entry.lord, fullYrs: entry.yrs, dur, startYr: cursorYr, endYr: cursorYr + dur });
+        cursorYr += dur;
+      }
+      st.dasaList = dasaList;
+      const nowYr = new Date().getFullYear() + (new Date().getMonth() / 12);
+      let activeDasaIdx = dasaList.findIndex(d => nowYr >= d.startYr && nowYr <= d.endYr);
+      if (activeDasaIdx < 0) activeDasaIdx = 0;
+
+      document.getElementById('vimshottariTableBody').innerHTML = dasaList.map((d, idx) => `
+        <tr onclick="selectMahadasaBhuktis(${idx})" class="cursor-pointer ${idx === activeDasaIdx ? 'bg-blue-950/50 text-blue-200 font-bold' : 'hover:bg-slate-900'}">
+          <td class="py-1.5 px-3">${d.lord} ${idx === activeDasaIdx ? '● Current' : ''}</td>
+          <td class="py-1.5 px-2">${d.dur.toFixed(1)}y</td>
+          <td class="py-1.5 px-2">${Math.floor(d.startYr)}</td>
+          <td class="py-1.5 px-2">${Math.floor(d.endYr)}</td>
+          <td class="py-1.5 px-2 text-right text-blue-400">View ➔</td>
+        </tr>`).join('');
+      selectMahadasaBhuktis(activeDasaIdx);
+
+      // Detect Classical Yogas & Key Sahams
+      const yogas = [];
+      const moonR = st.planetRasiMap.Moon, jupR = st.planetRasiMap.Jupiter, sunR = st.planetRasiMap.Sun, mercR = st.planetRasiMap.Mercury;
+      if ([0, 3, 6, 9].includes((jupR - moonR + 12) % 12)) yogas.push("✨ Gajakesari Yoga (Moon & Jupiter in mutual Kendra — lasting fame, intellect & fortune)");
+      if (sunR === mercR) yogas.push("☀️ Budhaditya Nipuna Yoga (Sun & Mercury conjunction — sharp intellect & scholarship)");
+      const l9 = RASIS[(L + 8) % 12].lord, l10 = RASIS[(L + 9) % 12].lord;
+      if (st.planetRasiMap[l9] === st.planetRasiMap[l10]) yogas.push(`👑 Dharma-Karmadhipati Rajyoga (9th Lord ${l9} & 10th Lord ${l10} conjoined)`);
+      const dusthanaRasis = [(L + 5) % 12, (L + 7) % 12, (L + 11) % 12];
+      if (dusthanaRasis.includes(st.planetRasiMap[RASIS[(L + 5) % 12].lord])) yogas.push("🛡️ Harsha Vipareeta Rajyoga (6th Lord in Dusthana — victory over competitors & immunity)");
+      if (dusthanaRasis.includes(st.planetRasiMap[RASIS[(L + 7) % 12].lord])) yogas.push("⚡ Sarala Vipareeta Rajyoga (8th Lord in Dusthana — longevity, fearlessness & occult mastery)");
+      if (dusthanaRasis.includes(st.planetRasiMap[RASIS[(L + 11) % 12].lord])) yogas.push("💎 Vimala Vipareeta Rajyoga (12th Lord in Dusthana — independent wealth & noble character)");
+      if (yogas.length === 0) yogas.push("🌟 Standard Parashari Kendra-Trikona Sambandha active across Rasi & Navamsa.");
+      document.getElementById('detectedYogasContainer').innerHTML = yogas.map(y => `<div class="p-2 rounded-xl bg-slate-900 border border-slate-800">${y}</div>`).join('');
+
+      const punyaLon = norm360(st.planets.Moon.lon - st.planets.Sun.lon + st.lagnaLon);
+      const vidyaLon = norm360(st.planets.Sun.lon - st.planets.Moon.lon + st.lagnaLon);
+      const karmaLon = norm360(st.planets.Mars.lon - st.planets.Mercury.lon + st.lagnaLon);
+      const vivahaLon = norm360(st.planets.Venus.lon - st.planets.Saturn.lon + st.lagnaLon);
+      document.getElementById('computedSahamsContainer').innerHTML = [
+        `Punya (Fortuna) Saham: ${RASIS[Math.floor(punyaLon/30)%12].name} ${dmsString(punyaLon%30)}`,
+        `Vidya (Knowledge) Saham: ${RASIS[Math.floor(vidyaLon/30)%12].name} ${dmsString(vidyaLon%30)}`,
+        `Karma (Enterprise) Saham: ${RASIS[Math.floor(karmaLon/30)%12].name} ${dmsString(karmaLon%30)}`,
+        `Vivaha (Marriage) Saham: ${RASIS[Math.floor(vivahaLon/30)%12].name} ${dmsString(vivahaLon%30)}`
+      ].map(s => `<div class="p-1.5 px-2.5 rounded-lg bg-slate-900 border border-slate-800 text-purple-200">${s}</div>`).join('');
+    }
+
+    function selectMahadasaBhuktis(dasaIdx) {
+      const st = currentHoroscopeState;
+      const d = st?.dasaList?.[dasaIdx];
+      if (!d) return;
+      document.getElementById('selectedDasaHeader').textContent = `🔍 ${d.lord} Mahadasa Bhuktis`;
+      const startSubIdx = VIMSHOTTARI_ORDER.findIndex(v => v.lord === d.lord);
+      let curEnd = d.endYr - d.fullYrs;
+      let html = '';
+      for (let i = 0; i < 9; i++) {
+        const sub = VIMSHOTTARI_ORDER[(startSubIdx + i) % 9];
+        const subYrs = (d.fullYrs * sub.yrs) / 120;
+        curEnd += subYrs;
+        const totMonths = Math.round(subYrs * 12);
+        html += `<tr><td class="py-1.5 px-3 font-semibold text-white">${d.lord} – ${sub.lord}</td><td class="py-1.5 px-2 text-amber-300">${Math.floor(totMonths/12)}y ${totMonths%12}m</td><td class="py-1.5 px-2 text-slate-300">${curEnd.toFixed(1)}</td></tr>`;
+      }
+      document.getElementById('bhuktiTableBody').innerHTML = html;
+    }
+
+    // Palm Image Upload & Multimodal Gemini 2.5 Flash Synthesis
+    function handlePalmImageUpload(input) {
+      const file = input.files?.[0];
+      if (!file) return;
+      palmImageMime = file.type || 'image/jpeg';
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        palmImageBase64 = dataUrl.split(',')[1];
+        const img = document.getElementById('palmPreviewImg');
+        img.src = dataUrl; img.classList.remove('hidden');
+        document.getElementById('palmPlaceholderText').classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearPalmImage() {
+      palmImageBase64 = null; palmImageMime = null;
+      document.getElementById('palmPreviewImg').classList.add('hidden');
+      document.getElementById('palmPlaceholderText').classList.remove('hidden');
+    }
+
+    function buildOfflineClassicalSynthesis() {
+      const st = currentHoroscopeState;
+      const name = document.getElementById('nativeName')?.value.trim() || 'Native';
+      const L = st.lagnaVargas.rasiIdx;
+      return `JYOTISH & SAMUDRIKA SYNTHESIS FOR ${name.toUpperCase()}\n` +
+        `====================================================================\n` +
+        `1. BIRTH & LAGNA ARCHITECTURE (BRIHAT JATAKA & DR. B.V. RAMAN):\n` +
+        `• Born on ${st.dobStr} at ${st.tobStr} (${document.getElementById('birthPlaceName').value}) | LMT: ${formatHrsToClock(st.lmtHours)} | Ishtakala: ${document.getElementById('outIshtakala').textContent}.\n` +
+        `• Udaya Lagna: ${RASIS[L].name} (${RASIS[L].eng}) ruled by ${RASIS[L].lord} | Navamsa Lagna (D-9): ${st.lagnaVargas.d9Name} (${st.lagnaVargas.d9Lord}).\n` +
+        `• Special Ascendants: Arudha Lagna (AL) in ${RASIS[st.alRasi].name}, Upapada (UL) in ${RASIS[st.ulRasi].name}, Hora Lagna (HL) in ${RASIS[st.hlRasi].name}, Ghatika Lagna (GL) in ${RASIS[st.glRasi].name}.\n` +
+        `• Soul Significator (Chara Atmakaraka): ${st.atmakaraka}.\n\n` +
+        `2. LONGEVITY (AYURDAYA) & VIMSHOTTARI DASA TIMING (SANJAY RATH & KALIDASA):\n` +
+        `• Jaimini 3-Pairs Longevity Verdict: ${document.getElementById('outAyurCompartmentBadge').textContent}.\n` +
+        `• ${document.getElementById('outDasaBalanceBadge').textContent}.\n\n` +
+        `3. SAMUDRIKA SHASTRA & PALM CORRELATION:\n` +
+        `• Hand Examined: ${document.getElementById('palmHandType').value} | Karatala Tattva: ${document.getElementById('palmElementShape').value}.\n` +
+        `• Note: Save your free Gemini API Key in the top-right 'API Key' vault to unlock live AI Vision inspection of your uploaded palm photo alongside these exact Shadvarga and Dasa coordinates.`;
+    }
+
+    async function triggerFinalGenerateAndPopup() {
+      const baseReport = buildOfflineClassicalSynthesis();
+      document.getElementById('inlineReadingOutput').value = baseReport;
+      document.getElementById('outputParagraphs').value = baseReport;
+      saveCurrentChartToStorage(false);
+      document.getElementById('summaryPopupModal').classList.remove('hidden');
+      await runMultimodalGeminiAnalysis();
+    }
+
+    async function runMultimodalGeminiAnalysis() {
+      const apiKey = (localStorage.getItem('jyotish_gemini_api_key') || '').trim();
+      const banner = document.getElementById('aiStatusBanner');
+      if (!apiKey) {
+        if (banner) banner.textContent = "ℹ️ Offline Mathematical Synthesis Shown (Add Gemini API Key for AI Vision + Deep Reading)";
+        return;
+      }
+      const st = currentHoroscopeState;
+      const focus = document.getElementById('aiReadingFocus')?.value || 'COMPLETE';
+      const customQ = document.getElementById('palmCustomQuestion')?.value || '';
+      const checks = Array.from(document.querySelectorAll('.palm-focus-check:checked')).map(c => c.value).join('; ');
+
+      const promptText = `You are a master Vedic Astrologer (versed in Varahamihira's Brihat Jataka & Brihat Samhita, Kalidasa's Uttara Kalamrita, Daivagya Kamadhenu, Dr. B.V. Raman, and Pt. Sanjay Rath's Crux of Vedic Astrology) and Samudrika Shastra palmist.\n` +
+        `Analyze the following exact mathematical horoscope and ${palmImageBase64 ? 'the attached palm photograph' : 'the Samudrika hand parameters'}:\n` +
+        `Native: ${document.getElementById('nativeName').value || 'Native'} (${document.getElementById('nativeGender').value})\n` +
+        `DOB: ${st.dobStr}, TOB: ${st.tobStr}, Place: ${document.getElementById('birthPlaceName').value}\n` +
+        `Udaya Lagna: ${RASIS[st.lagnaVargas.rasiIdx].name} ${dmsString(st.lagnaVargas.deg)}, D-9 Navamsa Lagna: ${st.lagnaVargas.d9Name}\n` +
+        `Special Ascendants: AL=${RASIS[st.alRasi].name}, UL=${RASIS[st.ulRasi].name}, HL=${RASIS[st.hlRasi].name}, GL=${RASIS[st.glRasi].name}, SL=${RASIS[st.slRasi].name}, Atmakaraka=${st.atmakaraka}\n` +
+        `Planets: ${JSON.stringify(Object.values(st.planets).map(p => ({ g: p.name, rasi: p.vargas.d1, deg: dmsString(p.degInSign), nak: p.nak.name, pada: p.pada, d9: p.vargas.d9Name, ck: p.karaka, avastha: p.avastha })))}\n` +
+        `Palm Focus: ${checks} | User Question: ${customQ} | Focus Mode: ${focus}\n` +
+        `Provide a structured, authoritative synthesis covering: (1) Lagna, Atmakaraka & Arudha Lagna Personality, (2) Palm Rekha & Graha Parvata Cross-Verification with Kundali, (3) Career, Wealth (Dhana/Sudasa) & Relationships (Upapada/Navamsa), (4) Vimshottari Dasa & Sudarshan Chakra Timing, and (5) Classical Vedic Remedies (Ista Devata & Mantra).`;
+
+      const parts = [{ text: promptText }];
+      if (palmImageBase64) parts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
+
+      try {
+        if (banner) banner.textContent = "🔄 Gemini 2.5 Flash analyzing Kundali & Palm Vision...";
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts }] })
+        });
+        const data = await res.json();
+        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (reply) {
+          document.getElementById('inlineReadingOutput').value = reply;
+          document.getElementById('outputParagraphs').value = reply;
+          if (banner) banner.textContent = "✅ Multimodal Jyotish + Palm Vision Synthesis Complete";
+        } else {
+          if (banner) banner.textContent = "⚠️ API Error: " + (data?.error?.message || "Check API Key");
+        }
+      } catch (e) { if (banner) banner.textContent = "⚠️ Network error calling Gemini API."; }
+    }
+
+    // UI Controls, Orbit Layout, Slide-In Rail & Keyboard Shortcuts
+    let currentOrbitSectionIndex = 0, railFocusedSecIndex = null, lastCursorX = 0;
+    function getAllMainSections() { return Array.from(document.querySelectorAll('#orbitCenterStage > details.orbit-section-card')); }
+    function toggleSidebar() {
+      const sb = document.getElementById('leftSidebar'), ov = document.getElementById('sidebarOverlay');
+      const isClosed = sb.classList.contains('-translate-x-full');
+      sb.classList.toggle('-translate-x-full', !isClosed); ov.classList.toggle('hidden', !isClosed);
+      syncPopupBackgroundBlurState();
+    }
+    function toggleAccountPopup(e) { e.stopPropagation(); document.getElementById('accountPopup').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function closeAccountPopup() { document.getElementById('accountPopup').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function openProfileModal() { document.getElementById('profileModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function openStorageModal() { renderStorageTable(); document.getElementById('storageModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeStorageModal() { document.getElementById('storageModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function toggleApiVaultModal() { document.getElementById('apiVaultModal').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function toggleSettingsModal() { document.getElementById('settingsModal').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeAboutModal() { document.getElementById('aboutModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function closeSummaryPopupModal() { document.getElementById('summaryPopupModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+
+    function syncPopupBackgroundBlurState() {
+      const sb = document.getElementById('leftSidebar');
+      const isMoreOpen = sb && !sb.classList.contains('-translate-x-full');
+      const modals = ['profileModal', 'storageModal', 'apiVaultModal', 'settingsModal', 'aboutModal', 'summaryPopupModal', 'shortcutsModal'];
+      const anyModal = modals.some(id => { const el = document.getElementById(id); return el && !el.classList.contains('hidden'); });
+      document.body.classList.toggle('popup-blur-active', Boolean(isMoreOpen || anyModal));
+    }
+
+    function saveApiKeyToVault() {
+      const k = document.getElementById('apiKeyInput').value.trim();
+      if (k) localStorage.setItem('jyotish_gemini_api_key', k);
+      document.getElementById('headerKeyStatusText').textContent = k ? 'Key Active' : 'API Key';
+      toggleApiVaultModal();
+    }
+    function handleVaultLock() { localStorage.removeItem('jyotish_gemini_api_key'); document.getElementById('headerKeyStatusText').textContent = 'API Key'; }
+    function setTheme(mode) { document.documentElement.classList.toggle('dark', mode === 'dark'); localStorage.setItem('jyotish_theme', mode); }
+    function copyReadingOutput(id) { navigator.clipboard.writeText(document.getElementById(id).value); alert('Copied reading to clipboard!'); }
+    function shareReadingWhatsApp() { window.open('https://wa.me/?text=' + encodeURIComponent(document.getElementById('inlineReadingOutput').value), '_blank'); }
+    function resetForm() { if (confirm('Reset form to defaults?')) window.location.reload(); }
+    function deleteAllUserData() { if (confirm('Permanently erase all saved horoscopes and API keys?')) { localStorage.clear(); window.location.reload(); } }
+
+    function getStoredCharts() { try { return JSON.parse(localStorage.getItem('jyotish_saved_charts_v1') || '[]'); } catch { return []; } }
+    function saveCurrentChartToStorage(toast = false) {
+      const st = currentHoroscopeState; if (!st) return;
+      const name = document.getElementById('nativeName').value.trim() || 'Unnamed Native';
+      const charts = getStoredCharts().filter(c => c.name.toLowerCase() !== name.toLowerCase());
+      charts.unshift({ id: 'ch_' + Date.now(), name, dob: st.dobStr, tob: st.tobStr, place: document.getElementById('birthPlaceName').value, lagna: RASIS[st.lagnaVargas.rasiIdx].name, rasi: st.planets.Moon.vargas.d1, lat: st.lat, lon: st.lon, reading: document.getElementById('inlineReadingOutput').value });
+      localStorage.setItem('jyotish_saved_charts_v1', JSON.stringify(charts));
+      document.getElementById('sidebarCaseCount').textContent = charts.length;
+      if (toast) alert('Horoscope saved!');
+    }
+    function renderStorageTable() {
+      const charts = getStoredCharts();
+      document.getElementById('storageTableBody').innerHTML = charts.length === 0 ? `<tr><td colspan="4" class="py-6 text-center text-slate-500">No saved horoscopes yet.</td></tr>` : charts.map(c => `<tr class="hover:bg-slate-800"><td class="py-2 px-3.5 font-bold text-blue-400 cursor-pointer" onclick="loadSavedChart('${c.id}')">${c.name}</td><td class="py-2 px-3">${c.dob} ${c.tob} (${c.place})</td><td class="py-2 px-3">${c.lagna} / ${c.rasi}</td><td class="py-2 px-3 text-right"><button onclick="deleteSavedChart('${c.id}')" class="text-rose-400">Delete</button></td></tr>`).join('');
+    }
+    function loadSavedChart(id) {
+      const c = getStoredCharts().find(x => x.id === id); if (!c) return;
+      document.getElementById('nativeName').value = c.name; document.getElementById('birthDate').value = c.dob; document.getElementById('birthTime').value = c.tob;
+      document.getElementById('birthPlaceName').value = c.place; document.getElementById('birthLat').value = c.lat; document.getElementById('birthLon').value = c.lon;
+      document.getElementById('inlineReadingOutput').value = c.reading || '';
+      closeStorageModal(); computeFullHoroscope();
+    }
+    function deleteSavedChart(id) { localStorage.setItem('jyotish_saved_charts_v1', JSON.stringify(getStoredCharts().filter(x => x.id !== id))); renderStorageTable(); }
+    function handleChartSearch(q) {
+      const clean = q.trim().toLowerCase();
+      if (clean === 'codes') { clearChartSearch(); alert('Shortcuts:\n• ← / → : Prev / Next Section\n• Ctrl + → : Open Right Rail\n• Ctrl + ← : Open More Menu\n• ↑ / ↓ + Enter : Browse & Select in Rail\n• Ctrl + Shift : Close Any Popup\n• Ctrl + S : Save Horoscope\n• Tab : Focus Search Bar'); return; }
+      const drop = document.getElementById('searchResultsDropdown');
+      const matches = getStoredCharts().filter(c => c.name.toLowerCase().includes(clean));
+      drop.innerHTML = matches.map(c => `<div onclick="loadSavedChart('${c.id}'); clearChartSearch();" class="px-4 py-2 hover:bg-slate-700 cursor-pointer text-xs font-bold">${c.name} — ${c.lagna} Lagna</div>`).join('');
+      drop.classList.toggle('hidden', !clean || matches.length === 0);
+    }
+    function clearChartSearch() { document.getElementById('headerCaseSearch').value = ''; document.getElementById('searchResultsDropdown').classList.add('hidden'); }
+    function handleProfilePicUpload(input) {
+      const f = input.files?.[0]; if (!f) return;
+      const r = new FileReader(); r.onload = (e) => { localStorage.setItem('jyotish_avatar', e.target.result); loadAstrologerProfile(); }; r.readAsDataURL(f);
+    }
+    function saveAstrologerProfile() {
+      localStorage.setItem('jyotish_prof_name', document.getElementById('profName').value.trim() || 'Acharya Danny');
+      localStorage.setItem('jyotish_prof_inst', document.getElementById('profInstitution').value.trim() || 'Jyotish & Samudrika Shastra');
+      loadAstrologerProfile(); closeProfileModal();
+    }
+    function loadAstrologerProfile() {
+      const av = localStorage.getItem('jyotish_avatar') || DEFAULT_AVATAR_SVG;
+      const nm = localStorage.getItem('jyotish_prof_name') || 'Acharya Satyapriya';
+      const inst = localStorage.getItem('jyotish_prof_inst') || 'Jyotish & Samudrika Shastra';
+      ['headerAvatarImg', 'popupAvatarImg', 'sidebarAvatarImg', 'profileModalAvatarPreview'].forEach(id => { const el = document.getElementById(id); if (el) el.src = av; });
+      document.getElementById('popupUserName').textContent = nm; document.getElementById('sidebarProfileName').textContent = nm;
+      document.getElementById('popupUserMeta').textContent = inst; document.getElementById('sidebarProfileCourse').textContent = inst;
+    }
+
+    function initOrbitWorkspace() {
+      const mainEl = document.querySelector('main'), sections = Array.from(mainEl.querySelectorAll(':scope > details')), footer = mainEl.querySelector('footer');
+      const wrap = document.createElement('div'); wrap.id = 'orbitWorkspaceWrapper'; wrap.className = 'grid grid-cols-1 lg:grid-cols-12 gap-5 items-start';
+      const stage = document.createElement('div'); stage.id = 'orbitCenterStage'; stage.className = 'lg:col-span-12 orbit-center-stage';
+      const rail = document.createElement('aside'); rail.id = 'rightSectionRail'; rail.className = 'hidden lg:block rounded-2xl p-2.5 space-y-1.5 overflow-y-auto';
+      const track = document.createElement('div'); track.id = 'rightRailSliderTrack'; track.className = 'hidden lg:block'; track.innerHTML = '<div id="rightRailSliderThumb"></div>';
+      mainEl.insertBefore(wrap, footer); wrap.appendChild(stage); document.body.appendChild(rail); document.body.appendChild(track);
+
+      sections.forEach((sec, idx) => {
+        sec.open = true; sec.classList.add('orbit-section-card'); if (idx === 0) sec.classList.add('orbit-active');
+        const bodyDiv = sec.querySelector(':scope > div');
+        const nav = document.createElement('div'); nav.className = 'flex items-center justify-between pt-3 mt-4 border-t border-slate-800';
+        nav.innerHTML = (idx > 0 ? `<button type="button" onclick="switchToOrbitSection(${idx-1})" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">⬅ Prev</button>` : `<span></span>`) +
+          (idx < sections.length - 1 ? `<button type="button" onclick="switchToOrbitSection(${idx+1})" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">Next ➔</button>` : `<button type="button" onclick="triggerFinalGenerateAndPopup()" class="chrome-pill-btn text-xs gemini-jyotish-fab text-white px-6 py-2.5 shadow-lg font-bold">Generate</button>`);
+        bodyDiv.appendChild(nav); stage.appendChild(sec);
+      });
+      rail.innerHTML = sections.map((s, i) => `<button type="button" data-sec-idx="${i}" onclick="switchToOrbitSection(${i})" class="rail-item-btn ${i===0?'rail-active':''} w-full text-left text-xs truncate">${s.querySelector('summary span').textContent}</button>`).join('');
+      document.addEventListener('mousemove', (e) => {
+        const vw = window.innerWidth, lw = vw - 9, isOpen = rail.classList.contains('rail-open');
+        if (!isOpen && e.clientY > 55 && e.clientX >= lastCursorX && e.clientX >= lw - 22) rail.classList.add('rail-open');
+        else if (isOpen && (e.clientX > lw + 3 || e.clientX < vw - 296)) rail.classList.remove('rail-open');
+        lastCursorX = e.clientX;
+      }, { passive: true });
+    }
+
+    function switchToOrbitSection(idx) {
+      const secs = getAllMainSections(); if (idx < 0 || idx >= secs.length) return;
+      secs.forEach((s, i) => s.classList.toggle('orbit-active', i === idx));
+      currentOrbitSectionIndex = idx;
+      document.querySelectorAll('#rightSectionRail .rail-item-btn').forEach((b, i) => b.classList.toggle('rail-active', i === idx));
+      const thumb = document.getElementById('rightRailSliderThumb'), track = document.getElementById('rightRailSliderTrack');
+      if (thumb && track) thumb.style.transform = `translate3d(0, ${Math.round((idx / (secs.length - 1)) * (track.clientHeight - 40)) + 2}px, 0)`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAstrologerProfile(); initOrbitWorkspace(); computeFullHoroscope();
+      if (localStorage.getItem('jyotish_gemini_api_key')) document.getElementById('headerKeyStatusText').textContent = 'Key Active';
+      document.getElementById('sidebarCaseCount').textContent = getStoredCharts().length;
+    });
+  </script>
+</body>
+</html>
