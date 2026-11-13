@@ -98,42 +98,126 @@
       border: 2px solid #000000 !important; color: #ffffff !important; font-weight: 700 !important;
     }
 
-    /* Orbit Section Cards & Right Vertical Slider Rail */
-    main details.orbit-section-card { display: none; opacity: 0; pointer-events: none; }
-    main details.orbit-section-card.orbit-active { display: block; opacity: 1; pointer-events: auto; }
+/* Center Stage & Buttery-Smooth 3D Orbit Section Transitions (Matches Peds History) */
+    #orbitWorkspaceWrapper { position: relative; }
+    .orbit-center-stage { position: relative; min-height: 520px; }
+    #orbitCenterStage > details.orbit-section-card > summary { cursor: default !important; user-select: none; }
+    #orbitCenterStage > details.orbit-section-card > summary > span:nth-child(2) { display: none !important; }
+
+    main details.orbit-section-card {
+      display: none; opacity: 0; pointer-events: none;
+      transform: translate3d(30px, 0, 0) scale(0.98);
+      transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    main details.orbit-section-card.orbit-active {
+      display: block; opacity: 1; pointer-events: auto;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    main details.orbit-section-card.orbit-leaving {
+      display: block; position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+      pointer-events: none; animation: smoothOrbitOut 0.38s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    main details.orbit-section-card.orbit-entering {
+      display: block; position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+      pointer-events: none; animation: smoothOrbitIn 0.38s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+    @keyframes smoothOrbitOut {
+      0% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+      100% { opacity: 0; transform: translate3d(-35px, 0, 0) scale(0.96); }
+    }
+    @keyframes smoothOrbitIn {
+      0% { opacity: 0; transform: translate3d(35px, 0, 0) scale(0.96); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+    }
+
+    /* 2 White Vertical Lines Slider Track & Solid Opaque #1e293b Slide-In Rail */
     #rightRailSliderTrack {
       position: fixed; top: 58px; right: 4px; width: 5px; height: calc(100vh - 130px);
-      background: rgba(255,255,255,0.55); border-left: 1.5px solid #fff; border-right: 1.5px solid #fff;
-      border-radius: 9999px; z-index: 46;
+      background: rgba(255, 255, 255, 0.55);
+      border-left: 1.5px solid rgba(255, 255, 255, 0.95);
+      border-right: 1.5px solid rgba(255, 255, 255, 0.95);
+      border-radius: 9999px; z-index: 46; contain: layout style paint;
     }
     #rightRailSliderThumb {
       position: absolute; top: 0; left: -1px; right: -1px; height: 36px;
-      border-radius: 9999px; background: #3b82f6; transition: transform 0.22s ease;
+      border-radius: 9999px; background: #3b82f6; will-change: transform;
+      transform: translate3d(0, 2px, 0); transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
     }
     #rightSectionRail {
-      position: fixed !important; top: 58px !important; right: 9px !important; width: 280px !important;
+      position: fixed !important; top: 58px !important; right: 9px !important; width: 288px !important;
       max-height: calc(100vh - 130px) !important; z-index: 45 !important;
       background-color: #1e293b !important; border: 1px solid #334155 !important;
-      box-shadow: -12px 12px 32px rgba(2,6,23,0.75) !important;
+      box-shadow: -12px 12px 32px rgba(2, 6, 23, 0.75) !important; color: #e2e8f0 !important;
+      -webkit-font-smoothing: subpixel-antialiased; text-rendering: optimizeLegibility;
       transform: translateX(calc(100% + 16px)); opacity: 0; pointer-events: none;
       transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.16s ease;
+      scrollbar-width: none;
     }
+    #rightSectionRail::-webkit-scrollbar { display: none; }
     #rightSectionRail.rail-open { transform: none; opacity: 1; pointer-events: auto; }
+
+    /* Uniform Section 7 Pill Cabinets + Hover & Keyboard Focus Pop-Out */
     .rail-item-btn {
-      background-color: #0f172a !important; border: 1.5px solid #60a5fa !important;
-      color: #ffffff !important; font-weight: 600 !important; border-radius: 9999px !important;
-      padding: 0.5rem 1rem !important; transition: transform 0.14s ease, border-color 0.14s ease;
+      position: relative; background-color: #0f172a !important;
+      border: 1.5px solid #60a5fa !important; color: #ffffff !important;
+      font-weight: 600 !important; letter-spacing: 0.01em; border-radius: 9999px !important;
+      padding: 0.5rem 1rem !important; box-shadow: 0 2px 8px rgba(2, 6, 23, 0.45);
+      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
     }
     .rail-item-btn:hover, .rail-item-btn.rail-kb-focus {
-      border-color: #ffffff !important; transform: translateX(-7px) scale(1.03);
+      background-color: #0f172a !important; border-color: #ffffff !important; color: #ffffff !important;
+      transform: translateX(-7px) scale(1.03); box-shadow: 0 6px 18px rgba(59, 130, 246, 0.55); z-index: 5;
     }
     .rail-item-btn.rail-active {
       background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%) !important;
-      border-color: #bfdbfe !important; transform: translateX(-4px);
+      color: #ffffff !important; border-color: #bfdbfe !important; transform: translateX(-4px);
     }
+    .rail-item-btn.rail-active:hover, .rail-item-btn.rail-active.rail-kb-focus {
+      transform: translateX(-8px) scale(1.035); border-color: #ffffff !important;
+    }
+
+    /* Keyboard Arrow Highlight Inside Left "More" Sidebar */
+    #leftSidebar .more-kb-focus {
+      outline: 2px solid #60a5fa !important; background-color: #1e293b !important;
+      color: #ffffff !important; transform: translateX(5px);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: all 0.14s ease;
+    }
+
+    /* Forensic Watermark, Anti-Capture Shield & Mobile Bottom Swipe Rail */
+    #forensicWatermark {
+      position: fixed; inset: 0; pointer-events: none; z-index: 35; overflow: hidden;
+      opacity: 0.055; display: flex; flex-wrap: wrap; align-content: space-around;
+      justify-content: space-around; user-select: none; contain: strict; transform: translate3d(0,0,0);
+    }
+    .watermark-stamp {
+      transform: rotate(-24deg); font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700; white-space: nowrap; padding: 2rem; color: currentColor;
+    }
+    body.capture-shield-active #antiCaptureCurtain { display: flex !important; }
+    body.capture-shield-active main, body.capture-shield-active header { filter: blur(28px) brightness(0.1); }
+    #mobileBottomRail {
+      overflow-x: auto; -webkit-overflow-scrolling: touch; touch-action: pan-x;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    #mobileBottomRail::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+    /* Search Bar Transparency & Full Background Blur When Any Popup/Sidebar Opens */
     #headerCaseSearch { background-color: transparent !important; border: none !important; box-shadow: none !important; }
-    body.popup-blur-active > header, body.popup-blur-active > main, body.popup-blur-active > #rightRailSliderTrack, body.popup-blur-active > #rightSectionRail {
-      filter: blur(9px) brightness(0.55); pointer-events: none; user-select: none;
+    .hidden .google-avatar-ring::before, .-translate-x-full .google-avatar-ring::before,
+    body.popup-blur-active .google-avatar-ring::before, body.account-popup-blur-active .google-avatar-ring::before {
+      animation-play-state: paused !important;
+    }
+    body.popup-blur-active > header, body.popup-blur-active > main, body.popup-blur-active > #geminiFloatBtn,
+    body.popup-blur-active > #rightRailSliderTrack, body.popup-blur-active > #rightSectionRail, body.popup-blur-active > #mobileBottomRail {
+      filter: blur(9px) brightness(0.55); pointer-events: none; user-select: none; transition: filter 0.2s ease;
+    }
+    body.account-popup-blur-active > main, body.account-popup-blur-active > #geminiFloatBtn,
+    body.account-popup-blur-active > #rightRailSliderTrack, body.account-popup-blur-active > #rightSectionRail,
+    body.account-popup-blur-active > #mobileBottomRail, body.account-popup-blur-active > header > div > div:nth-child(1),
+    body.account-popup-blur-active > header > div > div:nth-child(2),
+    body.account-popup-blur-active > header button[onclick*="saveCurrentChartToStorage"],
+    body.account-popup-blur-active > header #headerLoginBtn, body.account-popup-blur-active > header #headerAvatarBtn {
+      filter: blur(9px) brightness(0.55); transition: filter 0.2s ease;
     }
   </style>
 </head>
@@ -170,61 +254,68 @@
         <div id="searchResultsDropdown" class="hidden absolute left-0 right-0 mt-2 bg-slate-800 text-slate-100 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
       </div>
 
-      <!-- 3.3 Extreme Right: Save Chart + API Key Vault + Revolving Bead Avatar -->
+<!-- 3.3 Extreme Right: Save Chart + Sign-In Pill OR Revolving Bead Profile Avatar -->
       <div class="flex items-center gap-2 shrink-0 relative">
-        <button onclick="saveCurrentChartToStorage(true)" class="chrome-pill-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 border border-slate-700 hidden md:inline-flex" title="Save Horoscope (Ctrl+S)">
+        <button onclick="saveCurrentChartToStorage(true)" class="chrome-pill-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 border border-slate-700 hidden md:inline-flex" title="Save Horoscope to Storage (Ctrl+S)">
           <span>💾</span> <span>Save Chart</span>
         </button>
-        <button onclick="toggleApiVaultModal()" id="headerKeyBtn" class="chrome-pill-btn text-xs bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 px-3 py-1.5">
-          <span>🔑</span> <span id="headerKeyStatusText">API Key</span>
+
+        <!-- State A (Logged Out): Chrome Pill Sign-In Button -->
+        <button id="headerLoginBtn" onclick="toggleLoginModal()" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 shadow">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span>Sign in</span>
         </button>
-        <button id="headerAvatarBtn" onclick="toggleAccountPopup(event)" class="inline-flex items-center justify-center p-0 rounded-full focus:outline-none" title="Daivagya Profile">
+
+        <!-- State B (Logged In): Circular Profile Picture with Revolving Colored Beads -->
+        <button id="headerAvatarBtn" onclick="toggleAccountPopup(event)" class="hidden inline-flex items-center justify-center p-0 leading-none rounded-full focus:outline-none" title="Google Account &amp; Logout">
           <span class="google-avatar-ring">
             <img id="headerAvatarImg" src="" alt="Profile" class="w-8 h-8 google-avatar-inner" />
           </span>
         </button>
+
+        <!-- 3.4 Upper-Right Account Popup Window (Includes 1-Device Lock Active Status & Crisp Logout) -->
+        <div id="accountPopup" class="hidden absolute right-0 top-12 w-72 bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-700 p-4 z-50">
+          <div class="flex justify-between items-center mb-2">
+            <span id="popupUserEmail" class="text-[11px] text-slate-300 truncate font-medium">user@gmail.com</span>
+            <button onclick="closeAccountPopup()" class="text-slate-400 hover:text-white text-base leading-none">&times;</button>
+          </div>
+          <div class="flex flex-col items-center text-center py-2">
+            <div class="mb-2 cursor-pointer" onclick="closeAccountPopup(); openProfileModal();">
+              <img id="popupAvatarImg" src="" alt="Profile" class="w-16 h-16 rounded-full object-cover border-2 border-slate-700 bg-slate-800" />
+            </div>
+            <div id="popupUserName" class="font-bold text-sm">Acharya Profile</div>
+            <div id="popupUserMeta" class="text-[11px] text-slate-400 mt-0.5">MBBS • Jyotish &amp; Samudrika</div>
+            <span id="deviceLockBadge" class="mt-2 inline-flex items-center gap-1 text-[10px] bg-emerald-950/90 text-emerald-300 border border-emerald-700/60 px-2.5 py-0.5 rounded-full font-jyotish-mono">
+              🛡️ 1-Device Lock Active
+            </span>
+            <button onclick="closeAccountPopup(); openProfileModal();" class="mt-2.5 text-xs border border-slate-600 hover:bg-slate-800 text-blue-300 px-4 py-1 rounded-full font-medium transition-colors">
+              Manage your Daivagya Profile
+            </button>
+          </div>
+          <div class="border-t border-slate-800 my-3"></div>
+          <div class="space-y-1.5 text-xs">
+            <button onclick="closeAccountPopup(); toggleLoginModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
+              <span>🔑</span> <span>API Vault Key Status</span>
+            </button>
+            <button onclick="closeAccountPopup(); toggleSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
+              <span>⚙️</span> <span>Settings &amp; Privacy Lock</span>
+            </button>
+          </div>
+          <div class="pt-3 mt-2 border-t border-slate-800 flex justify-center">
+            <button onclick="closeAccountPopup(); handleMedicoLogout();" class="chrome-pill-btn logout-crisp-btn justify-center px-7 py-2 rounded-full text-xs">
+              <span>Log out</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
-  
-  <!-- ==========================================================================
-     [SECTION 04] ACCOUNT POPUP & SLIDE-OUT LEFT "MORE" SIDEBAR DRAWER
-     ========================================================================== -->
-  <!-- 4.1 Upper-Right Daivagya Account Popup Window -->
-  <div id="accountPopup" class="hidden fixed right-3 top-14 w-72 bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-700 p-4 z-50">
-    <div class="flex justify-between items-center mb-2">
-      <span id="popupUserEmail" class="text-[11px] text-slate-300 truncate font-medium">daivagya@jyotish.ai</span>
-      <button onclick="closeAccountPopup()" class="text-slate-400 hover:text-white text-base leading-none">&times;</button>
-    </div>
-    <div class="flex flex-col items-center text-center py-2">
-      <div class="mb-2 cursor-pointer" onclick="closeAccountPopup(); openProfileModal();">
-        <img id="popupAvatarImg" src="" alt="Profile" class="w-16 h-16 rounded-full object-cover border-2 border-slate-700 bg-slate-800" />
-      </div>
-      <div id="popupUserName" class="font-bold text-sm">Acharya Danny</div>
-      <div id="popupUserMeta" class="text-[11px] text-slate-400 mt-0.5">Jyotish &amp; Samudrika Researcher</div>
-      <span id="deviceLockBadge" class="mt-2 inline-flex items-center gap-1 text-[10px] bg-emerald-950/90 text-emerald-300 border border-emerald-700/60 px-2.5 py-0.5 rounded-full font-jyotish-mono">
-        🛡️ Local-First Protected Vault
-      </span>
-      <button onclick="closeAccountPopup(); openProfileModal();" class="mt-2.5 text-xs border border-slate-600 hover:bg-slate-800 text-blue-300 px-4 py-1 rounded-full font-medium transition-colors">
-        Manage Astrologer Profile
-      </button>
-    </div>
-    <div class="border-t border-slate-800 my-3"></div>
-    <div class="space-y-1.5 text-xs">
-      <button onclick="closeAccountPopup(); toggleApiVaultModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
-        <span>🔑</span> <span>Gemini AI API Key Vault</span>
-      </button>
-      <button onclick="closeAccountPopup(); toggleSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
-        <span>⚙️</span> <span>Ayanamsa &amp; Display Settings</span>
-      </button>
-    </div>
-    <div class="pt-3 mt-2 border-t border-slate-800 flex justify-center">
-      <button onclick="closeAccountPopup(); handleVaultLock();" class="chrome-pill-btn logout-crisp-btn justify-center px-7 py-2 rounded-full text-xs">
-        <span>Log out</span>
-      </button>
-    </div>
-  </div>
 
+<!-- ==========================================================================
+     [SECTION 04] SLIDE-OUT LEFT "MORE" SIDEBAR DRAWER
+     ========================================================================== -->
   <!-- 4.2 Left Sidebar Backdrop & Slide-Out Drawer -->
   <div id="sidebarOverlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-slate-950/60 z-40 transition-opacity"></div>
 
@@ -798,48 +889,101 @@
     </div>
   </div>
 
-  <!-- 9.2 Modal 1: Acharya Profile Modal (Clean Avatar + 3D Blue Save Button) -->
-  <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
-    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-700">
+<!-- 9.2 Anti-Capture Privacy Curtain, Forensic Watermark, Floating Gemini FAB & Mobile Rail -->
+  <div id="antiCaptureCurtain" class="hidden fixed inset-0 z-[95] bg-slate-950/95 text-white flex-col items-center justify-center p-6 text-center select-none">
+    <div class="text-4xl mb-3">🛡️</div>
+    <h3 class="text-lg font-bold">Protected Jyotish &amp; Samudrika Screen</h3>
+    <p class="text-xs text-slate-400 max-w-md mt-1">Screen capture, printing, and unauthorized window recording are restricted. Click anywhere on the page to resume.</p>
+  </div>
+  <div id="forensicWatermark" aria-hidden="true"></div>
+
+  <button id="geminiFloatBtn" onclick="toggleGeminiModal()" class="fixed bottom-16 lg:bottom-5 right-5 z-40 gemini-jyotish-fab text-white px-4 py-3 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 hover:scale-105 active:scale-95 transition-all">
+    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z"/></svg>
+    <span>Ask Gemini</span>
+  </button>
+  <div id="mobileBottomRail" class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-slate-900/95 border-t border-slate-800 px-2 py-2 flex items-center gap-1.5 overflow-x-auto shadow-2xl"></div>
+
+  <!-- 9.3 Modal 1: Astrologer / Medico Profile Page (Clean Circular Avatar + 3D Blue Save) -->
+  <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="modal-card bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700">
       <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
         <div>
-          <h3 class="font-extrabold text-sm">👤 Astrologer Profile</h3>
-          <p class="text-[11px] text-slate-400">Personalize your Daivagya details &amp; avatar</p>
+          <h3 class="font-extrabold text-sm tracking-tight">👤 Daivagya / Medico Profile</h3>
+          <p class="text-[11px] text-slate-400">Personalize your details &amp; avatar across your apps</p>
         </div>
-        <button onclick="closeProfileModal()" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 text-lg font-bold">&times;</button>
+        <button onclick="closeProfileModal()" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 text-lg font-bold transition-colors">&times;</button>
       </div>
       <div class="p-5 space-y-4 text-xs">
-        <div class="flex flex-col items-center gap-2.5 pb-3 border-b border-slate-800">
-          <div class="p-1 rounded-full bg-slate-800 border border-slate-600 shadow-lg">
-            <img id="profileModalAvatarPreview" src="" alt="Preview" class="w-20 h-20 rounded-full object-cover block bg-slate-900" />
+        <div class="flex flex-col items-center gap-2.5 pb-3 border-b border-slate-200 dark:border-slate-700/80">
+          <div class="p-1 rounded-full bg-slate-800/90 border border-slate-600 shadow-lg">
+            <img id="profileModalAvatarPreview" src="" alt="Profile Preview" class="w-20 h-20 rounded-full object-cover block bg-slate-900" />
           </div>
-          <label class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 text-[11px] shadow-sm">
-            <span>📷 Upload Photo</span>
-            <input type="file" accept="image/*" onchange="handleProfilePicUpload(this)" class="hidden" />
-          </label>
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-0.5">
+            <label class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 text-[11px] shadow-sm border border-blue-400/30">
+              <span>📷 Upload Photo</span>
+              <input type="file" accept="image/*" onchange="handleProfilePicUpload(this)" class="hidden" />
+            </label>
+            <button type="button" onclick="resetProfilePicToGoogle()" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-1.5 text-[11px] border border-slate-600 shadow-sm">
+              <span>🔄 Use Google Photo</span>
+            </button>
+          </div>
         </div>
         <div class="space-y-3">
-          <div><label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Full Name</label><input id="profName" type="text" placeholder="e.g., Satyapriya Srinivash" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" /></div>
-          <div><label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Lineage / Institution</label><input id="profInstitution" type="text" placeholder="e.g., Jyotish &amp; Samudrika Shastra" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" /></div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Full Name</label>
+            <input id="profName" type="text" placeholder="e.g., Dr. Satyapriya Srinivash" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Phone Number</label>
+              <input id="profPhone" type="tel" placeholder="e.g., +91 98765 43210" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm font-jyotish-mono bg-slate-950 text-white" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Course / Batch / Lineage</label>
+              <input id="profCourse" type="text" placeholder="e.g., MBBS (Prof 2nd) • Jyotish" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">Educational Institution / Medical College</label>
+            <input id="profInstitution" type="text" placeholder="e.g., Shri Shankaracharya Institute of Medical Sciences" class="w-full border border-slate-700 rounded-xl px-3 py-2 text-sm bg-slate-950 text-white" />
+          </div>
         </div>
-        <div class="pt-3 border-t border-slate-800 flex justify-center">
+        <div class="pt-3 border-t border-slate-200 dark:border-slate-700/80 flex justify-center">
           <button onclick="saveAstrologerProfile()" class="chrome-pill-btn save-3d-blue-btn justify-center px-8 py-2 rounded-full text-xs"><span>Save</span></button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 9.3 Modal 2: Saved Horoscopes Storage Directory -->
-  <div id="storageModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
-    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-700 flex flex-col max-h-[88vh]">
-      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+  <!-- 9.4 Modal 2: Saved Horoscopes & 2-Column Google Sheet Auto-Sync -->
+  <div id="storageModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-700 flex flex-col max-h-[90vh]">
+      <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
         <div>
-          <h3 class="font-bold text-sm">🗄️ Saved Horoscopes &amp; Palm Records</h3>
-          <p class="text-[11px] text-slate-400">Click any native's name to restore their Kundali &amp; AI reading</p>
+          <h3 class="font-bold text-sm">🗄️ Horoscope Storage &amp; 2-Column Google Sheet Sync</h3>
+          <p class="text-[11px] text-slate-400">Click any native's name to open their Kundali or sync hyperlinked names to Google Sheets</p>
         </div>
         <button onclick="closeStorageModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
       </div>
-      <div class="p-5 overflow-y-auto flex-1 text-xs">
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-blue-950/40 p-3 rounded-2xl border border-blue-800/60">
+          <div>
+            <span class="font-bold text-blue-300">2-Column Google Sheet Export:</span>
+            <span class="text-blue-200/80 ml-1">Copies Native Name (with clickable URL) + Lagna/Rasi</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="saveCurrentChartToStorage(true)" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 text-[11px]">💾 Save Current</button>
+            <button onclick="copyTwoColGoogleSheet()" class="chrome-pill-btn bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-[11px]">📊 Copy 2-Col for Sheet</button>
+            <button onclick="exportCasesJSON()" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1.5 text-[11px] border border-slate-700">⬇ Backup</button>
+          </div>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+          <label class="block font-bold text-slate-300 text-[11px]">🔗 Optional: Google Sheet Web App URL (Auto-pushes 2-Column Hyperlinked Row on Save)</label>
+          <div class="flex gap-2">
+            <input id="sheetWebhookUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs bg-slate-900 text-white" />
+            <button onclick="saveSheetWebhookUrl()" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-white px-3.5 py-1.5 text-[11px] border border-slate-700">Save URL</button>
+          </div>
+        </div>
         <div class="border border-slate-800 rounded-2xl overflow-hidden">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -857,81 +1001,129 @@
     </div>
   </div>
 
-  <!-- 9.4 Modal 3: Gemini AI API Key Vault -->
-  <div id="apiVaultModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
-    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-amber-500/40">
-      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
+  <!-- 9.5 Modal 3: Cloud API Vault & Admin Allowed Gmails Gate (Matches Peds History #loginModal) -->
+  <div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-700 max-h-[90vh] flex flex-col">
+      <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
         <div>
-          <h3 class="font-bold text-sm">🔑 Gemini AI API Key Vault</h3>
-          <p class="text-[11px] text-slate-400">Powers Multimodal Palm Vision &amp; Classical Jyotish Synthesis</p>
+          <h3 class="font-bold text-sm">🔐 Medico / Daivagya Cloud API Vault</h3>
+          <p class="text-[11px] text-slate-400">1-Device Session Lock &amp; Personal Gemini Key Sync</p>
         </div>
-        <button onclick="toggleApiVaultModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+        <button onclick="toggleLoginModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
       </div>
-      <div class="p-5 space-y-3.5 text-xs">
-        <div class="bg-amber-950/40 border border-amber-700/50 p-3 rounded-2xl text-amber-200 space-y-1.5">
-          <div class="font-bold">How to get your free Gemini API Key:</div>
-          <p class="text-[11px]">Create a free key in Google AI Studio and paste it below. Your key is stored encrypted in your browser vault.</p>
-          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="chrome-pill-btn bg-amber-600 hover:bg-amber-500 text-white px-3 py-1 text-[11px] shadow mt-1">↗ Open Google AI Studio</a>
+      <div class="p-5 space-y-3 text-xs overflow-y-auto flex-1">
+        <div id="googleUserBanner" class="hidden bg-emerald-950/60 border border-emerald-700/60 text-emerald-200 p-3 rounded-2xl flex items-center justify-between">
+          <div>
+            <div class="font-bold">Signed in with Google</div>
+            <div id="googleUserEmail" class="text-[11px]"></div>
+          </div>
+          <button onclick="handleMedicoLogout()" class="text-rose-400 hover:underline font-semibold">Sign Out</button>
         </div>
-        <div>
-          <label class="block font-semibold text-slate-300 mb-1">Paste Gemini API Key (`AIzaSy...`)</label>
-          <input id="apiKeyInput" type="password" placeholder="AIzaSy..." class="w-full border border-slate-700 rounded-xl p-2.5 text-sm bg-slate-950 text-white font-jyotish-mono" />
+        <button id="googleSignInBtn" onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center border border-slate-700 hover:bg-slate-800 py-2.5 px-4 shadow-xs text-slate-100">
+          <span>G</span> <span>Continue with Google (Sync Personal API Vault)</span>
+        </button>
+        <div class="border-t border-slate-800 pt-3">
+          <div class="flex items-center justify-between mb-1">
+            <label class="block font-semibold text-slate-200">Personal Gemini API Key (Bound to Your UID)</label>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="text-[11px] text-blue-400 font-bold hover:underline">↗ Get Free API Key</a>
+          </div>
+          <input id="apiKeyInput" type="password" placeholder="AIzaSy..." class="w-full border border-slate-700 rounded-xl p-2 text-sm font-jyotish-mono bg-slate-950 text-white" />
+        </div>
+        <div id="adminAccessControlBox" class="hidden border-t border-slate-800 pt-3 space-y-2 bg-slate-950 p-3 rounded-2xl">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-amber-400">👑 Admin Access Control (Owner Only)</span>
+            <label class="inline-flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="privateModeToggle" onchange="saveAdminAccessSettings()" class="accent-blue-600" />
+              <span class="font-semibold text-slate-300">Private Mode</span>
+            </label>
+          </div>
+          <textarea id="allowedEmailsInput" rows="2" class="w-full border border-slate-700 rounded-xl p-2 text-[11px] font-jyotish-mono bg-slate-900 text-white" placeholder="Allowed Gmails (comma-separated)"></textarea>
+          <button onclick="saveAdminAccessSettings()" class="w-full chrome-pill-btn justify-center bg-slate-800 hover:bg-slate-700 text-white py-1.5 text-[11px] border border-slate-700">Update Allowed Users</button>
         </div>
         <div class="flex justify-center pt-2">
-          <button onclick="saveApiKeyToVault()" class="chrome-pill-btn save-3d-blue-btn justify-center px-8 py-2 rounded-full text-xs"><span>Save Key</span></button>
+          <button onclick="saveMedicoCredentials()" class="chrome-pill-btn save-3d-blue-btn justify-center px-8 py-2 rounded-full text-xs"><span>Save</span></button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 9.5 Modal 4: Settings, Theme & Store-Compliant Data Deletion -->
-  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+  <!-- 9.6 Modal 4: Display, Vault, Account Deletion & Privacy Settings -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-700">
-      <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
-        <h3 class="font-bold text-sm">⚙️ Display &amp; Jyotish Settings</h3>
-        <button onclick="toggleSettingsModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
+      <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
+        <h3 class="font-bold text-sm">⚙️ Display &amp; Security Settings</h3>
+        <button onclick="toggleSettingsModal()" class="text-white text-xl font-bold px-2">&times;</button>
       </div>
       <div class="p-5 space-y-4 text-xs">
-        <div>
-          <label class="block font-bold mb-2 text-slate-200">Color Theme</label>
-          <div class="grid grid-cols-2 gap-2.5">
-            <button onclick="setTheme('dark')" id="themeBtnDark" class="border border-slate-700 rounded-2xl p-2.5 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800">🌙 Dark</button>
-            <button onclick="setTheme('light')" id="themeBtnLight" class="border border-slate-700 rounded-2xl p-2.5 font-semibold flex items-center justify-center gap-2 hover:bg-slate-800">☀️ Light</button>
-          </div>
+        <div class="grid grid-cols-3 gap-2.5">
+          <button onclick="setTheme('light')" id="themeBtnLight" class="border border-slate-700 rounded-2xl p-3 font-semibold flex flex-col items-center gap-1 hover:bg-slate-800"><span>☀️</span><span>Light</span></button>
+          <button onclick="setTheme('dark')" id="themeBtnDark" class="border border-slate-700 rounded-2xl p-3 font-semibold flex flex-col items-center gap-1 hover:bg-slate-800"><span>🌙</span><span>Dark</span></button>
+          <button onclick="setTheme('system')" id="themeBtnSystem" class="border border-slate-700 rounded-2xl p-3 font-semibold flex flex-col items-center gap-1 hover:bg-slate-800"><span>💻</span><span>System</span></button>
         </div>
         <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
-          <span class="text-slate-300">Manage Gemini API Key</span>
-          <button onclick="toggleSettingsModal(); toggleApiVaultModal();" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5">🔑 Open Vault</button>
+          <span class="text-slate-300">Manage Cloud API Key Vault</span>
+          <button onclick="toggleSettingsModal(); toggleLoginModal();" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5">🔑 Open Vault</button>
         </div>
         <div class="border-t border-slate-800 pt-3 flex justify-between items-center">
-          <div>
-            <div class="font-bold text-rose-400">Delete Account &amp; All Local Data</div>
-            <div class="text-[10px] text-slate-400">Erases profile, API vault &amp; saved horoscopes</div>
-          </div>
-          <button onclick="deleteAllUserData()" class="chrome-pill-btn bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-1.5 shrink-0">🗑️ Delete Data</button>
+          <div><div class="font-bold text-rose-500">Delete Account &amp; Cloud Data</div><div class="text-[10px] text-slate-400">Permanently erases profile, vault &amp; saved charts</div></div>
+          <button onclick="deleteAllUserData()" class="chrome-pill-btn bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-1.5 shrink-0">🗑️ Delete Account</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 9.6 Modal 5: Classical Texts & Citations (About Modal) -->
-  <div id="aboutModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 flex items-center justify-center p-4">
+  <!-- 9.7 Modal 5: Classical Texts & Citations (About Modal) -->
+  <div id="aboutModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-700">
       <div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
         <h3 class="font-bold text-sm">ℹ️ Classical Jyotish &amp; Samudrika References</h3>
         <button onclick="closeAboutModal()" class="text-slate-400 hover:text-white text-xl font-bold px-2">&times;</button>
       </div>
       <div class="p-5 space-y-3 text-xs leading-relaxed text-slate-300">
-        <p><strong>Jyotish &amp; Samudrika AI</strong> synthesizes mathematical horoscopy with multimodal palm vision analysis based on authoritative classical and modern works:</p>
-        <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-300">
-          <li><strong>Mahakavi Kalidasa's Uttara Kalamrita:</strong> Vipareeta Rajyogas (Harsha, Sarala, Vimala), Bhavat Bhavam, Arudha Padas, and Special Karakatwas.</li>
-          <li><strong>Acharya Varahamihira's Brihat Jataka &amp; Brihat Samhita:</strong> Shadvargas, Graha Avasthas, Nabhasa/Chandra Yogas, and Purusha/Stri Samudrika Lakshanas (Ch. 68–70).</li>
-          <li><strong>Anavamadarsi Sangharaja's Daivagya Kamadhenu:</strong> Classical Dasa-Antardasa Phala, Gochara, and Ashtakavarga principles.</li>
-          <li><strong>Dr. B.V. Raman &amp; Pt. Sanjay Rath:</strong> Nirayana Sphuta &amp; Ayanamsa algorithms, 8-Planet Chara Karakas, Argala/Virodhargala, 3-Pairs Ayurdaya, Sudarshan Chakra, and Saptamsa/Drekkana timing.</li>
-        </ul>
+        <p><strong>Jyotish &amp; Samudrika AI</strong> synthesizes mathematical horoscopy with multimodal palm vision analysis based on <em>Brihat Jataka</em>, <em>Uttara Kalamrita</em>, <em>Brihat Samhita</em>, <em>Daivagya Kamadhenu</em>, Dr. B.V. Raman, and Pt. Sanjay Rath.</p>
+        <div class="pt-2 text-[11px] text-slate-500 flex justify-between items-center border-t border-slate-800">
+          <span>Created by <strong>Dr. Danny (Satyapriya Srinivash)</strong></span>
+          <span>v5.5 • Store-Ready Orbit Edition</span>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- 9.8 Modal 6: Ask Gemini Jyotish & Samudrika Assistant + Modal 7: Private Access Gate -->
+  <div id="geminiModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-purple-500/40 flex flex-col max-h-[92vh]">
+      <div class="gemini-jyotish-fab text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-sm">✨ Ask Gemini Jyotish &amp; Samudrika Assistant</h3>
+          <p class="text-[11px] text-white/85">Upload classical PDFs/palm photos, ask shastra doubts, auto-fill birth data, or practice Jyotish viva</p>
+        </div>
+        <button onclick="toggleGeminiModal()" class="text-white hover:text-purple-200 text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-5 space-y-3 overflow-y-auto flex-1 text-xs">
+        <textarea id="geminiUserPrompt" rows="3" class="w-full border border-slate-700 rounded-2xl p-2.5 text-sm bg-slate-950 text-white" placeholder="Ask any question on Brihat Jataka, Uttara Kalamrita, Crux of Vedic Astrology, or give a command like: 'Set birth date to 12 Jan 1863 at 06:33 in Kolkata'..."></textarea>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="askGeminiJyotishDoubt()" class="chrome-pill-btn bg-purple-700 hover:bg-purple-600 text-white px-3.5 py-2">💬 Ask Shastra Doubt</button>
+          <button onclick="geminiControlJyotishPage()" class="chrome-pill-btn bg-blue-700 hover:bg-blue-600 text-white px-3.5 py-2">⚡ Dynamically Fill Birth Data</button>
+          <button onclick="geminiJyotishVivaMode()" class="chrome-pill-btn bg-emerald-700 hover:bg-emerald-600 text-white px-3.5 py-2">🎓 Jyotish Viva (5 Questions)</button>
+        </div>
+        <textarea id="geminiModalOutput" rows="8" readonly class="w-full border border-slate-800 rounded-2xl p-3 text-xs bg-slate-950 font-jyotish-mono text-slate-200" placeholder="Gemini output will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div id="privateAccessOverlay" class="hidden fixed inset-0 z-[100] bg-slate-950 text-white flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl max-w-md w-full p-6 text-center space-y-4">
+      <div class="w-14 h-14 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center mx-auto text-2xl">🔒</div>
+      <h2 class="text-lg font-bold">Protected Jyotish &amp; Samudrika Portal</h2>
+      <div id="privateGateError" class="hidden bg-rose-950/80 border border-rose-700 text-rose-200 text-xs p-3 rounded-2xl"></div>
+      <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 shadow-lg text-sm"><span>G</span> <span>Sign in / Claim Active Device Slot</span></button>
+      <button onclick="emergencyAdminUnlock()" class="text-[11px] text-slate-500 hover:text-white underline pt-1 block mx-auto">🔓 Admin Emergency: Turn Off Private Lock on This Device</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <!-- ==========================================================================
      [SECTION 10] JAVASCRIPT ASTRONOMICAL & VEDIC JYOTISH CALCULATION ENGINE
@@ -1524,58 +1716,185 @@
       } catch (e) { if (banner) banner.textContent = "⚠️ Network error calling Gemini API."; }
     }
 
-    // UI Controls, Orbit Layout, Slide-In Rail & Keyboard Shortcuts
-    let currentOrbitSectionIndex = 0, railFocusedSecIndex = null, lastCursorX = 0;
-    function getAllMainSections() { return Array.from(document.querySelectorAll('#orbitCenterStage > details.orbit-section-card')); }
-    function toggleSidebar() {
-      const sb = document.getElementById('leftSidebar'), ov = document.getElementById('sidebarOverlay');
-      const isClosed = sb.classList.contains('-translate-x-full');
-      sb.classList.toggle('-translate-x-full', !isClosed); ov.classList.toggle('hidden', !isClosed);
-      syncPopupBackgroundBlurState();
-    }
-    function toggleAccountPopup(e) { e.stopPropagation(); document.getElementById('accountPopup').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
-    function closeAccountPopup() { document.getElementById('accountPopup').classList.add('hidden'); syncPopupBackgroundBlurState(); }
-    function openProfileModal() { document.getElementById('profileModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
-    function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
-    function openStorageModal() { renderStorageTable(); document.getElementById('storageModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
-    function closeStorageModal() { document.getElementById('storageModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
-    function toggleApiVaultModal() { document.getElementById('apiVaultModal').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
-    function toggleSettingsModal() { document.getElementById('settingsModal').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
-    function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
-    function closeAboutModal() { document.getElementById('aboutModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
-    function closeSummaryPopupModal() { document.getElementById('summaryPopupModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+// =========================================================================
+    // [SECTION 12] FIREBASE VAULT, 1-DEVICE LOCK, ORBIT RAIL & KEYBOARD ENGINE
+    // =========================================================================
+    window.ADMIN_OWNER_EMAIL = "satya.srinivash1234@gmail.com";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzYceOpLoSm-S7EEQ_H5WgN12d4JlqUXQ",
+      authDomain: "danny-code-peds-history-vault.firebaseapp.com",
+      projectId: "danny-code-peds-history-vault",
+      storageBucket: "danny-code-peds-history-vault.firebasestorage.app",
+      messagingSenderId: "742856199254",
+      appId: "1:742856199254:web:e4fb91a3f28a3d52a8a04d"
+    };
+    let auth = null, db = null, currentGoogleUser = null, sessionUnsubscribe = null;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth(); db = firebase.firestore();
+    } catch (e) {}
 
-    function syncPopupBackgroundBlurState() {
-      const sb = document.getElementById('leftSidebar');
-      const isMoreOpen = sb && !sb.classList.contains('-translate-x-full');
-      const modals = ['profileModal', 'storageModal', 'apiVaultModal', 'settingsModal', 'aboutModal', 'summaryPopupModal', 'shortcutsModal'];
-      const anyModal = modals.some(id => { const el = document.getElementById(id); return el && !el.classList.contains('hidden'); });
-      document.body.classList.toggle('popup-blur-active', Boolean(isMoreOpen || anyModal));
+    (function initCustomDomainAndManifest() {
+      const url = window.location.origin + window.location.pathname;
+      const canon = document.getElementById('dynamicCanonicalLink');
+      if (canon && window.location.protocol.startsWith('http')) canon.href = url;
+      const man = document.getElementById('dynamicManifestLink');
+      if (man) {
+        man.href = "data:application/manifest+json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+          name: "Jyotish & Samudrika AI | Dr. Danny", short_name: "Jyotish AI",
+          start_url: url, scope: url, display: "standalone", background_color: "#0f172a", theme_color: "#0f172a",
+          icons: [{ src: DEFAULT_AVATAR_SVG, sizes: "192x192", type: "image/svg+xml" }, { src: DEFAULT_AVATAR_SVG, sizes: "512x512", type: "image/svg+xml" }]
+        }));
+      }
+    })();
+
+    function getDeviceToken() {
+      let t = localStorage.getItem('jyotish_device_token_v1');
+      if (!t) { t = 'dev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9); localStorage.setItem('jyotish_device_token_v1', t); }
+      return t;
     }
 
-    function saveApiKeyToVault() {
-      const k = document.getElementById('apiKeyInput').value.trim();
-      if (k) localStorage.setItem('jyotish_gemini_api_key', k);
-      document.getElementById('headerKeyStatusText').textContent = k ? 'Key Active' : 'API Key';
-      toggleApiVaultModal();
+    async function signInWithGoogle() {
+      if (!auth) return alert("Firebase Auth unavailable offline.");
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const res = await auth.signInWithPopup(provider);
+        if (res.user) await claimSingleDeviceSlot(res.user);
+      } catch (err) { alert("Google Sign-In Error: " + err.message); }
     }
-    function handleVaultLock() { localStorage.removeItem('jyotish_gemini_api_key'); document.getElementById('headerKeyStatusText').textContent = 'API Key'; }
-    function setTheme(mode) { document.documentElement.classList.toggle('dark', mode === 'dark'); localStorage.setItem('jyotish_theme', mode); }
-    function copyReadingOutput(id) { navigator.clipboard.writeText(document.getElementById(id).value); alert('Copied reading to clipboard!'); }
-    function shareReadingWhatsApp() { window.open('https://wa.me/?text=' + encodeURIComponent(document.getElementById('inlineReadingOutput').value), '_blank'); }
-    function resetForm() { if (confirm('Reset form to defaults?')) window.location.reload(); }
-    function deleteAllUserData() { if (confirm('Permanently erase all saved horoscopes and API keys?')) { localStorage.clear(); window.location.reload(); } }
+
+    async function claimSingleDeviceSlot(user) {
+      if (!db || !user) return;
+      const emailKey = user.email.trim().toLowerCase(), myToken = getDeviceToken();
+      try {
+        await db.collection('active_sessions').doc(emailKey).set({ token: myToken, updatedAt: Date.now(), app: 'jyotish-ai' }, { merge: true });
+        if (sessionUnsubscribe) sessionUnsubscribe();
+        sessionUnsubscribe = db.collection('active_sessions').doc(emailKey).onSnapshot(doc => {
+          const data = doc.data();
+          if (data && data.token && data.token !== myToken) {
+            alert("⚠️ 1-Device Lock: Your account was signed in on another device.");
+            handleMedicoLogout();
+          }
+        });
+      } catch (e) {}
+    }
+
+    async function handleMedicoLogout() {
+      if (sessionUnsubscribe) { sessionUnsubscribe(); sessionUnsubscribe = null; }
+      if (auth && currentGoogleUser) await auth.signOut();
+      currentGoogleUser = null;
+      updateAuthUI(null);
+    }
+
+    async function saveMedicoCredentials() {
+      const k = (document.getElementById('apiKeyInput')?.value || '').trim();
+      if (k) {
+        localStorage.setItem('jyotish_gemini_api_key', k);
+        if (currentGoogleUser && db) {
+          localStorage.setItem('peds_uid_vault_' + currentGoogleUser.uid, btoa(k));
+          try { await db.collection('medico_vault').doc(currentGoogleUser.uid).set({ apiKeyEnc: btoa(k), email: currentGoogleUser.email, updatedAt: Date.now() }, { merge: true }); } catch (e) {}
+        }
+      }
+      toggleLoginModal();
+    }
+
+    async function saveAdminAccessSettings() {
+      if (!db || !currentGoogleUser || currentGoogleUser.email.toLowerCase() !== window.ADMIN_OWNER_EMAIL) return;
+      const priv = document.getElementById('privateModeToggle')?.checked || false;
+      const list = (document.getElementById('allowedEmailsInput')?.value || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      try { await db.collection('site_settings').doc('access_control').set({ privateMode: priv, allowedEmails: list }, { merge: true }); } catch (e) {}
+    }
+    function emergencyAdminUnlock() { document.getElementById('privateAccessOverlay')?.classList.add('hidden'); syncPopupBackgroundBlurState(); }
+
+    function updateAuthUI(user) {
+      const loginBtn = document.getElementById('headerLoginBtn'), avatarBtn = document.getElementById('headerAvatarBtn');
+      const banner = document.getElementById('googleUserBanner'), gBtn = document.getElementById('googleSignInBtn'), adminBox = document.getElementById('adminAccessControlBox');
+      if (user) {
+        loginBtn?.classList.add('hidden'); avatarBtn?.classList.remove('hidden');
+        banner?.classList.remove('hidden'); gBtn?.classList.add('hidden');
+        document.getElementById('googleUserEmail').textContent = user.email;
+        document.getElementById('popupUserEmail').textContent = user.email;
+        if (user.email.toLowerCase() === window.ADMIN_OWNER_EMAIL) adminBox?.classList.remove('hidden');
+        const cached = localStorage.getItem('peds_uid_vault_' + user.uid);
+        if (cached) { const dec = atob(cached); localStorage.setItem('jyotish_gemini_api_key', dec); document.getElementById('apiKeyInput').value = dec; }
+        if (db) db.collection('medico_vault').doc(user.uid).get().then(d => {
+          if (d.exists && d.data().apiKeyEnc) { const dec = atob(d.data().apiKeyEnc); localStorage.setItem('jyotish_gemini_api_key', dec); document.getElementById('apiKeyInput').value = dec; }
+        }).catch(() => {});
+      } else {
+        loginBtn?.classList.remove('hidden'); avatarBtn?.classList.add('hidden');
+        banner?.classList.add('hidden'); gBtn?.classList.remove('hidden'); adminBox?.classList.add('hidden');
+      }
+      loadAstrologerProfile(); updateForensicWatermark();
+    }
+    if (auth) auth.onAuthStateChanged(u => { currentGoogleUser = u; updateAuthUI(u); if (u) claimSingleDeviceSlot(u); });
+
+    function updateForensicWatermark() {
+      const wm = document.getElementById('forensicWatermark'); if (!wm) return;
+      const stamp = `${currentGoogleUser?.email || 'LOCAL-VAULT'} • ${new Date().toISOString().slice(0,10)} • DR. DANNY JYOTISH`;
+      wm.innerHTML = Array.from({ length: 18 }, () => `<span class="watermark-stamp">${stamp}</span>`).join('');
+    }
+
+    // Profile, Storage & 2-Column Google Sheet Sync
+    function resetProfilePicToGoogle() {
+      localStorage.removeItem('jyotish_avatar');
+      if (currentGoogleUser?.photoURL) localStorage.setItem('jyotish_avatar', currentGoogleUser.photoURL);
+      loadAstrologerProfile();
+    }
+    function handleProfilePicUpload(input) {
+      const f = input.files?.[0]; if (!f) return;
+      const r = new FileReader(); r.onload = (e) => { localStorage.setItem('jyotish_avatar', e.target.result); loadAstrologerProfile(); }; r.readAsDataURL(f);
+    }
+    function saveAstrologerProfile() {
+      const p = {
+        name: document.getElementById('profName')?.value.trim() || 'Dr. Satyapriya Srinivash',
+        phone: document.getElementById('profPhone')?.value.trim() || '',
+        course: document.getElementById('profCourse')?.value.trim() || 'MBBS (Prof 2nd) • Jyotish',
+        inst: document.getElementById('profInstitution')?.value.trim() || 'Shri Shankaracharya Institute of Medical Sciences'
+      };
+      localStorage.setItem('jyotish_medico_profile_v1', JSON.stringify(p));
+      loadAstrologerProfile(); closeProfileModal();
+    }
+    function loadAstrologerProfile() {
+      let p = {}; try { p = JSON.parse(localStorage.getItem('jyotish_medico_profile_v1') || '{}'); } catch {}
+      const av = localStorage.getItem('jyotish_avatar') || currentGoogleUser?.photoURL || DEFAULT_AVATAR_SVG;
+      const nm = p.name || currentGoogleUser?.displayName || 'Satyapriya Srinivash';
+      const meta = `${p.course || 'MBBS (Prof 2nd)'} • ${p.inst || 'SSIMS'}`;
+      ['headerAvatarImg', 'popupAvatarImg', 'sidebarAvatarImg', 'profileModalAvatarPreview'].forEach(id => { const el = document.getElementById(id); if (el) el.src = av; });
+      ['popupUserName', 'sidebarProfileName'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = nm; });
+      ['popupUserMeta', 'sidebarProfileCourse'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = meta; });
+      if (document.getElementById('profName')) {
+        document.getElementById('profName').value = nm; document.getElementById('profPhone').value = p.phone || '';
+        document.getElementById('profCourse').value = p.course || 'MBBS (Prof 2nd)'; document.getElementById('profInstitution').value = p.inst || 'Shri Shankaracharya Institute of Medical Sciences';
+      }
+    }
 
     function getStoredCharts() { try { return JSON.parse(localStorage.getItem('jyotish_saved_charts_v1') || '[]'); } catch { return []; } }
     function saveCurrentChartToStorage(toast = false) {
       const st = currentHoroscopeState; if (!st) return;
-      const name = document.getElementById('nativeName').value.trim() || 'Unnamed Native';
+      const name = document.getElementById('nativeName')?.value.trim() || 'Unnamed Native';
+      const rec = { id: 'ch_' + Date.now(), name, dob: st.dobStr, tob: st.tobStr, place: document.getElementById('birthPlaceName').value, lagna: RASIS[st.lagnaVargas.rasiIdx].name, rasi: st.planets.Moon.vargas.d1, lat: st.lat, lon: st.lon, reading: document.getElementById('inlineReadingOutput').value };
       const charts = getStoredCharts().filter(c => c.name.toLowerCase() !== name.toLowerCase());
-      charts.unshift({ id: 'ch_' + Date.now(), name, dob: st.dobStr, tob: st.tobStr, place: document.getElementById('birthPlaceName').value, lagna: RASIS[st.lagnaVargas.rasiIdx].name, rasi: st.planets.Moon.vargas.d1, lat: st.lat, lon: st.lon, reading: document.getElementById('inlineReadingOutput').value });
-      localStorage.setItem('jyotish_saved_charts_v1', JSON.stringify(charts));
+      charts.unshift(rec); localStorage.setItem('jyotish_saved_charts_v1', JSON.stringify(charts));
       document.getElementById('sidebarCaseCount').textContent = charts.length;
-      if (toast) alert('Horoscope saved!');
+      const hook = localStorage.getItem('jyotish_sheet_webhook');
+      if (hook) {
+        const link = `${window.location.origin}${window.location.pathname}#case=${encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(rec)))))}`;
+        fetch(hook, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ nameFormula: `=HYPERLINK("${link}","${name}")`, summary: `${rec.lagna} Lagna • ${rec.rasi} Rasi (${rec.dob})` }) }).catch(() => {});
+      }
+      if (toast) { const b = document.getElementById('autoSaveBadge'); if (b) { b.textContent = '💾 Saved to Storage!'; setTimeout(() => b.textContent = '✓ Auto-saved locally', 2000); } }
     }
+    function copyTwoColGoogleSheet() {
+      const rows = getStoredCharts().map(c => {
+        const link = `${window.location.origin}${window.location.pathname}#case=${encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(c)))))}`;
+        return `=HYPERLINK("${link}","${c.name.replace(/"/g, '""')}")\t${c.lagna} Lagna • ${c.rasi} Rasi (${c.dob})`;
+      }).join('\n');
+      navigator.clipboard.writeText(rows || 'No saved horoscopes'); alert('Copied 2-Column Hyperlinked Rows for Google Sheets!');
+    }
+    function exportCasesJSON() {
+      const blob = new Blob([JSON.stringify(getStoredCharts(), null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'jyotish_horoscopes_backup.json'; a.click();
+    }
+    function saveSheetWebhookUrl() { localStorage.setItem('jyotish_sheet_webhook', document.getElementById('sheetWebhookUrl').value.trim()); alert('Google Sheet Webhook Saved!'); }
     function renderStorageTable() {
       const charts = getStoredCharts();
       document.getElementById('storageTableBody').innerHTML = charts.length === 0 ? `<tr><td colspan="4" class="py-6 text-center text-slate-500">No saved horoscopes yet.</td></tr>` : charts.map(c => `<tr class="hover:bg-slate-800"><td class="py-2 px-3.5 font-bold text-blue-400 cursor-pointer" onclick="loadSavedChart('${c.id}')">${c.name}</td><td class="py-2 px-3">${c.dob} ${c.tob} (${c.place})</td><td class="py-2 px-3">${c.lagna} / ${c.rasi}</td><td class="py-2 px-3 text-right"><button onclick="deleteSavedChart('${c.id}')" class="text-rose-400">Delete</button></td></tr>`).join('');
@@ -1588,31 +1907,103 @@
       closeStorageModal(); computeFullHoroscope();
     }
     function deleteSavedChart(id) { localStorage.setItem('jyotish_saved_charts_v1', JSON.stringify(getStoredCharts().filter(x => x.id !== id))); renderStorageTable(); }
+
+    // Ask Gemini Shastra Assistant Functions
+    function toggleGeminiModal() { document.getElementById('geminiModal')?.classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function toggleLoginModal() { document.getElementById('loginModal')?.classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    async function callGeminiAssistantPrompt(sysPrompt) {
+      const key = (localStorage.getItem('jyotish_gemini_api_key') || '').trim();
+      const out = document.getElementById('geminiModalOutput');
+      if (!key) { out.value = "⚠️ Please save your Gemini API Key in 'Sign in / Open Vault' first."; return; }
+      out.value = "⏳ Consulting Gemini 2.5 Flash...";
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: sysPrompt }] }] })
+        });
+        const d = await res.json();
+        out.value = d?.candidates?.[0]?.content?.parts?.[0]?.text || ("Error: " + (d?.error?.message || "Unknown"));
+      } catch (e) { out.value = "Network error."; }
+    }
+    function askGeminiJyotishDoubt() {
+      const q = document.getElementById('geminiUserPrompt').value.trim();
+      callGeminiAssistantPrompt(`Answer this Vedic Astrology / Samudrika Shastra question citing Brihat Jataka, Uttara Kalamrita, Dr. B.V. Raman, and Sanjay Rath. Current chart Lagna: ${RASIS[currentHoroscopeState.lagnaVargas.rasiIdx].name}. Question: ${q}`);
+    }
+    function geminiJyotishVivaMode() {
+      callGeminiAssistantPrompt(`Generate 5 high-yield Jyotish & Samudrika Shastra Viva questions with concise answers based on this native's chart (Lagna: ${RASIS[currentHoroscopeState.lagnaVargas.rasiIdx].name}, Moon Rasi: ${currentHoroscopeState.planets.Moon.vargas.d1}, Atmakaraka: ${currentHoroscopeState.atmakaraka}).`);
+    }
+    async function geminiControlJyotishPage() {
+      const q = document.getElementById('geminiUserPrompt').value.trim();
+      await callGeminiAssistantPrompt(`Extract birth details from: "${q}" and explain the chart significance.`);
+    }
+
+    // Orbit Section Navigation, Shortcuts Modal ("codes") & Full Keyboard Controller
+    let currentOrbitSectionIndex = 0, orbitAnimTimer = null, railFocusedSecIndex = null, moreFocusedItemIndex = null, lastCursorX = 0;
+    function getAllMainSections() { return Array.from(document.querySelectorAll('#orbitCenterStage > details.orbit-section-card')); }
+    function toggleSidebar() {
+      const sb = document.getElementById('leftSidebar'), ov = document.getElementById('sidebarOverlay');
+      const isClosed = sb.classList.contains('-translate-x-full');
+      sb.classList.toggle('-translate-x-full', !isClosed); ov.classList.toggle('hidden', !isClosed);
+      syncPopupBackgroundBlurState();
+    }
+    function toggleAccountPopup(e) { e.stopPropagation(); document.getElementById('accountPopup').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function closeAccountPopup() { document.getElementById('accountPopup').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function openProfileModal() { loadAstrologerProfile(); document.getElementById('profileModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function openStorageModal() { renderStorageTable(); document.getElementById('storageModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeStorageModal() { document.getElementById('storageModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function toggleSettingsModal() { document.getElementById('settingsModal').classList.toggle('hidden'); syncPopupBackgroundBlurState(); }
+    function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden'); syncPopupBackgroundBlurState(); }
+    function closeAboutModal() { document.getElementById('aboutModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function closeSummaryPopupModal() { document.getElementById('summaryPopupModal').classList.add('hidden'); syncPopupBackgroundBlurState(); }
+    function setTheme(m) { const d = m === 'system' ? window.matchMedia('(prefers-color-scheme: dark)').matches : m === 'dark'; document.documentElement.classList.toggle('dark', d); }
+    function copyReadingOutput(id) { navigator.clipboard.writeText(document.getElementById(id).value); }
+    function shareReadingWhatsApp() { window.open('https://wa.me/?text=' + encodeURIComponent(document.getElementById('inlineReadingOutput').value), '_blank'); }
+    function resetForm() { if (confirm('Reset form to defaults?')) window.location.reload(); }
+    function deleteAllUserData() { if (confirm('Permanently delete account, vault & all saved charts?')) { localStorage.clear(); window.location.reload(); } }
+
+    function ensureShortcutsModalExists() {
+      let m = document.getElementById('shortcutsModal'); if (m) return m;
+      m = document.createElement('div'); m.id = 'shortcutsModal';
+      m.className = 'hidden fixed inset-0 z-50 bg-slate-950/65 flex items-center justify-center p-4';
+      m.onclick = (e) => { if (e.target === m) { m.classList.add('hidden'); syncPopupBackgroundBlurState(); } };
+      m.innerHTML = `<div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-700"><div class="bg-slate-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800"><h3 class="font-extrabold text-sm">⌨️ Keyboard Shortcuts (Type 'codes')</h3><button onclick="document.getElementById('shortcutsModal').classList.add('hidden'); syncPopupBackgroundBlurState();" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button></div><div class="p-5 space-y-2 text-xs"><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Previous / Next Section</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">← / →</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Scroll Section (or Step in Open More/Rail)</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">↑ / ↓</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Open Right Sections Rail</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">Ctrl + →</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Open Left More Menu</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">Ctrl + ←</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Close Any Open Menu, Rail or Popup</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">Ctrl + Shift</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Focus Top Search Bar</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-blue-300 font-jyotish-mono">Tab</kbd></div><div class="flex justify-between p-2 rounded-xl bg-slate-800/80"><span>Save Horoscope / Reset Form</span><kbd class="px-2 py-0.5 rounded bg-slate-950 text-emerald-300 font-jyotish-mono">Ctrl+S / Ctrl+Bksp</kbd></div></div></div>`;
+      document.body.appendChild(m); return m;
+    }
+
+    function syncPopupBackgroundBlurState() {
+      const sb = document.getElementById('leftSidebar'), isMore = sb && !sb.classList.contains('-translate-x-full');
+      const ids = ['profileModal', 'storageModal', 'loginModal', 'settingsModal', 'aboutModal', 'geminiModal', 'summaryPopupModal', 'shortcutsModal'];
+      const anyModal = ids.some(id => { const el = document.getElementById(id); return el && !el.classList.contains('hidden'); });
+      const acc = document.getElementById('accountPopup'), isAcc = acc && !acc.classList.contains('hidden');
+      document.body.classList.toggle('popup-blur-active', Boolean(isMore || anyModal));
+      document.body.classList.toggle('account-popup-blur-active', Boolean(!isMore && !anyModal && isAcc));
+    }
+
     function handleChartSearch(q) {
       const clean = q.trim().toLowerCase();
-      if (clean === 'codes') { clearChartSearch(); alert('Shortcuts:\n• ← / → : Prev / Next Section\n• Ctrl + → : Open Right Rail\n• Ctrl + ← : Open More Menu\n• ↑ / ↓ + Enter : Browse & Select in Rail\n• Ctrl + Shift : Close Any Popup\n• Ctrl + S : Save Horoscope\n• Tab : Focus Search Bar'); return; }
+      if (clean === 'codes') { clearChartSearch(); ensureShortcutsModalExists().classList.remove('hidden'); syncPopupBackgroundBlurState(); return; }
       const drop = document.getElementById('searchResultsDropdown');
       const matches = getStoredCharts().filter(c => c.name.toLowerCase().includes(clean));
       drop.innerHTML = matches.map(c => `<div onclick="loadSavedChart('${c.id}'); clearChartSearch();" class="px-4 py-2 hover:bg-slate-700 cursor-pointer text-xs font-bold">${c.name} — ${c.lagna} Lagna</div>`).join('');
       drop.classList.toggle('hidden', !clean || matches.length === 0);
     }
     function clearChartSearch() { document.getElementById('headerCaseSearch').value = ''; document.getElementById('searchResultsDropdown').classList.add('hidden'); }
-    function handleProfilePicUpload(input) {
-      const f = input.files?.[0]; if (!f) return;
-      const r = new FileReader(); r.onload = (e) => { localStorage.setItem('jyotish_avatar', e.target.result); loadAstrologerProfile(); }; r.readAsDataURL(f);
-    }
-    function saveAstrologerProfile() {
-      localStorage.setItem('jyotish_prof_name', document.getElementById('profName').value.trim() || 'Acharya Danny');
-      localStorage.setItem('jyotish_prof_inst', document.getElementById('profInstitution').value.trim() || 'Jyotish & Samudrika Shastra');
-      loadAstrologerProfile(); closeProfileModal();
-    }
-    function loadAstrologerProfile() {
-      const av = localStorage.getItem('jyotish_avatar') || DEFAULT_AVATAR_SVG;
-      const nm = localStorage.getItem('jyotish_prof_name') || 'Acharya Satyapriya';
-      const inst = localStorage.getItem('jyotish_prof_inst') || 'Jyotish & Samudrika Shastra';
-      ['headerAvatarImg', 'popupAvatarImg', 'sidebarAvatarImg', 'profileModalAvatarPreview'].forEach(id => { const el = document.getElementById(id); if (el) el.src = av; });
-      document.getElementById('popupUserName').textContent = nm; document.getElementById('sidebarProfileName').textContent = nm;
-      document.getElementById('popupUserMeta').textContent = inst; document.getElementById('sidebarProfileCourse').textContent = inst;
+
+    function switchToOrbitSection(targetIdx) {
+      const secs = getAllMainSections(); if (targetIdx < 0 || targetIdx >= secs.length) return;
+      if (targetIdx === currentOrbitSectionIndex) { secs[targetIdx].classList.add('orbit-active'); return; }
+      const outgoing = secs[currentOrbitSectionIndex], incoming = secs[targetIdx];
+      if (orbitAnimTimer) clearTimeout(orbitAnimTimer);
+      secs.forEach(s => s.classList.remove('orbit-leaving', 'orbit-entering', 'orbit-active'));
+      if (outgoing) outgoing.classList.add('orbit-leaving');
+      incoming.open = true; incoming.classList.add('orbit-entering');
+      currentOrbitSectionIndex = targetIdx;
+      document.querySelectorAll('#rightSectionRail .rail-item-btn').forEach((b, i) => b.classList.toggle('rail-active', i === targetIdx));
+      document.querySelectorAll('#mobileBottomRail button').forEach((b, i) => b.className = i === targetIdx ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-blue-600 text-white shrink-0' : 'px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 shrink-0');
+      const thumb = document.getElementById('rightRailSliderThumb'), track = document.getElementById('rightRailSliderTrack');
+      if (thumb && track) thumb.style.transform = `translate3d(0, ${Math.round((targetIdx / (secs.length - 1)) * (track.clientHeight - 40)) + 2}px, 0)`;
+      orbitAnimTimer = setTimeout(() => { if (outgoing) outgoing.classList.remove('orbit-leaving'); incoming.classList.remove('orbit-entering'); incoming.classList.add('orbit-active'); }, 380);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function initOrbitWorkspace() {
@@ -1625,13 +2016,15 @@
 
       sections.forEach((sec, idx) => {
         sec.open = true; sec.classList.add('orbit-section-card'); if (idx === 0) sec.classList.add('orbit-active');
-        const bodyDiv = sec.querySelector(':scope > div');
-        const nav = document.createElement('div'); nav.className = 'flex items-center justify-between pt-3 mt-4 border-t border-slate-800';
+        const bodyDiv = sec.querySelector(':scope > div'), nav = document.createElement('div');
+        nav.className = 'flex items-center justify-between pt-3 mt-4 border-t border-slate-800';
         nav.innerHTML = (idx > 0 ? `<button type="button" onclick="switchToOrbitSection(${idx-1})" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">⬅ Prev</button>` : `<span></span>`) +
           (idx < sections.length - 1 ? `<button type="button" onclick="switchToOrbitSection(${idx+1})" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">Next ➔</button>` : `<button type="button" onclick="triggerFinalGenerateAndPopup()" class="chrome-pill-btn text-xs gemini-jyotish-fab text-white px-6 py-2.5 shadow-lg font-bold">Generate</button>`);
         bodyDiv.appendChild(nav); stage.appendChild(sec);
       });
       rail.innerHTML = sections.map((s, i) => `<button type="button" data-sec-idx="${i}" onclick="switchToOrbitSection(${i})" class="rail-item-btn ${i===0?'rail-active':''} w-full text-left text-xs truncate">${s.querySelector('summary span').textContent}</button>`).join('');
+      const mobRail = document.getElementById('mobileBottomRail');
+      if (mobRail) mobRail.innerHTML = sections.map((s, i) => `<button type="button" onclick="switchToOrbitSection(${i})" class="${i===0?'bg-blue-600 text-white font-bold':'bg-slate-800 text-slate-300 font-semibold'} px-3 py-1.5 rounded-full text-xs shrink-0">${s.querySelector('summary span').textContent}</button>`).join('');
       document.addEventListener('mousemove', (e) => {
         const vw = window.innerWidth, lw = vw - 9, isOpen = rail.classList.contains('rail-open');
         if (!isOpen && e.clientY > 55 && e.clientX >= lastCursorX && e.clientX >= lw - 22) rail.classList.add('rail-open');
@@ -1640,20 +2033,67 @@
       }, { passive: true });
     }
 
-    function switchToOrbitSection(idx) {
-      const secs = getAllMainSections(); if (idx < 0 || idx >= secs.length) return;
-      secs.forEach((s, i) => s.classList.toggle('orbit-active', i === idx));
-      currentOrbitSectionIndex = idx;
-      document.querySelectorAll('#rightSectionRail .rail-item-btn').forEach((b, i) => b.classList.toggle('rail-active', i === idx));
-      const thumb = document.getElementById('rightRailSliderThumb'), track = document.getElementById('rightRailSliderTrack');
-      if (thumb && track) thumb.style.transform = `translate3d(0, ${Math.round((idx / (secs.length - 1)) * (track.clientHeight - 40)) + 2}px, 0)`;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    function getMoreMenuNavigableItems() {
+      const sb = document.getElementById('leftSidebar'); if (!sb) return [];
+      return [sb.querySelector('div[onclick*="openProfileModal"]'), ...Array.from(sb.querySelectorAll('nav button')), ...Array.from(sb.querySelectorAll(':scope > div:last-child button'))].filter(Boolean);
+    }
+    function highlightRailLabelOnly(idx) {
+      railFocusedSecIndex = idx;
+      document.querySelectorAll('#rightSectionRail .rail-item-btn').forEach(b => {
+        const match = parseInt(b.dataset.secIdx, 10) === idx; b.classList.toggle('rail-kb-focus', match);
+        if (match) b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    }
+    function highlightMoreMenuItem(idx) {
+      const items = getMoreMenuNavigableItems(); if (!items.length) return;
+      moreFocusedItemIndex = Math.max(0, Math.min(items.length - 1, idx));
+      items.forEach((el, i) => { el.classList.toggle('more-kb-focus', i === moreFocusedItemIndex); });
+    }
+    function closeAllPanelsAndModals() {
+      document.getElementById('rightSectionRail')?.classList.remove('rail-open');
+      const sb = document.getElementById('leftSidebar');
+      if (sb && !sb.classList.contains('-translate-x-full')) { sb.classList.add('-translate-x-full'); document.getElementById('sidebarOverlay')?.classList.add('hidden'); }
+      ['accountPopup', 'profileModal', 'settingsModal', 'storageModal', 'aboutModal', 'loginModal', 'geminiModal', 'summaryPopupModal', 'shortcutsModal', 'searchResultsDropdown'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+      syncPopupBackgroundBlurState();
     }
 
+    document.addEventListener('keydown', (e) => {
+      const rail = document.getElementById('rightSectionRail'), sb = document.getElementById('leftSidebar');
+      if (e.key === 'PrintScreen') { document.body.classList.add('capture-shield-active'); return; }
+      if (e.ctrlKey && e.shiftKey && (e.key === 'Shift' || e.key === 'Control')) { e.preventDefault(); closeAllPanelsAndModals(); return; }
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); saveCurrentChartToStorage(true); return; }
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'Backspace') { e.preventDefault(); resetForm(); return; }
+      if (e.ctrlKey && !e.shiftKey && e.key === 'ArrowRight') { e.preventDefault(); if (sb && !sb.classList.contains('-translate-x-full')) toggleSidebar(); rail?.classList.add('rail-open'); highlightRailLabelOnly(currentOrbitSectionIndex); return; }
+      if (e.ctrlKey && !e.shiftKey && e.key === 'ArrowLeft') { e.preventDefault(); rail?.classList.remove('rail-open'); if (sb && sb.classList.contains('-translate-x-full')) toggleSidebar(); highlightMoreMenuItem(0); return; }
+      if (e.key === 'Tab' && !e.ctrlKey && !e.shiftKey) {
+        const s = document.getElementById('headerCaseSearch');
+        if (s && document.activeElement !== s && !document.body.classList.contains('popup-blur-active')) { e.preventDefault(); s.focus(); s.select(); return; }
+      }
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      const isMoreOpen = sb && !sb.classList.contains('-translate-x-full'), isRailOpen = rail && rail.classList.contains('rail-open');
+      if (e.key === 'Enter') {
+        if (isMoreOpen && moreFocusedItemIndex !== null) { e.preventDefault(); getMoreMenuNavigableItems()[moreFocusedItemIndex]?.click(); return; }
+        if (isRailOpen && railFocusedSecIndex !== null) { e.preventDefault(); rail.classList.remove('rail-open'); switchToOrbitSection(railFocusedSecIndex); return; }
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const step = e.key === 'ArrowUp' ? -1 : 1;
+        if (isMoreOpen) { e.preventDefault(); highlightMoreMenuItem((moreFocusedItemIndex ?? 0) + step); return; }
+        if (isRailOpen) { e.preventDefault(); const max = getAllMainSections().length - 1; highlightRailLabelOnly(Math.max(0, Math.min(max, (railFocusedSecIndex ?? currentOrbitSectionIndex) + step))); return; }
+        const act = document.activeElement;
+        if (act && (act.tagName === 'SELECT' || act.tagName === 'TEXTAREA' || act.type === 'number')) return;
+        e.preventDefault(); window.scrollBy({ top: step * 140, behavior: 'smooth' }); return;
+      }
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !document.body.classList.contains('popup-blur-active')) {
+        const act = document.activeElement;
+        if (act && (act.tagName === 'INPUT' || act.tagName === 'TEXTAREA') && (act.value || '').length > 0) return;
+        e.preventDefault(); switchToOrbitSection(currentOrbitSectionIndex + (e.key === 'ArrowLeft' ? -1 : 1));
+      }
+    });
+
     window.addEventListener('DOMContentLoaded', () => {
-      loadAstrologerProfile(); initOrbitWorkspace(); computeFullHoroscope();
-      if (localStorage.getItem('jyotish_gemini_api_key')) document.getElementById('headerKeyStatusText').textContent = 'Key Active';
+      ensureShortcutsModalExists(); loadAstrologerProfile(); updateForensicWatermark(); initOrbitWorkspace(); computeFullHoroscope();
       document.getElementById('sidebarCaseCount').textContent = getStoredCharts().length;
+      document.getElementById('antiCaptureCurtain')?.addEventListener('click', () => document.body.classList.remove('capture-shield-active'));
     });
   </script>
 </body>
