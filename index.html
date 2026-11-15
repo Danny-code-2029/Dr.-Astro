@@ -642,7 +642,7 @@
               <span>🔑</span> <span>API Vault Key Status</span>
             </button>
             <button onclick="closeAccountPopup(); toggleSettingsModal();" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-800 text-left text-slate-200">
-              <span>⚙️</span> <span>Settings &amp; Privacy Lock</span>
+              <span>⚙️</span> <span>Settings &amp; Allowed Gmails</span>
             </button>
           </div>
           <div class="pt-3 mt-2 border-t border-slate-800 flex justify-center">
@@ -1470,6 +1470,7 @@
           <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 shadow text-sm">
             <span>G</span> <span>Sign in with Google</span>
           </button>
+          <div id="authErrorBanner" class="hidden bg-rose-50 border border-rose-300 text-rose-900 p-3 rounded-2xl text-[11px] leading-relaxed space-y-1.5"></div>
           <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 space-y-1.5 text-indigo-950">
             <div class="font-bold">1-Device Security &amp; Cloud Vault:</div>
             <p class="text-[11px]">1. Each authorized email can access this portal on <strong>1 active device at a time</strong>.<br/>2. Paste your free Gemini API key once to unlock automatic AI horoscope &amp; palm vision generation.</p>
@@ -1499,6 +1500,9 @@
             <div class="font-bold text-sm" id="activeUserDisplay">Logged in</div>
             <p class="text-[11px] mt-1">✅ Active 1-Device session verified &amp; Gemini API key unlocked.</p>
           </div>
+          <button id="openAdminPanelQuickBtn" type="button" onclick="toggleLoginModal(); toggleSettingsModal();" class="hidden w-full chrome-pill-btn justify-center bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-3 shadow text-xs">
+            <span>🔒 Open Admin Access Panel (Allowed Gmail IDs)</span>
+          </button>
           <div>
             <label class="block font-semibold mb-1">Update / Replace Saved Cloud Vault Key</label>
             <div class="flex gap-2">
@@ -1712,7 +1716,7 @@
     // 2. App Store / Google Play Reviewer Passcode Unlock
     function unlockStoreReviewerAccess() {
       const code = (document.getElementById('reviewerPasscodeInput')?.value || '').trim();
-      if (code === window.STORE_REVIEWER_PASSCODE || code === "PEDS-REVIEW-2026") {
+      if (code === window.STORE_REVIEWER_PASSCODE) {
         sessionStorage.setItem('jyotish_store_reviewer_unlocked', 'true');
         document.getElementById('privateAccessOverlay')?.classList.add('hidden');
         syncPopupBackgroundBlurState();
@@ -2090,14 +2094,13 @@
       let loadedKey = '';
       try {
         const docSnap = await db.collection('medico_vault').doc(user.uid).get();
-        if (docSnap.exists) {
-          const enc = docSnap.data().encryptedKey || docSnap.data().apiKeyEnc;
-          if (enc) loadedKey = atob(enc);
+        if (docSnap.exists && docSnap.data().encryptedKey) {
+          loadedKey = atob(docSnap.data().encryptedKey);
         }
       } catch (err) {}
 
       if (!loadedKey) {
-        const localBackup = localStorage.getItem('jyotish_uid_vault_' + user.uid) || localStorage.getItem('peds_uid_vault_' + user.uid);
+        const localBackup = localStorage.getItem('jyotish_uid_vault_' + user.uid);
         if (localBackup) loadedKey = atob(localBackup);
       }
 
@@ -2114,10 +2117,38 @@
       }
     });
 
+    // Standalone Google Sign-In for danny-code-jyotish-vault (Never calls signInWithRedirect)
     async function signInWithGoogle() {
+      const errBanner = document.getElementById('authErrorBanner');
+      if (errBanner) errBanner.classList.add('hidden');
+
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
-      try { await auth.signInWithPopup(provider); } catch (err) { await auth.signInWithRedirect(provider); }
+
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        const code = err?.code || '';
+        const host = window.location.hostname || 'localhost';
+        let helpHtml = `<div><strong>⚠️ Google Sign-In Error (${code || 'Popup Failed'}):</strong> ${err?.message || ''}</div>`;
+
+        if (code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found') {
+          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Fix in Firebase Console (<code>danny-code-jyotish-vault</code>):</strong><br/>1. Open <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/providers" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authentication → Sign-in method</a>.<br/>2. Click <strong>Google</strong> → Toggle <strong>Enable</strong> → Choose support email (<code>satya.srinivash1234@gmail.com</code>) → Click <strong>Save</strong>.</div>`;
+        } else if (code === 'auth/unauthorized-domain') {
+          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Fix in Firebase Console (<code>danny-code-jyotish-vault</code>):</strong><br/>1. Open <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/settings" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authentication → Settings → Authorized domains</a>.<br/>2. Click <strong>Add domain</strong> and add: <code>${host}</code> (and <code>danny-code-2029.github.io</code>).</div>`;
+        } else {
+          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Checklist for <code>danny-code-jyotish-vault</code>:</strong><br/>1. Enable <strong>Google</strong> provider in <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/providers" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Firebase Auth → Sign-in method</a>.<br/>2. Add <code>${host}</code> &amp; <code>danny-code-2029.github.io</code> under <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/settings" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authorized domains</a>.</div>`;
+        }
+
+        if (errBanner) {
+          errBanner.innerHTML = helpHtml;
+          errBanner.classList.remove('hidden');
+        }
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal && loginModal.classList.contains('hidden')) {
+          loginModal.classList.remove('hidden');
+        }
+      }
     }
 
     async function saveKeyToCloudVault(inputElementId) {
@@ -2127,7 +2158,7 @@
       const encoded = btoa(rawKey);
       localStorage.setItem('jyotish_uid_vault_' + currentGoogleUser.uid, encoded);
       try {
-        await db.collection('medico_vault').doc(currentGoogleUser.uid).set({ email: currentGoogleUser.email, encryptedKey: encoded, apiKeyEnc: encoded }, { merge: true });
+        await db.collection('medico_vault').doc(currentGoogleUser.uid).set({ email: currentGoogleUser.email, encryptedKey: encoded }, { merge: true });
       } catch (err) {}
       activeSessionKey = rawKey;
       sessionStorage.setItem('jyotish_active_session_key', rawKey);
@@ -2152,14 +2183,17 @@
       const loggedInView = document.getElementById('loggedInView');
       const activeUserDisplay = document.getElementById('activeUserDisplay');
       const statusBox = document.getElementById('vaultSyncStatus');
+      const adminQuickBtn = document.getElementById('openAdminPanelQuickBtn');
 
       if (currentGoogleUser) {
         loginBtn.classList.add('hidden');
         avatarBtn.classList.remove('hidden');
         if (activeUserDisplay) activeUserDisplay.textContent = `Signed in as ${currentGoogleUser.email}`;
+        if (adminQuickBtn) adminQuickBtn.classList.toggle('hidden', !isCurrentUserAdmin(currentGoogleUser));
       } else {
         loginBtn.classList.remove('hidden');
         avatarBtn.classList.add('hidden');
+        if (adminQuickBtn) adminQuickBtn.classList.add('hidden');
       }
 
       if (loggedOutView && firstTimeKeyView && loggedInView) {
