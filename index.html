@@ -19,9 +19,9 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Jyotish AI" />
+ <meta name="apple-mobile-web-app-title" content="Dr. Astro" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <link id="dynamicCanonicalLink" rel="canonical" href="https://danny-code-2029.github.io/jyotish-ai/" />
+  <link id="dynamicCanonicalLink" rel="canonical" href="https://danny-code-2029.github.io/Dr.-Astro/" />
   <link id="dynamicManifestLink" rel="manifest" href="" />
 
   <!-- 1.3 Professional Typography (Plus Jakarta Sans, Source Serif 4, JetBrains Mono) -->
@@ -1462,10 +1462,10 @@
       </div>
 
       <div class="p-5 space-y-3 text-xs">
-        <div id="vaultSyncStatus" class="text-[11px] bg-slate-950 text-slate-300 px-3 py-2 rounded-xl border border-slate-800">
-          ☁️ Connected to Firebase (`danny-code-jyotish-vault`)
+        <div id="vaultSyncStatus" class="text-[11px] bg-slate-100 text-slate-700 px-3 py-2 rounded-xl border">
+          ☁️ Connected to Dr. Astro Firebase (`danny-code-jyotish-vault`)
         </div>
-
+           
         <!-- View A: Logged Out -->
         <div id="loggedOutView" class="space-y-3">
           <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 shadow text-sm">
@@ -1693,9 +1693,9 @@
       }
       const manifestEl = document.getElementById('dynamicManifestLink');
       if (manifestEl) {
-        const pwaManifest = {
-          name: "Jyotish & Samudrika AI | Dr. Danny",
-          short_name: "Jyotish AI",
+const pwaManifest = {
+          name: "Dr. Astro — Jyotish & Samudrika AI | Dr. Danny",
+          short_name: "Dr. Astro",
           description: "Vedic Horoscope & Multimodal Samudrika Shastra Palm Analyzer",
           start_url: currentOriginUrl,
           scope: currentOriginUrl,
@@ -1734,7 +1734,7 @@
       }
     }
 
-    // 3. Mandatory In-App Account & Cloud Data Deletion
+    // 3. Mandatory In-App Account & Cloud Data Deletion (Isolated to jyotish_vault)
     async function deleteMedicoAccountAndData() {
       try {
         if (currentGoogleUser) {
@@ -2074,7 +2074,7 @@
       return (list || []).map(e => normalizeEmail(e)).filter(e => e && e !== window.BANNED_RESIDUE_EMAIL && e !== window.ADMIN_OWNER_EMAIL);
     }
 
-    auth.onAuthStateChanged(async (user) => {
+auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
       renderForensicWatermark();
       injectPrivacySettingsUI();
@@ -2090,8 +2090,8 @@
       }
 
       await claimSingleDeviceSessionSlot(user);
-      if (statusBox) statusBox.textContent = `🔄 Signed in as ${user.email} — Checking Cloud Vault...`;
-let loadedKey = '';
+      if (statusBox) statusBox.textContent = `🔄 Signed in as ${user.email} — Checking Dr. Astro Vault...`;
+      let loadedKey = '';
       try {
         const docSnap = await db.collection('jyotish_vault').doc(user.uid).get();
         if (docSnap.exists) {
@@ -2102,7 +2102,9 @@ let loadedKey = '';
 
       if (!loadedKey) {
         const localBackup = localStorage.getItem('jyotish_uid_vault_' + user.uid);
-        if (localBackup) loadedKey = atob(localBackup);
+        if (localBackup) {
+          try { loadedKey = atob(localBackup); } catch (e) {}
+        }
       }
 
       loadMedicoProfileUI();
@@ -2118,48 +2120,30 @@ let loadedKey = '';
       }
     });
 
-    // Standalone Google Sign-In for danny-code-jyotish-vault (Never calls signInWithRedirect)
     async function signInWithGoogle() {
-      const errBanner = document.getElementById('authErrorBanner');
-      if (errBanner) errBanner.classList.add('hidden');
-
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
-
       try {
         await auth.signInWithPopup(provider);
       } catch (err) {
-        const code = err?.code || '';
-        const host = window.location.hostname || 'localhost';
-        let helpHtml = `<div><strong>⚠️ Google Sign-In Error (${code || 'Popup Failed'}):</strong> ${err?.message || ''}</div>`;
-
-        if (code === 'auth/operation-not-allowed' || code === 'auth/configuration-not-found') {
-          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Fix in Firebase Console (<code>danny-code-jyotish-vault</code>):</strong><br/>1. Open <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/providers" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authentication → Sign-in method</a>.<br/>2. Click <strong>Google</strong> → Toggle <strong>Enable</strong> → Choose support email (<code>satya.srinivash1234@gmail.com</code>) → Click <strong>Save</strong>.</div>`;
-        } else if (code === 'auth/unauthorized-domain') {
-          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Fix in Firebase Console (<code>danny-code-jyotish-vault</code>):</strong><br/>1. Open <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/settings" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authentication → Settings → Authorized domains</a>.<br/>2. Click <strong>Add domain</strong> and add: <code>${host}</code> (and <code>danny-code-2029.github.io</code>).</div>`;
-        } else {
-          helpHtml += `<div class="mt-1 text-indigo-950 bg-white p-2 rounded-lg border border-rose-200"><strong>Checklist for <code>danny-code-jyotish-vault</code>:</strong><br/>1. Enable <strong>Google</strong> provider in <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/providers" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Firebase Auth → Sign-in method</a>.<br/>2. Add <code>${host}</code> &amp; <code>danny-code-2029.github.io</code> under <a href="https://console.firebase.google.com/project/danny-code-jyotish-vault/authentication/settings" target="_blank" rel="noopener" class="text-blue-600 underline font-bold">Authorized domains</a>.</div>`;
-        }
-
-        if (errBanner) {
-          errBanner.innerHTML = helpHtml;
-          errBanner.classList.remove('hidden');
-        }
-        const loginModal = document.getElementById('loginModal');
-        if (loginModal && loginModal.classList.contains('hidden')) {
-          loginModal.classList.remove('hidden');
-        }
+        showStatusToast('⚠️ Sign-in popup closed or blocked (' + (err.code || 'check Authorized Domains') + ')');
       }
     }
 
     async function saveKeyToCloudVault(inputElementId) {
       if (!currentGoogleUser) { showStatusToast('⚠️ Please sign in with Google first.'); return; }
       const rawKey = document.getElementById(inputElementId).value.trim();
-      if (!rawKey) { showStatusToast('⚠️ Please paste your Gemini API key'); return; }
+      if (!rawKey) { showStatusToast('⚠️ Please paste your Dr. Astro Gemini API key'); return; }
       const encoded = btoa(rawKey);
       localStorage.setItem('jyotish_uid_vault_' + currentGoogleUser.uid, encoded);
-    try {
-        await db.collection('jyotish_vault').doc(currentGoogleUser.uid).set({ email: currentGoogleUser.email, encryptedKey: encoded, apiKeyEnc: encoded }, { merge: true });
+      try {
+        await db.collection('jyotish_vault').doc(currentGoogleUser.uid).set({
+          email: currentGoogleUser.email,
+          encryptedKey: encoded,
+          apiKeyEnc: encoded,
+          appNickname: "Dr. Astro",
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
       } catch (err) {}
       activeSessionKey = rawKey;
       sessionStorage.setItem('jyotish_active_session_key', rawKey);
@@ -2184,17 +2168,14 @@ let loadedKey = '';
       const loggedInView = document.getElementById('loggedInView');
       const activeUserDisplay = document.getElementById('activeUserDisplay');
       const statusBox = document.getElementById('vaultSyncStatus');
-      const adminQuickBtn = document.getElementById('openAdminPanelQuickBtn');
 
       if (currentGoogleUser) {
         loginBtn.classList.add('hidden');
         avatarBtn.classList.remove('hidden');
         if (activeUserDisplay) activeUserDisplay.textContent = `Signed in as ${currentGoogleUser.email}`;
-        if (adminQuickBtn) adminQuickBtn.classList.toggle('hidden', !isCurrentUserAdmin(currentGoogleUser));
       } else {
         loginBtn.classList.remove('hidden');
         avatarBtn.classList.add('hidden');
-        if (adminQuickBtn) adminQuickBtn.classList.add('hidden');
       }
 
       if (loggedOutView && firstTimeKeyView && loggedInView) {
@@ -2203,9 +2184,9 @@ let loadedKey = '';
         loggedInView.classList.toggle('hidden', state !== 'unlocked');
       }
       if (statusBox) {
-        if (state === 'unlocked') statusBox.textContent = `✅ Cloud Vault Unlocked (${currentGoogleUser?.email || ''})`;
-        else if (state === 'needs_key') statusBox.textContent = `⚠️ Paste your Gemini API key once to finish setup`;
-        else statusBox.textContent = `☁️ Connected to Firebase (danny-code-jyotish-vault)`;
+        if (state === 'unlocked') statusBox.textContent = `✅ Dr. Astro Cloud Vault Unlocked (${currentGoogleUser?.email || ''})`;
+        else if (state === 'needs_key') statusBox.textContent = `⚠️ Paste your Dr. Astro Gemini API key once to finish setup`;
+        else statusBox.textContent = `☁️ Connected to Dr. Astro Firebase (danny-code-jyotish-vault)`;
       }
     }
 
