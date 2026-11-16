@@ -1740,7 +1740,7 @@
         if (currentGoogleUser) {
           const uid = currentGoogleUser.uid;
           const emailKey = normalizeEmail(currentGoogleUser.email);
-          try { await db.collection('medico_vault').doc(uid).delete(); } catch (e) {}
+          try { await db.collection('jyotish_vault').doc(uid).delete(); } catch (e) {}
           try { await db.collection('active_sessions').doc(emailKey).delete(); } catch (e) {}
           localStorage.removeItem('jyotish_uid_vault_' + uid);
           try {
@@ -2091,11 +2091,12 @@
 
       await claimSingleDeviceSessionSlot(user);
       if (statusBox) statusBox.textContent = `🔄 Signed in as ${user.email} — Checking Cloud Vault...`;
-      let loadedKey = '';
+let loadedKey = '';
       try {
-        const docSnap = await db.collection('medico_vault').doc(user.uid).get();
-        if (docSnap.exists && docSnap.data().encryptedKey) {
-          loadedKey = atob(docSnap.data().encryptedKey);
+        const docSnap = await db.collection('jyotish_vault').doc(user.uid).get();
+        if (docSnap.exists) {
+          const enc = docSnap.data().encryptedKey || docSnap.data().apiKeyEnc;
+          if (enc) loadedKey = atob(enc);
         }
       } catch (err) {}
 
@@ -2157,8 +2158,8 @@
       if (!rawKey) { showStatusToast('⚠️ Please paste your Gemini API key'); return; }
       const encoded = btoa(rawKey);
       localStorage.setItem('jyotish_uid_vault_' + currentGoogleUser.uid, encoded);
-      try {
-        await db.collection('medico_vault').doc(currentGoogleUser.uid).set({ email: currentGoogleUser.email, encryptedKey: encoded }, { merge: true });
+    try {
+        await db.collection('jyotish_vault').doc(currentGoogleUser.uid).set({ email: currentGoogleUser.email, encryptedKey: encoded, apiKeyEnc: encoded }, { merge: true });
       } catch (err) {}
       activeSessionKey = rawKey;
       sessionStorage.setItem('jyotish_active_session_key', rawKey);
