@@ -1450,73 +1450,73 @@
     </div>
   </div>
 
-  <!-- 11.5 Modal 4: Firebase Google Login & Cloud API Vault (Exact 3-State Flow) -->
+<!-- START: JYOTISH VAULT MODAL -->
   <div id="loginModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="modal-card bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-indigo-200">
-      <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
+    <div class="modal-card bg-slate-900 rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-indigo-500/40">
+      <div class="bg-slate-950 text-white px-5 py-4 flex items-center justify-between border-b border-slate-800">
         <div>
-          <h3 class="font-bold text-sm">🔑 Medico Google Login &amp; Cloud API Vault</h3>
-          <p class="text-[11px] text-slate-400">1-Device Concurrent Session Lock &amp; API Key Vault</p>
+          <h3 class="font-bold text-sm">🔑 Daivagya Google Login &amp; Jyotish API Vault</h3>
+          <p class="text-[11px] text-slate-400">1-Device Session Lock &amp; Dedicated Jyotish Gemini Key</p>
         </div>
         <button onclick="toggleLoginModal()" class="text-white text-xl font-bold px-2">&times;</button>
       </div>
 
       <div class="p-5 space-y-3 text-xs">
-        <div id="vaultSyncStatus" class="text-[11px] bg-slate-100 text-slate-700 px-3 py-2 rounded-xl border">
+        <div id="vaultSyncStatus" class="text-[11px] bg-slate-950 text-slate-300 px-3 py-2 rounded-xl border border-slate-800">
           ☁️ Connected to Firebase (`danny-code-jyotish-vault`)
         </div>
 
+        <!-- View A: Logged Out -->
         <div id="loggedOutView" class="space-y-3">
-          <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 shadow text-sm">
+          <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 shadow text-sm">
             <span>G</span> <span>Sign in with Google</span>
           </button>
-          <div id="authErrorBanner" class="hidden bg-rose-50 border border-rose-300 text-rose-900 p-3 rounded-2xl text-[11px] leading-relaxed space-y-1.5"></div>
-          <div class="bg-indigo-50 p-3.5 rounded-2xl border border-indigo-200 space-y-1.5 text-indigo-950">
-            <div class="font-bold">1-Device Security &amp; Cloud Vault:</div>
-            <p class="text-[11px]">1. Each authorized email can access this portal on <strong>1 active device at a time</strong>.<br/>2. Paste your free Gemini API key once to unlock automatic AI horoscope &amp; palm vision generation.</p>
+          <div class="bg-indigo-950/50 p-3.5 rounded-2xl border border-indigo-800/60 space-y-1.5 text-indigo-200">
+            <div class="font-bold">1-Device Security &amp; Separate Jyotish API Vault:</div>
+            <p class="text-[11px]">1. Each authorized email can access this portal on <strong>1 active device at a time</strong>.<br/>2. Paste a separate Gemini API key created under <code>danny-code-jyotish-vault</code> to keep quotas independent from Peds History.</p>
           </div>
         </div>
 
-        <div id="firstTimeKeyView" class="hidden space-y-3 bg-amber-50 p-3.5 rounded-2xl border border-amber-300 text-amber-950">
-          <div class="font-bold text-sm" id="welcomeNewMedico">👋 Welcome! Link Your Gemini API Key Once</div>
-          <p class="text-[11px]">Tap Step 1 to create a free key in Google AI Studio, then paste it in Step 2:</p>
-          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="chrome-pill-btn bg-indigo-700 hover:bg-indigo-800 text-white px-3.5 py-1.5 shadow">
-            ↗ Step 1: Open Google AI Studio &amp; Create Key
+        <!-- View B: First-Time Key Setup -->
+        <div id="firstTimeKeyView" class="hidden space-y-3 bg-amber-950/40 p-3.5 rounded-2xl border border-amber-700/60 text-amber-100">
+          <div class="font-bold text-sm" id="welcomeNewMedico">👋 Welcome! Link Your Jyotish Gemini API Key</div>
+          <p class="text-[11px]">Create a separate key under project <strong>danny-code-jyotish-vault</strong> in Google AI Studio, then paste it below:</p>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5 shadow">
+            ↗ Step 1: Open Google AI Studio &amp; Create Jyotish Key
           </a>
           <div>
-            <label class="block font-semibold mb-1">Step 2: Paste Your Gemini API Key (`AIzaSy...`)</label>
-            <input id="firstTimeKeyInput" type="password" placeholder="AIzaSy..." class="w-full border rounded-xl p-2 text-sm bg-white" />
+            <label class="block font-semibold mb-1">Step 2: Paste Your Jyotish Gemini API Key (`AIzaSy...`)</label>
+            <input id="firstTimeKeyInput" type="password" placeholder="AIzaSy..." class="w-full border border-slate-700 rounded-xl p-2 text-sm bg-slate-950 text-white font-jyotish-mono" />
           </div>
-          <button onclick="saveKeyToCloudVault('firstTimeKeyInput')" class="w-full chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 shadow">
-            🔒 Lock Key Into My Firebase Cloud Vault
+          <button onclick="saveKeyToCloudVault('firstTimeKeyInput')" class="w-full chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 shadow">
+            🔒 Lock Key Into Jyotish Cloud Vault
           </button>
-          <button onclick="handleMedicoLogout()" class="w-full text-center text-red-600 hover:underline pt-1">
+          <button onclick="handleMedicoLogout()" class="w-full text-center text-rose-400 hover:underline pt-1">
             Cancel &amp; Sign Out
           </button>
         </div>
 
+        <!-- View C: Logged In & Key Unlocked -->
         <div id="loggedInView" class="hidden space-y-3">
-          <div class="bg-emerald-50 border border-emerald-300 p-3.5 rounded-2xl text-emerald-950">
+          <div class="bg-emerald-950/50 border border-emerald-700/60 p-3.5 rounded-2xl text-emerald-200">
             <div class="font-bold text-sm" id="activeUserDisplay">Logged in</div>
-            <p class="text-[11px] mt-1">✅ Active 1-Device session verified &amp; Gemini API key unlocked.</p>
+            <p class="text-[11px] mt-1">✅ Active 1-Device session verified &amp; dedicated Jyotish Gemini API key unlocked.</p>
           </div>
-          <button id="openAdminPanelQuickBtn" type="button" onclick="toggleLoginModal(); toggleSettingsModal();" class="hidden w-full chrome-pill-btn justify-center bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 px-3 shadow text-xs">
-            <span>🔒 Open Admin Access Panel (Allowed Gmail IDs)</span>
-          </button>
           <div>
-            <label class="block font-semibold mb-1">Update / Replace Saved Cloud Vault Key</label>
+            <label class="block font-semibold mb-1 text-slate-300">Update / Replace Saved Jyotish Vault Key</label>
             <div class="flex gap-2">
-              <input id="updateVaultKeyInput" type="password" placeholder="Paste new AIzaSy... key" class="w-full border rounded-xl p-2 text-xs" />
-              <button onclick="saveKeyToCloudVault('updateVaultKeyInput')" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-700 text-white px-4">Save</button>
+              <input id="updateVaultKeyInput" type="password" placeholder="Paste new Jyotish AIzaSy... key" class="w-full border border-slate-700 rounded-xl p-2 text-xs bg-slate-950 text-white font-jyotish-mono" />
+              <button onclick="saveKeyToCloudVault('updateVaultKeyInput')" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-4">Save</button>
             </div>
           </div>
-          <button onclick="handleMedicoLogout()" class="w-full chrome-pill-btn justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 shadow">
+          <button onclick="handleMedicoLogout()" class="w-full chrome-pill-btn justify-center bg-rose-600 hover:bg-rose-500 text-white font-bold py-2.5 shadow">
             🚪 Log Out &amp; Release Device Lock
           </button>
         </div>
       </div>
     </div>
   </div>
+  <!-- END: JYOTISH VAULT MODAL -->
 
   <!-- 11.6 Modal 5: Display, Vault, Account Deletion & Admin Privacy Settings -->
   <div id="settingsModal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
@@ -3172,12 +3172,26 @@
       window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
     }
 
+// START: ISOLATED JYOTISH GEMINI HELPERS
+    function getActiveJyotishGeminiKey() {
+      if (activeSessionKey) return activeSessionKey.trim();
+      if (currentGoogleUser) {
+        const localEnc = localStorage.getItem('jyotish_uid_vault_' + currentGoogleUser.uid);
+        if (localEnc) {
+          try { return atob(localEnc).trim(); } catch (e) {}
+        }
+      }
+      return (sessionStorage.getItem('jyotish_active_session_key') || '').trim();
+    }
+
     async function callGeminiAPI(promptText, extraInlineParts = []) {
+      const apiKey = getActiveJyotishGeminiKey();
+      if (!apiKey) return '';
       const parts = [{ text: promptText }, ...extraInlineParts];
       if (attachedFileBase64 && attachedFileMime) {
         parts.push({ inline_data: { mime_type: attachedFileMime, data: attachedFileBase64 } });
       }
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${activeSessionKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts }] })
       });
@@ -3188,8 +3202,9 @@
     async function polishWithGemini() {
       const btn = document.getElementById('aiBtn');
       const banner = document.getElementById('vaultStatusBanner');
-      if (!activeSessionKey) {
-        if (banner) banner.textContent = '⚠️ Sign in & link your Gemini API key in the Cloud Vault for AI synthesis';
+      const apiKey = getActiveJyotishGeminiKey();
+      if (!apiKey) {
+        if (banner) banner.textContent = '⚠️ Sign in & link your Jyotish Gemini API key in the Cloud Vault for AI synthesis';
         return;
       }
       try {
@@ -3220,39 +3235,7 @@
         btn.disabled = false;
       }
     }
-
-    async function askGeminiDoubt() {
-      const out = document.getElementById('geminiModalOutput');
-      if (!activeSessionKey) { out.value = '⚠️ Please sign in and unlock your Cloud API Vault first.'; return; }
-      const q = document.getElementById('geminiUserPrompt').value.trim() || 'Analyze this chart and any attached file.';
-      out.value = '⏳ Consulting Gemini 2.5 Flash...';
-      const st = currentHoroscopeState;
-      const reply = await callGeminiAPI(`You are an expert in Vedic Jyotish (Parashara, Jaimini, Varahamihira, Kalidasa, B.V. Raman, Sanjay Rath) and Samudrika Shastra. Current chart Lagna: ${RASIS[st.lagnaVargas.rasiIdx].name}, Moon Rasi: ${st.planets.Moon.vargas.d1}, Atmakaraka: ${st.atmakaraka}. Answer: ${q}`);
-      out.value = reply || 'No response received.';
-    }
-
-    async function geminiControlPage() {
-      const out = document.getElementById('geminiModalOutput');
-      if (!activeSessionKey) { out.value = '⚠️ Please sign in and unlock your Cloud API Vault first.'; return; }
-      const cmd = document.getElementById('geminiUserPrompt').value.trim();
-      if (!cmd) { out.value = 'Please type a command in the prompt box first.'; return; }
-      out.value = '⚡ Parsing command and updating page fields...';
-      const prompt = `Extract birth & palm parameters from this user command: "${cmd}". Return ONLY valid JSON with any applicable keys from: {"nativeName": string, "nativeGender": "Male (Purusha Jataka)"|"Female (Stri Jataka)", "birthDate": "YYYY-MM-DD", "birthTime": "HH:MM:SS", "birthPlaceName": string, "birthLat": number, "birthLon": number, "palmMountsNotes": string, "palmCustomQuestion": string}. Do not include markdown fences.`;
-      const reply = await callGeminiAPI(prompt);
-      try {
-        const cleanJson = reply.replace(/```json|```/g, '').trim();
-        const parsed = JSON.parse(cleanJson);
-        Object.keys(parsed).forEach(k => {
-          const el = document.getElementById(k);
-          if (el && parsed[k] !== undefined && parsed[k] !== null) el.value = parsed[k];
-        });
-        computeFullHoroscope();
-        saveActiveWorkingDraft();
-        out.value = `✅ Page updated dynamically:\n` + JSON.stringify(parsed, null, 2);
-      } catch (e) {
-        out.value = `Raw response:\n${reply}`;
-      }
-    }
+    // END: ISOLATED JYOTISH GEMINI HELPERS
 
     async function geminiVivaMode() {
       const out = document.getElementById('geminiModalOutput');
