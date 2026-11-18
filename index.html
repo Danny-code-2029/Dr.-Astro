@@ -1466,11 +1466,44 @@
           ☁️ Connected to Dr. Astro Firebase (`danny-code-jyotish-vault`)
         </div>
            
-        <!-- View A: Logged Out -->
+<!-- View A: Logged Out (With Device Account Matcher & Other Accounts Button) -->
         <div id="loggedOutView" class="space-y-3">
-          <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 shadow text-sm">
-            <span>G</span> <span>Sign in with Google</span>
+          <!-- Matched / Present Accounts on This Device -->
+          <div id="modalMatchedAccountsBox" class="hidden space-y-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center justify-between">
+              <span>✓ Present Accounts Matched on Device</span>
+              <span class="text-[10px] text-slate-400 font-normal">Tap to sign in</span>
+            </div>
+            <div id="modalMatchedAccountsList" class="space-y-1.5 max-h-40 overflow-y-auto pr-0.5"></div>
+          </div>
+
+          <!-- Quick Device Email Autofill Checker -->
+          <div class="bg-slate-950/70 p-2.5 rounded-2xl border border-slate-800 space-y-1.5">
+            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Check / Match a Device Email with Website Access
+            </label>
+            <div class="flex gap-1.5">
+              <input
+                id="modalCheckDeviceEmailInput"
+                type="email"
+                name="email"
+                autocomplete="username email"
+                placeholder="Tap to autofill or type Gmail..."
+                onkeydown="if(event.key==='Enter'){ event.preventDefault(); checkAndAddDeviceEmail('modalCheckDeviceEmailInput'); }"
+                class="flex-1 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs bg-slate-900 text-white"
+              />
+              <button type="button" onclick="checkAndAddDeviceEmail('modalCheckDeviceEmailInput')" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-600 px-3 py-1.5 text-xs shrink-0">
+                Match
+              </button>
+            </div>
+            <div id="modalCheckEmailFeedback" class="hidden text-[11px] pt-0.5"></div>
+          </div>
+
+          <!-- Login with Another Account Button -->
+          <button onclick="signInWithGoogle('')" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 shadow text-sm">
+            <span>G</span> <span id="modalOtherAccountBtnText">Login with another Google account</span>
           </button>
+
           <div class="bg-indigo-950/50 p-3.5 rounded-2xl border border-indigo-800/60 space-y-1.5 text-indigo-200">
             <div class="font-bold">1-Device Security &amp; Separate Jyotish API Vault:</div>
             <p class="text-[11px]">1. Each authorized email can access this portal on <strong>1 active device at a time</strong>.<br/>2. Paste a separate Gemini API key created under <code>danny-code-jyotish-vault</code> to keep quotas independent from Peds History.</p>
@@ -1632,9 +1665,41 @@
           Access is restricted to authorized Gmail IDs on <strong>1 active device at a time</strong>.
         </p>
       </div>
-      <div id="privateGateError" class="hidden bg-rose-950/80 border border-rose-700 text-rose-200 text-xs p-3 rounded-2xl"></div>
-      <button onclick="signInWithGoogle()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 shadow-lg text-sm">
-        <span>G</span> <span>Sign in / Claim Active Device Slot</span>
+  <div id="privateGateError" class="hidden bg-rose-950/80 border border-rose-700 text-rose-200 text-xs p-3 rounded-2xl"></div>
+
+      <!-- Matched / Present Accounts on This Device -->
+      <div id="gateMatchedAccountsBox" class="hidden text-left space-y-2 bg-slate-950/80 p-3 rounded-2xl border border-emerald-700/50">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 flex items-center justify-between">
+          <span>✓ Present Accounts in Website</span>
+          <span class="text-[10px] text-slate-400 font-normal">Tap to login</span>
+        </div>
+        <div id="gateMatchedAccountsList" class="space-y-1.5 max-h-40 overflow-y-auto"></div>
+      </div>
+
+      <!-- Check Device Email via Browser Autofill -->
+      <div class="text-left bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800 space-y-1.5">
+        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          Check if Your Device Gmail is Authorized
+        </label>
+        <div class="flex gap-1.5">
+          <input
+            id="gateCheckDeviceEmailInput"
+            type="email"
+            name="email"
+            autocomplete="username email"
+            placeholder="Tap to pick device email..."
+            onkeydown="if(event.key==='Enter'){ event.preventDefault(); checkAndAddDeviceEmail('gateCheckDeviceEmailInput'); }"
+            class="flex-1 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs bg-slate-900 text-white"
+          />
+          <button type="button" onclick="checkAndAddDeviceEmail('gateCheckDeviceEmailInput')" class="chrome-pill-btn bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-600 px-3 py-1.5 text-xs shrink-0">
+            Check
+          </button>
+        </div>
+        <div id="gateCheckEmailFeedback" class="hidden text-[11px] pt-0.5"></div>
+      </div>
+
+      <button onclick="signInWithGoogle('')" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 shadow-lg text-sm">
+        <span>G</span> <span id="gateOtherAccountBtnText">Login with another Google account</span>
       </button>
 
       <!-- App Store / Google Play Reviewer Access Passcode Box (Guideline 2.1 Compliance) -->
@@ -1734,8 +1799,13 @@ const pwaManifest = {
       }
     }
 
-    // 3. Mandatory In-App Account & Cloud Data Deletion (Isolated to jyotish_vault)
+// 3. Mandatory In-App Account & Cloud Data Deletion (Isolated to jyotish_vault)
     async function deleteMedicoAccountAndData() {
+      const confirmDelete = confirm(
+        "⚠️ Permanent Account & Data Deletion:\n\nThis will permanently delete your saved Jyotish Cloud API Vault, active device lock record, Daivagya profile, and all locally stored horoscopes.\n\nDo you want to proceed?"
+      );
+      if (!confirmDelete) return;
+
       try {
         if (currentGoogleUser) {
           const uid = currentGoogleUser.uid;
@@ -1755,6 +1825,7 @@ const pwaManifest = {
       localStorage.removeItem('jyotish_saved_cases_db_v1');
       localStorage.removeItem('jyotish_working_draft_v1');
       sessionStorage.clear();
+      alert("Your account and all associated cloud and local Jyotish data have been permanently deleted.");
       window.location.reload();
     }
 
@@ -1959,7 +2030,13 @@ const pwaManifest = {
     function openAboutModal() { document.getElementById('aboutModal').classList.remove('hidden'); }
     function closeAboutModal() { document.getElementById('aboutModal').classList.add('hidden'); }
     function closeSummaryPopupModal() { document.getElementById('summaryPopupModal').classList.add('hidden'); }
-    function toggleLoginModal() { document.getElementById('loginModal').classList.toggle('hidden'); }
+    function toggleLoginModal() {
+      const modal = document.getElementById('loginModal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        renderDeviceAccountMatchers();
+      }
+    }
     function toggleSettingsModal() { injectPrivacySettingsUI(); document.getElementById('settingsModal').classList.toggle('hidden'); }
     function toggleGeminiModal() { document.getElementById('geminiModal').classList.toggle('hidden'); }
 
@@ -2074,11 +2151,157 @@ const pwaManifest = {
       return (list || []).map(e => normalizeEmail(e)).filter(e => e && e !== window.BANNED_RESIDUE_EMAIL && e !== window.ADMIN_OWNER_EMAIL);
     }
 
-auth.onAuthStateChanged(async (user) => {
+// Device Account Memory & Website Allowed-List Matcher
+    function getSavedDeviceAccounts() {
+      try {
+        const list = JSON.parse(localStorage.getItem('jyotish_device_accounts_v1') || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function rememberDeviceAccount(email, displayName = '', photoURL = '') {
+      const norm = normalizeEmail(email);
+      if (!norm || !norm.includes('@') || norm === window.BANNED_RESIDUE_EMAIL) return;
+      const list = getSavedDeviceAccounts();
+      const idx = list.findIndex(a => normalizeEmail(a.email) === norm);
+      const entry = {
+        email: norm,
+        name: displayName || (idx >= 0 ? list[idx].name : '') || norm.split('@')[0],
+        photo: photoURL || (idx >= 0 ? list[idx].photo : '') || DEFAULT_AVATAR_SVG,
+        lastSeen: new Date().toISOString()
+      };
+      if (idx >= 0) list[idx] = entry;
+      else list.unshift(entry);
+      localStorage.setItem('jyotish_device_accounts_v1', JSON.stringify(list.slice(0, 8)));
+    }
+
+    function removeRememberedDeviceAccount(email, event) {
+      if (event) event.stopPropagation();
+      const norm = normalizeEmail(email);
+      const filtered = getSavedDeviceAccounts().filter(a => normalizeEmail(a.email) !== norm);
+      localStorage.setItem('jyotish_device_accounts_v1', JSON.stringify(filtered));
+      renderDeviceAccountMatchers();
+    }
+
+    async function fetchWebsiteAllowedEmailsSet() {
+      let cfg = getPrivacyConfig();
+      try {
+        const snap = await db.collection('site_settings').doc('access_control').get();
+        if (snap.exists) {
+          cfg = { enabled: Boolean(snap.data().enabled), emails: cleanEmailList(snap.data().emails) };
+          localStorage.setItem('jyotish_privacy_config_v3', JSON.stringify(cfg));
+        }
+      } catch (e) {}
+      const allowedSet = new Set([
+        normalizeEmail(window.ADMIN_OWNER_EMAIL),
+        ...cleanEmailList(cfg.emails)
+      ]);
+      return { enabled: Boolean(cfg.enabled), allowedSet };
+    }
+
+    async function renderDeviceAccountMatchers() {
+      const { enabled, allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const deviceAccounts = getSavedDeviceAccounts();
+
+      // Match device accounts that exist in the website's allowed list (or all device accounts if Private Mode is off)
+      const matchedAccounts = deviceAccounts.filter(acc => {
+        const em = normalizeEmail(acc.email);
+        return !enabled || allowedSet.has(em);
+      });
+
+      const buildAccountCardsHtml = (accounts) => accounts.map(acc => {
+        const isOwner = normalizeEmail(acc.email) === normalizeEmail(window.ADMIN_OWNER_EMAIL);
+        const badgeText = isOwner ? 'Owner ★' : '✓ In Website';
+        return `
+          <div onclick="signInWithGoogle('${acc.email}')" class="group cursor-pointer flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-blue-950/70 border border-slate-700 hover:border-blue-400 transition-all">
+            <div class="flex items-center gap-2.5 overflow-hidden">
+              <img src="${acc.photo || DEFAULT_AVATAR_SVG}" alt="" class="w-8 h-8 rounded-full object-cover border border-slate-600 shrink-0 bg-slate-800" />
+              <div class="overflow-hidden text-left">
+                <div class="text-xs font-bold text-white truncate group-hover:text-blue-300">${acc.name}</div>
+                <div class="text-[10px] text-slate-400 truncate font-clinical-mono">${acc.email}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0 ml-2">
+              <span class="text-[10px] bg-emerald-950/90 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded-full font-clinical-mono font-bold">${badgeText}</span>
+              <button type="button" onclick="removeRememberedDeviceAccount('${acc.email}', event)" class="text-slate-500 hover:text-rose-400 text-xs px-1" title="Forget from device">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const modalBox = document.getElementById('modalMatchedAccountsBox');
+      const modalList = document.getElementById('modalMatchedAccountsList');
+      const modalBtnText = document.getElementById('modalOtherAccountBtnText');
+      if (modalBox && modalList) {
+        if (matchedAccounts.length > 0) {
+          modalList.innerHTML = buildAccountCardsHtml(matchedAccounts);
+          modalBox.classList.remove('hidden');
+          if (modalBtnText) modalBtnText.textContent = 'Login with another Google account';
+        } else {
+          modalBox.classList.add('hidden');
+          if (modalBtnText) modalBtnText.textContent = 'Sign in with Google';
+        }
+      }
+
+      const gateBox = document.getElementById('gateMatchedAccountsBox');
+      const gateList = document.getElementById('gateMatchedAccountsList');
+      const gateBtnText = document.getElementById('gateOtherAccountBtnText');
+      if (gateBox && gateList) {
+        if (matchedAccounts.length > 0) {
+          gateList.innerHTML = buildAccountCardsHtml(matchedAccounts);
+          gateBox.classList.remove('hidden');
+          if (gateBtnText) gateBtnText.textContent = 'Login with another Google account';
+        } else {
+          gateBox.classList.add('hidden');
+          if (gateBtnText) gateBtnText.textContent = 'Sign in / Claim Active Device Slot';
+        }
+      }
+    }
+
+    async function checkAndAddDeviceEmail(inputId) {
+      const inputEl = document.getElementById(inputId);
+      const feedbackId = inputId === 'modalCheckDeviceEmailInput' ? 'modalCheckEmailFeedback' : 'gateCheckEmailFeedback';
+      const feedbackEl = document.getElementById(feedbackId);
+      const email = normalizeEmail(inputEl?.value || '');
+
+      if (!email || !email.includes('@')) {
+        if (feedbackEl) {
+          feedbackEl.textContent = '⚠️ Please enter or autofill a valid Gmail address.';
+          feedbackEl.className = 'text-[11px] pt-0.5 text-amber-400 font-semibold';
+        }
+        return;
+      }
+
+      const { enabled, allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const isMatched = !enabled || allowedSet.has(email);
+
+      if (isMatched) {
+        rememberDeviceAccount(email);
+        if (inputEl) inputEl.value = '';
+        if (feedbackEl) {
+          feedbackEl.textContent = `✅ ${email} is registered in this website! Tap it above to sign in.`;
+          feedbackEl.className = 'text-[11px] pt-0.5 text-emerald-400 font-semibold';
+        }
+        await renderDeviceAccountMatchers();
+      } else {
+        if (feedbackEl) {
+          feedbackEl.textContent = `❌ ${email} is not in the website's Allowed Gmails list. Try another account.`;
+          feedbackEl.className = 'text-[11px] pt-0.5 text-rose-400 font-semibold';
+        }
+      }
+    }
+
+    auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
+      if (user && user.email) {
+        rememberDeviceAccount(user.email, user.displayName, user.photoURL);
+      }
       renderForensicWatermark();
       injectPrivacySettingsUI();
       await enforcePrivateAccessGate(user);
+      await renderDeviceAccountMatchers();
 
       const statusBox = document.getElementById('vaultSyncStatus');
       if (!user) {
@@ -2120,9 +2343,16 @@ auth.onAuthStateChanged(async (user) => {
       }
     });
 
-    async function signInWithGoogle() {
+    async function signInWithGoogle(hintEmail = '') {
       const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
+      const cleanHint = normalizeEmail(hintEmail);
+      if (cleanHint && cleanHint.includes('@')) {
+        // Direct sign-in for a matched account present on the device
+        provider.setCustomParameters({ login_hint: cleanHint });
+      } else {
+        // Opens Google's account chooser to login with other accounts on the device
+        provider.setCustomParameters({ prompt: 'select_account' });
+      }
       try {
         await auth.signInWithPopup(provider);
       } catch (err) {
@@ -2418,9 +2648,10 @@ auth.onAuthStateChanged(async (user) => {
       if (raw) { try { applyFormSnapshot(JSON.parse(raw)); } catch (e) {} }
     }
 
-    function buildCaseShareUrl(caseObj) {
+function buildCaseShareUrl(caseObj) {
       const baseUrl = window.location.origin + window.location.pathname;
-      const minimal = { id: caseObj.id, nativeName: caseObj.name, chiefComplaints: caseObj.chiefComplaints };
+      const details = caseObj.birthDetails || caseObj.chiefComplaints || 'Vedic Horoscope';
+      const minimal = { id: caseObj.id, nativeName: caseObj.name, birthDetails: details };
       return `${baseUrl}#case=${btoa(unescape(encodeURIComponent(JSON.stringify(minimal))))}`;
     }
 
@@ -2443,17 +2674,18 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById('outputParagraphs').value = base;
       }
       const snap = collectFormSnapshot();
-      const ptName = (snap.nativeName || '').trim() || 'Unnamed Native';
+      const nativeName = (snap.nativeName || '').trim() || 'Unnamed Native';
       const st = currentHoroscopeState;
-      const cc = st
+      const detailsSummary = st
         ? `${RASIS[st.lagnaVargas.rasiIdx].name} Lagna • ${st.planets.Moon.vargas.d1} Rasi (${st.dobStr} ${st.tobStr})`
         : 'Vedic Horoscope';
       const cases = getStoredCases();
-      const existingIdx = cases.findIndex(c => c.name.toLowerCase() === ptName.toLowerCase());
+      const existingIdx = cases.findIndex(c => c.name.toLowerCase() === nativeName.toLowerCase());
       const caseRecord = {
         id: existingIdx >= 0 ? cases[existingIdx].id : 'case_' + Date.now(),
-        name: ptName,
-        chiefComplaints: cc,
+        name: nativeName,
+        birthDetails: detailsSummary,
+        chiefComplaints: detailsSummary,
         updatedAt: new Date().toLocaleDateString('en-IN'),
         formData: snap
       };
@@ -2477,11 +2709,19 @@ auth.onAuthStateChanged(async (user) => {
       const badge = document.getElementById('sheetAutoSaveBadge');
       const webhookUrl = (document.getElementById('googleSheetWebhookInput')?.value || localStorage.getItem('jyotish_google_sheet_webhook') || '').trim();
       if (!webhookUrl) { if (badge) badge.textContent = '✓ Saved Locally'; return; }
+      const details = caseRecord.birthDetails || caseRecord.chiefComplaints || 'Vedic Horoscope';
       try {
         if (badge) badge.textContent = '🔄 Syncing to Sheet...';
         await fetch(webhookUrl, {
           method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ patientName: caseRecord.name, shareUrl: caseRecord.shareUrl, chiefComplaints: caseRecord.chiefComplaints, timestamp: new Date().toISOString() })
+          body: JSON.stringify({
+            nativeName: caseRecord.name,
+            patientName: caseRecord.name,
+            shareUrl: caseRecord.shareUrl,
+            birthDetails: details,
+            chiefComplaints: details,
+            timestamp: new Date().toISOString()
+          })
         });
         if (badge) badge.textContent = '✅ Synced to Google Sheet';
       } catch (err) { if (badge) badge.textContent = '⚠️ Saved Locally'; }
@@ -2496,21 +2736,33 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     function deleteCaseById(caseId) { setStoredCases(getStoredCases().filter(c => c.id !== caseId)); renderStorageTable(); }
-    function startBlankPatientCase() { localStorage.removeItem('jyotish_working_draft_v1'); window.location.hash = ''; window.location.reload(); }
-    function clearAllDrafts() { localStorage.removeItem('jyotish_saved_cases_db_v1'); window.location.reload(); }
-    function resetForm() { startBlankPatientCase(); }
+    function startBlankHoroscope() { localStorage.removeItem('jyotish_working_draft_v1'); window.location.hash = ''; window.location.reload(); }
+    function startBlankPatientCase() { startBlankHoroscope(); }
+    function clearAllDrafts() {
+      if (confirm('Clear all saved horoscopes from local storage?')) {
+        localStorage.removeItem('jyotish_saved_cases_db_v1');
+        window.location.reload();
+      }
+    }
+    function resetForm() {
+      if (confirm('Reset current horoscope form to default values?')) {
+        startBlankHoroscope();
+      }
+    }
 
     function renderStorageTable() {
       const tbody = document.getElementById('storageTableBody');
       const cases = getStoredCases();
       if (cases.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="py-6 text-center text-slate-400">No saved horoscopes yet.</td></tr>`; return; }
-      tbody.innerHTML = cases.map(c => `
+      tbody.innerHTML = cases.map(c => {
+        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
+        return `
         <tr class="hover:bg-blue-50 dark:hover:bg-slate-800">
           <td class="py-2 px-3 font-bold"><a href="#" onclick="loadCaseById('${c.id}'); return false;" class="text-blue-600">${c.name}</a></td>
-          <td class="py-2 px-3">${c.chiefComplaints}</td>
+          <td class="py-2 px-3">${details}</td>
           <td class="py-2 px-3 text-right"><button onclick="deleteCaseById('${c.id}')" class="text-rose-600">Delete</button></td>
-        </tr>
-      `).join('');
+        </tr>`;
+      }).join('');
     }
 
     function saveGoogleSheetUrl() {
@@ -2539,13 +2791,19 @@ auth.onAuthStateChanged(async (user) => {
 
     function copyTwoColumnForGoogleSheet() {
       const cases = getStoredCases();
-      copyTextToClipboard(cases.map(c => `=HYPERLINK("${c.shareUrl}", "${c.name}")\t${c.chiefComplaints}`).join('\n'));
+      copyTextToClipboard(cases.map(c => {
+        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
+        return `=HYPERLINK("${c.shareUrl}", "${c.name}")\t${details}`;
+      }).join('\n'));
     }
 
     function exportTwoColumnCSV() {
       const cases = getStoredCases();
       const link = document.createElement('a');
-      link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(cases.map(c => `"=HYPERLINK(""${c.shareUrl}"", ""${c.name}"")","${c.chiefComplaints}"`).join('\n'));
+      link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(cases.map(c => {
+        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
+        return `"=HYPERLINK(""${c.shareUrl}"", ""${c.name}"")","${details}"`;
+      }).join('\n'));
       link.download = 'jyotish_horoscopes.csv'; link.click(); link.remove();
     }
 
@@ -2648,7 +2906,7 @@ auth.onAuthStateChanged(async (user) => {
     }
     window.addEventListener('DOMContentLoaded', initPopupBlurObserver);
 
-    function handleCaseSearch(query) {
+function handleCaseSearch(query) {
       const q = query.trim().toLowerCase();
       const dropdown = document.getElementById('searchResultsDropdown');
       if (q === 'codes') {
@@ -2658,8 +2916,14 @@ auth.onAuthStateChanged(async (user) => {
         return;
       }
       document.getElementById('clearSearchBtn').classList.toggle('hidden', !q);
-      const matches = getStoredCases().filter(c => c.name.toLowerCase().includes(q) || c.chiefComplaints.toLowerCase().includes(q));
-      dropdown.innerHTML = matches.map(c => `<div onclick="loadCaseById('${c.id}')" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-bold text-xs">${c.name} — ${c.chiefComplaints}</div>`).join('');
+      const matches = getStoredCases().filter(c => {
+        const details = (c.birthDetails || c.chiefComplaints || '').toLowerCase();
+        return c.name.toLowerCase().includes(q) || details.includes(q);
+      });
+      dropdown.innerHTML = matches.map(c => {
+        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
+        return `<div onclick="loadCaseById('${c.id}')" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-bold text-xs">${c.name} — ${details}</div>`;
+      }).join('');
       dropdown.classList.toggle('hidden', !q);
     }
     function clearCaseSearch() { document.getElementById('headerCaseSearch').value = ''; document.getElementById('searchResultsDropdown').classList.add('hidden'); document.getElementById('clearSearchBtn')?.classList.add('hidden'); }
@@ -3136,14 +3400,14 @@ auth.onAuthStateChanged(async (user) => {
         `• Hand Examined: ${document.getElementById('palmHandType').value} | Karatala Tattva: ${document.getElementById('palmElementShape').value}.`;
     }
 
-    async function triggerFinalGenerateAndPopup() {
+async function triggerFinalGenerateAndPopup() {
       const baseReport = buildOfflineClassicalSynthesis();
       document.getElementById('inlineReadingOutput').value = baseReport;
       document.getElementById('outputParagraphs').value = baseReport;
       const caseRecord = saveCurrentCaseToStorage(false);
       document.getElementById('summaryPopupModal').classList.remove('hidden');
       await autoSyncCaseToGoogleSheet(caseRecord);
-      if (activeSessionKey) await polishWithGemini();
+      if (getActiveJyotishGeminiKey()) await polishWithGemini();
     }
 
     function copySummary() { copyTextToClipboard(document.getElementById('outputParagraphs').value); }
@@ -3154,7 +3418,7 @@ auth.onAuthStateChanged(async (user) => {
       window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
     }
 
-// START: ISOLATED JYOTISH GEMINI HELPERS
+    // START: ISOLATED JYOTISH GEMINI HELPERS
     function getActiveJyotishGeminiKey() {
       if (activeSessionKey) return activeSessionKey.trim();
       if (currentGoogleUser) {
@@ -3219,9 +3483,81 @@ auth.onAuthStateChanged(async (user) => {
     }
     // END: ISOLATED JYOTISH GEMINI HELPERS
 
+    async function askGeminiDoubt() {
+      const out = document.getElementById('geminiModalOutput');
+      const userQ = (document.getElementById('geminiUserPrompt')?.value || '').trim();
+      if (!getActiveJyotishGeminiKey()) {
+        out.value = '⚠️ Please sign in and unlock your Jyotish Cloud API Vault first.';
+        return;
+      }
+      if (!userQ && !attachedFileBase64) {
+        out.value = '⚠️ Please type a Jyotish/Samudrika question or attach a PDF/image first.';
+        return;
+      }
+      out.value = '💬 Consulting classical Jyotish & Samudrika Shastra references...';
+      const st = currentHoroscopeState;
+      const chartContext = st
+        ? `Current Chart Context: Native=${document.getElementById('nativeName')?.value || 'Native'}, DOB=${st.dobStr}, TOB=${st.tobStr}, Lagna=${RASIS[st.lagnaVargas.rasiIdx].name}, D-9 Navamsa=${st.lagnaVargas.d9Name}, Moon=${st.planets.Moon.vargas.d1} (${st.planets.Moon.nak.name}), Atmakaraka=${st.atmakaraka}, AL=${RASIS[st.alRasi].name}, UL=${RASIS[st.ulRasi].name}.`
+        : '';
+      const extraParts = palmImageBase64 ? [{ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } }] : [];
+      const reply = await callGeminiAPI(
+        `You are an expert Vedic Astrologer and Samudrika Shastra scholar. Answer the user's question clearly and rigorously using classical principles (Brihat Parashara Hora Shastra, Jaimini Sutras, Brihat Jataka, Uttara Kalamrita, Sanjay Rath, and B.V. Raman).\n${chartContext}\n\nUser Question: ${userQ}`,
+        extraParts
+      );
+      out.value = reply || 'Unable to fetch response from Gemini.';
+    }
+
+    async function geminiControlPage() {
+      const out = document.getElementById('geminiModalOutput');
+      const cmd = (document.getElementById('geminiUserPrompt')?.value || '').trim();
+      if (!getActiveJyotishGeminiKey()) {
+        out.value = '⚠️ Please sign in and unlock your Jyotish Cloud API Vault first.';
+        return;
+      }
+      if (!cmd && !attachedFileBase64) {
+        out.value = '⚠️ Enter a command (e.g., "Fill this form for Swami Vivekananda born 12 Jan 1863 at 06:33 in Kolkata") or attach a chart image.';
+        return;
+      }
+      out.value = '⚡ Parsing birth details & dynamically updating horoscope form...';
+      const prompt = `Extract birth and palm parameters from the following command (and any attached file) and return ONLY a valid JSON object (no markdown fences, no extra text) with any applicable keys from this list:\n` +
+        `{\n` +
+        `  "nativeName": "string",\n` +
+        `  "nativeGender": "Male (Purusha Jataka)" | "Female (Stri Jataka)",\n` +
+        `  "birthDate": "YYYY-MM-DD",\n` +
+        `  "birthTime": "HH:MM:SS",\n` +
+        `  "birthPlaceName": "City, State/Country",\n` +
+        `  "birthLat": number,\n` +
+        `  "birthLon": number,\n` +
+        `  "ayanamsaMode": "LAHIRI" | "RAMAN",\n` +
+        `  "timeAccuracyMode": "EXACT" | "SURYA" | "PRASNA",\n` +
+        `  "palmMountsNotes": "string",\n` +
+        `  "palmCustomQuestion": "string"\n` +
+        `}\n\nCommand: ${cmd}`;
+      try {
+        const rawReply = await callGeminiAPI(prompt);
+        const jsonMatch = rawReply.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          out.value = '⚠️ Could not parse structured form fields from response:\n' + rawReply;
+          return;
+        }
+        const parsed = JSON.parse(jsonMatch[0]);
+        Object.keys(parsed).forEach(id => {
+          const el = document.getElementById(id);
+          if (el && parsed[id] !== undefined && parsed[id] !== null && parsed[id] !== '') {
+            el.value = parsed[id];
+          }
+        });
+        computeFullHoroscope();
+        saveActiveWorkingDraft();
+        out.value = `✅ Form updated and horoscope recomputed:\n` + JSON.stringify(parsed, null, 2);
+      } catch (err) {
+        out.value = '⚠️ Failed to apply dynamic page command: ' + (err.message || err);
+      }
+    }
+
     async function geminiVivaMode() {
       const out = document.getElementById('geminiModalOutput');
-      if (!activeSessionKey) { out.value = '⚠️ Please sign in and unlock your Cloud API Vault first.'; return; }
+      if (!getActiveJyotishGeminiKey()) { out.value = '⚠️ Please sign in and unlock your Jyotish Cloud API Vault first.'; return; }
       out.value = '🎓 Generating 5 Jyotish & Samudrika Shastra Viva Questions...';
       const st = currentHoroscopeState;
       const reply = await callGeminiAPI(`Generate 5 high-yield Vedic Astrology & Samudrika Shastra viva voce questions with model answers based on this native's chart: Lagna=${RASIS[st.lagnaVargas.rasiIdx].name}, Navamsa Lagna=${st.lagnaVargas.d9Name}, Moon=${st.planets.Moon.vargas.d1} (${st.planets.Moon.nak.name}), Atmakaraka=${st.atmakaraka}, Arudha Lagna=${RASIS[st.alRasi].name}, Upapada=${RASIS[st.ulRasi].name}.`);
@@ -3230,13 +3566,12 @@ auth.onAuthStateChanged(async (user) => {
 
     async function geminiAuditFlaws() {
       const out = document.getElementById('geminiModalOutput');
-      if (!activeSessionKey) { out.value = '⚠️ Please sign in and unlock your Cloud API Vault first.'; return; }
+      if (!getActiveJyotishGeminiKey()) { out.value = '⚠️ Please sign in and unlock your Jyotish Cloud API Vault first.'; return; }
       out.value = '🔍 Auditing current horoscope data & form completeness...';
       const snap = collectFormSnapshot();
       const reply = await callGeminiAPI(`Audit this Jyotish & Samudrika form snapshot for missing birth inputs, astronomical edge cases (such as high-latitude sunrise or Sandhi degrees near 0° or 30°), or palm evaluation gaps:\n${JSON.stringify(snap)}`);
       out.value = reply || 'Audit complete.';
     }
-
     // 9. Orbit Workspace Layout, Hidden Vertical Slider Rail & Mobile Bottom Number Rail (Exact Match to Peds History)
     let lastCursorX = 0;
 
@@ -3311,12 +3646,20 @@ auth.onAuthStateChanged(async (user) => {
       draftSaveTimer = setTimeout(() => _origSaveDraft(), 450);
     };
 
-    function formatCrispSectionTitle(rawText) {
+function formatCrispSectionTitle(rawText) {
       let clean = (rawText || '')
         .replace(/^\d+\.\s*/, '')
         .replace(/\s*\([^)]*\)/g, '')
         .trim();
-      return clean;
+      const shortMap = {
+        'Birth & Terrestrial Data': 'Birth & Place Data',
+        'Palm Vision & Samudrika': 'Palm Vision AI',
+        'Graha Sphutas & Shadvargas': 'Sphutas & Shadvargas',
+        'Kundali & Sudarshan Chakra': 'Kundali & Sudarshan',
+        'Dasa, Ayurdaya & Yogas': 'Dasa, Ayur & Yogas',
+        'AI Jyotish & Palm Synthesis': 'AI Jyotish Synthesis'
+      };
+      return shortMap[clean] || clean;
     }
 
     function initRightRailProximitySensor() {
