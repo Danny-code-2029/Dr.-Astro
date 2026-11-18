@@ -641,14 +641,466 @@
       width: 0;
       height: 0;
     }
-    #mobileBottomRail button {
+#mobileBottomRail button {
       scroll-snap-align: center;
       touch-action: manipulation;
     }
+
+    /* Public Landing Page & 3-Step Onboarding Isolation (Strictly Light Mode, No Rails/Shortcuts) */
+    body.public-landing-active {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    body.public-landing-active > header,
+    body.public-landing-active > #leftSidebar,
+    body.public-landing-active > #sidebarOverlay,
+    body.public-landing-active > main,
+    body.public-landing-active > #geminiFloatBtn,
+    body.public-landing-active > #rightRailSliderTrack,
+    body.public-landing-active > #rightSectionRail,
+    body.public-landing-active > #mobileBottomRail,
+    body.public-landing-active > #forensicWatermark,
+    body.public-landing-active > #privateAccessOverlay {
+      display: none !important;
+    }
+
+    /* Blurred Volunteer Personal Info in Preview Cards */
+    .volunteer-pii-blur {
+      filter: blur(5px);
+      -webkit-filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+      display: inline-block;
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 4px;
+      padding: 0 4px;
+    }
+
+    /* Section Card Top-Right '?' Help Circle Button & Collapsible Instruction Strip */
+    .section-help-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 9999px;
+      border: 1.5px solid #3b82f6;
+      background-color: rgba(59, 130, 246, 0.12);
+      color: #2563eb;
+      font-weight: 800;
+      font-size: 13px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }
+    html.dark .section-help-btn {
+      border-color: #60a5fa;
+      background-color: rgba(96, 165, 250, 0.15);
+      color: #93c5fd;
+    }
+    .section-help-btn:hover,
+    .section-help-btn.help-active {
+      background-color: #2563eb !important;
+      border-color: #1d4ed8 !important;
+      color: #ffffff !important;
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    .section-help-strip {
+      background-color: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 0.65rem 0.9rem;
+      font-size: 0.78rem;
+      color: #1e3a8a;
+      margin-bottom: 0.75rem;
+      border-radius: 0 0.65rem 0.65rem 0;
+      animation: fadeHelpIn 0.18s ease-out;
+    }
+    html.dark .section-help-strip {
+      background-color: rgba(30, 58, 138, 0.38) !important;
+      border-color: #60a5fa !important;
+      color: #dbeafe !important;
+    }
+    @keyframes fadeHelpIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
+     
+<body class="bg-slate-50 text-slate-900 min-h-screen selection:bg-blue-600 selection:text-white public-landing-active">
 
-<body class="bg-slate-50 text-slate-900 min-h-screen selection:bg-blue-600 selection:text-white">
+<!-- ==========================================================================
+     [SECTION 02B] PUBLIC MAIN LANDING PAGE & 3-STEP ₹11/YR SIGN-UP PORTAL
+     (NO "MORE" MENU, NO SHORTCUTS, STRICT LIGHT MODE, BLURRED VOLUNTEER PREVIEWS)
+     ========================================================================== -->
+  <div id="publicLandingWrapper" class="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between">
+
+    <!-- Top Public Navbar: Logo on Left, Log in & Sign up Buttons at Top Right Corner -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div onclick="showPublicSubView('landingHomeView')" class="flex items-center gap-3 cursor-pointer">
+          <div class="w-9 h-9 rounded-2xl bg-slate-900 text-amber-400 flex items-center justify-center font-extrabold text-lg shadow-sm">
+            🪐
+          </div>
+          <div>
+            <span class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900">Dr. Astro</span>
+            <span class="block text-[11px] text-slate-500 font-medium">Jyotish &amp; Samudrika Shastra AI Portal</span>
+          </div>
+        </div>
+
+        <!-- Top-Right Login & Sign Up Buttons Only (No More Button, No Dark Mode) -->
+        <div class="flex items-center gap-2.5">
+          <button type="button" onclick="handlePublicLoginClick()" class="chrome-pill-btn text-xs sm:text-sm bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 px-4 py-2 shadow-2xs">
+            Log in
+          </button>
+          <button type="button" onclick="openSignupFlowStep1()" class="chrome-pill-btn text-xs sm:text-sm bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 shadow-md">
+            Sign up
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- VIEW 1: MAIN PUBLIC LANDING PAGE (INFO, BLURRED VOLUNTEER PREVIEWS & FAQS) -->
+    <div id="landingHomeView" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12 flex-1">
+
+      <!-- 1. Hero Banner -->
+      <div class="text-center max-w-3xl mx-auto space-y-4">
+        <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+          ✨ Classical Ganita Siddhanta + Multimodal Gemini Vision AI
+        </span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          Precision Vedic Horoscopy &amp; Samudrika Shastra Palm Analyzer
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+          Compute high-precision Nirayana Graha Sphutas, Shadvargas (D-1 to D-30), 3-Ring Sudarshan Chakra, Jaimini Arudha Padas, 3-Pairs Ayurdaya Longevity, and 120-Year Vimshottari Dasa—cross-verified with AI Palm Rekha &amp; Graha Parvata Vision.
+        </p>
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <button type="button" onclick="openSignupFlowStep1()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-sm px-6 py-3 shadow-lg font-bold">
+            🚀 Get Started — ₹11 / Year Access
+          </button>
+          <button type="button" onclick="handlePublicLoginClick()" class="chrome-pill-btn bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-sm px-6 py-3 font-semibold">
+            Already Registered? Log in ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. Core Shastra Capabilities Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-blue-600">01 • Parashara &amp; Jaimini Ganita</div>
+          <h3 class="font-bold text-base text-slate-900">Shadvargas, Arudha Padas &amp; Chara Karakas</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Calculates Local Mean Time (LMT), Suryodayadi Ishtakala Ghatis, Lahiri &amp; Raman Ayanamsa, 8 Chara Karakas (Atmakaraka to Darakaraka), Hora/Ghatika/Shri Lagna, Arudha Lagna (AL), and Upapada (UL).
+          </p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-purple-600">02 • Interactive Kundali &amp; Timing</div>
+          <h3 class="font-bold text-base text-slate-900">South/North Charts, Sudarshan &amp; Dasa</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Instant Rasi (D-1), Navamsa (D-9), and concentric 3-ring Sudarshan Chakra (Lagna, Moon, Sun) with house-wise Argala &amp; Rasi Drishti inspector, Jaimini 3-Pairs Ayurdaya, Tajaka Sahams, and 120-year Vimshottari Bhuktis.
+          </p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-amber-600">03 • Samudrika Shastra Vision</div>
+          <h3 class="font-bold text-base text-slate-900">Multimodal AI Palm &amp; Rekha Scanner</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Upload a palm photograph to evaluate Karatala Tattva (Fire/Earth/Air/Water hand), Graha Parvata (mounts), Jeevan, Mastishka, Hridaya, Bhagya, Surya &amp; Budha Rekhas, and auspicious Chihnas alongside your Kundali.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Volunteer Result Preview Gallery (Personal Info Blurred) -->
+      <div class="space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+          <div>
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">📸 Live Output Previews (Volunteer Case Study)</h2>
+            <p class="text-xs text-slate-500">Actual horoscope, Sudarshan Chakra, and Samudrika palm synthesis generated by Dr. Astro (volunteer's personal identifiers blurred for privacy).</p>
+          </div>
+          <span class="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-semibold">
+            🔒 Volunteer PII Blurred
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Preview Card A: Volunteer Kundali, Sudarshan & Shadvarga Output -->
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between">
+            <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between text-xs">
+              <span class="font-bold">Preview 1 • Kundali, Sudarshan Chakra &amp; Shadvarga</span>
+              <span class="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2.5 py-0.5 rounded-full font-clinical-mono">D-1 • D-9 • Sudarshan</span>
+            </div>
+            <div class="p-5 space-y-4 text-xs">
+              <!-- Blurred Volunteer Demographics Strip -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div><span class="text-[10px] text-slate-400 block">Native Name</span><strong class="volunteer-pii-blur">Satyapriya Nayak</strong></div>
+                <div><span class="text-[10px] text-slate-400 block">Date &amp; Time</span><strong class="volunteer-pii-blur">07-07-2003 10:30</strong></div>
+                <div><span class="text-[10px] text-slate-400 block">Birth Place</span><strong class="volunteer-pii-blur">Bhubaneswar, OD</strong></div>
+                <div><span class="text-[10px] text-slate-400 block">Coordinates</span><strong class="volunteer-pii-blur">20.30°N, 85.82°E</strong></div>
+              </div>
+
+              <!-- Visual Chart Previews (Rasi D-1 & Concentric Sudarshan Chakra) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex flex-col items-center">
+                  <span class="text-[11px] font-bold text-blue-400 mb-1.5">Rasi Kundali (D-1 • Simha Lagna)</span>
+                  <svg viewBox="0 0 240 240" class="w-44 h-44">
+                    <rect x="2" y="2" width="236" height="236" rx="10" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+                    <rect x="60" y="60" width="120" height="120" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                    <text x="120" y="118" text-anchor="middle" fill="#93c5fd" font-size="10" font-weight="bold">RASI CHAKRA</text>
+                    <text x="120" y="132" text-anchor="middle" fill="#fbbf24" font-size="8.5">AL: वृषभ • UL: मकर</text>
+                    <rect x="180" y="60" width="58" height="60" fill="rgba(37,99,235,0.22)" stroke="#334155"/>
+                    <text x="209" y="88" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="bold">Asc Ju</text>
+                    <text x="90" y="34" text-anchor="middle" fill="#fbbf24" font-size="9.5" font-weight="bold">Ra AL</text>
+                    <text x="150" y="34" text-anchor="middle" fill="#f8fafc" font-size="9.5" font-weight="bold">Su Me Ve Sa</text>
+                    <text x="209" y="150" text-anchor="middle" fill="#93c5fd" font-size="9.5" font-weight="bold">Mo</text>
+                    <text x="30" y="150" text-anchor="middle" fill="#f87171" font-size="9.5" font-weight="bold">Ma</text>
+                  </svg>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex flex-col items-center">
+                  <span class="text-[11px] font-bold text-amber-400 mb-1.5">3-Ring Sudarshan Chakra</span>
+                  <svg viewBox="0 0 240 240" class="w-44 h-44">
+                    <circle cx="120" cy="120" r="110" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+                    <circle cx="120" cy="120" r="78" fill="none" stroke="#334155" stroke-width="1.4"/>
+                    <circle cx="120" cy="120" r="48" fill="none" stroke="#334155" stroke-width="1.4"/>
+                    <circle cx="120" cy="120" r="20" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/>
+                    <line x1="120" y1="10" x2="120" y2="100" stroke="#334155"/>
+                    <line x1="120" y1="140" x2="120" y2="230" stroke="#334155"/>
+                    <line x1="10" y1="120" x2="100" y2="120" stroke="#334155"/>
+                    <line x1="140" y1="120" x2="230" y2="120" stroke="#334155"/>
+                    <text x="120" y="123" text-anchor="middle" fill="#93c5fd" font-size="6.5" font-weight="bold">CHAKRA</text>
+                    <text x="120" y="85" text-anchor="middle" fill="#60a5fa" font-size="8.5" font-weight="bold">Lag: 5</text>
+                    <text x="120" y="55" text-anchor="middle" fill="#e2e8f0" font-size="8.5">Mo: 6</text>
+                    <text x="120" y="26" text-anchor="middle" fill="#fbbf24" font-size="8.5">Su: 3</text>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Sample Computed Verdict Strip -->
+              <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 font-clinical-mono text-[11px] text-blue-950 space-y-1">
+                <div><strong>Atmakaraka:</strong> Saturn (Dharma-Karmadhipati &amp; Budhaditya Nipuna Yoga Active)</div>
+                <div><strong>Jaimini Ayurdaya (3-Pairs):</strong> Purnayu (72–108 Yrs) • <strong>Current Dasa:</strong> Rahu Mahadasa</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview Card B: Volunteer Samudrika Palm Vision & AI Synthesis Output -->
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between">
+            <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between text-xs">
+              <span class="font-bold">Preview 2 • Samudrika Palm Scan &amp; AI Synthesis</span>
+              <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-clinical-mono">Gemini 2.5 Vision</span>
+            </div>
+            <div class="p-5 space-y-3.5 text-xs flex-1 flex flex-col justify-between">
+              <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div>
+                  <span class="text-[10px] text-slate-400 block">Volunteer Case ID &amp; Contact</span>
+                  <strong class="volunteer-pii-blur">VOL-2026-9841 • +91 9876543210</strong>
+                </div>
+                <span class="text-[11px] bg-amber-100 text-amber-900 px-2.5 py-1 rounded-lg font-bold">🖐️ Right Palm (Agni-Vayu)</span>
+              </div>
+
+              <!-- Simulated Palm Vision Findings -->
+              <div class="bg-slate-950 text-slate-100 p-4 rounded-2xl border border-slate-800 space-y-2.5 font-clinical-serif text-xs leading-relaxed">
+                <div class="text-amber-400 font-sans font-bold text-[11px] uppercase tracking-wider">
+                  📜 Multimodal Synthesis Excerpt (Kundali + Palm Vision):
+                </div>
+                <p>
+                  <strong>1. Lagna &amp; Karatala Correlation:</strong> Native <span class="volunteer-pii-blur">Satyapriya</span> exhibits a prominent <em>Guru Parvata</em> (Mount of Jupiter) and <em>Surya Parvata</em> (Mount of Sun), directly mirroring Jupiter's placement in the Ascendant/Kendra and the <em>Budhaditya Nipuna Yoga</em> in the Rasi Chakra.
+                </p>
+                <p>
+                  <strong>2. Rekha &amp; Dasa Verification:</strong> A deep, unbroken <em>Mastishka Rekha</em> (Head Line) sloping slightly toward <em>Chandra Parvata</em> confirms analytical and clinical diagnostic aptitude. The <em>Bhagya Rekha</em> (Fate Line) rises cleanly toward Saturn's mount, synchronizing with the upcoming <em>Guru Mahadasa</em> expansion.
+                </p>
+                <p>
+                  <strong>3. Longevity &amp; Remedies:</strong> Unbroken <em>Jeevan Rekha</em> wrapping wide around <em>Shukra Parvata</em> corroborates the Jaimini 3-Pairs <em>Purnayu</em> verdict.
+                </p>
+              </div>
+
+              <div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                <span>✓ Instant 2-Column Google Sheet Export</span>
+                <span>✓ WhatsApp &amp; PDF Report Ready</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Frequently Asked Questions (FAQs) -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-5">
+        <div class="border-b border-slate-200 pb-3">
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">❓ Frequently Asked Questions (FAQs)</h2>
+          <p class="text-xs text-slate-500">Everything you need to know about calculations, the ₹11/year plan, and data retention.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h3 class="font-bold text-slate-900 text-sm">1. How does the ₹11/Year subscription &amp; renewal work?</h3>
+            <p class="text-slate-600 leading-relaxed">
+              When you sign up and complete the ₹11 annual UPI payment (via QR scan on laptop/PC or GPay/PhonePe/BHIM on mobile), your Gmail ID is automatically added to the authorized access list for 365 days. After 1 year, your email is automatically removed from the active access list, <strong>but your saved horoscopes and Cloud Vault data remain 100% intact in Firestore</strong> so you can resume right where you left off upon renewal.
+            </p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h3 class="font-bold text-slate-900 text-sm">2. What if the native's exact Time of Birth is unknown?</h3>
+            <p class="text-slate-600 leading-relaxed">
+              In Section 1 of the questionnaire, switch the Birth Time Mode to <strong>TOB Unknown (Surya Lagna)</strong> or <strong>Prasna (Query Moment)</strong> and upload a clear palm photo in Section 2 to cross-verify life events via Samudrika Shastra.
+            </p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h3 class="font-bold text-slate-900 text-sm">3. Which classical Sanskrit texts are programmed into the engine?</h3>
+            <p class="text-slate-600 leading-relaxed">
+              All mathematical and AI rules follow Maharishi Parashara's <em>Brihat Parashara Hora Shastra</em>, Jaimini's <em>Upadesa Sutras</em>, Varahamihira's <em>Brihat Jataka</em> &amp; <em>Brihat Samhita</em>, Kalidasa's <em>Uttara Kalamrita</em>, Dr. B.V. Raman, and Pt. Sanjay Rath.
+            </p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h3 class="font-bold text-slate-900 text-sm">4. How does the 1-Device Concurrent Session Lock protect my account?</h3>
+            <p class="text-slate-600 leading-relaxed">
+              Your authorized Gmail ID is bound to 1 active device session at a time via real-time Firestore telemetry. Signing in on a new device automatically closes the previous session.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- VIEW 2: SIGN-UP STEP 1 — SELECT MAIL ID -->
+    <div id="signupStep1EmailView" class="hidden max-w-md w-full mx-auto px-4 py-12 flex-1 flex items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-5">
+        <div class="flex items-center justify-between text-[11px] font-bold text-blue-600 uppercase tracking-wider">
+          <span>Step 1 of 3 • Select Mail ID</span>
+          <button type="button" onclick="showPublicSubView('landingHomeView')" class="text-slate-400 hover:text-slate-700">✕ Cancel</button>
+        </div>
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900">Select Your Google Mail ID</h2>
+          <p class="text-xs text-slate-500 mt-1">Choose the Gmail account you want to register for your 1-Year Dr. Astro access and Cloud Vault.</p>
+        </div>
+
+        <button type="button" onclick="selectGoogleAccountForSignup()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 shadow-md text-sm">
+          <span>G</span> <span>Select Gmail ID with Google</span>
+        </button>
+
+        <div id="signupSelectedEmailCard" class="hidden bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl flex items-center justify-between text-xs">
+          <div>
+            <span class="text-[10px] text-emerald-600 font-bold uppercase block">Selected Gmail ID</span>
+            <strong id="signupSelectedEmailText" class="text-emerald-950 font-clinical-mono">user@gmail.com</strong>
+          </div>
+          <button type="button" onclick="showPublicSubView('signupStep2PermissionsView')" class="chrome-pill-btn bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1.5 text-xs shadow">
+            Next: Permissions ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: SIGN-UP STEP 2 — PERMISSIONS & CONSENT PAGE -->
+    <div id="signupStep2PermissionsView" class="hidden max-w-lg w-full mx-auto px-4 py-10 flex-1 flex items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-5 text-xs">
+        <div class="flex items-center justify-between text-[11px] font-bold text-blue-600 uppercase tracking-wider">
+          <span>Step 2 of 3 • Permissions &amp; Vault Consent</span>
+          <button type="button" onclick="showPublicSubView('signupStep1EmailView')" class="text-slate-400 hover:text-slate-700">⬅ Back</button>
+        </div>
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900">Review &amp; Grant Portal Permissions</h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Account: <strong id="permStepEmailBadge" class="text-blue-700 font-clinical-mono">--</strong>
+          </p>
+        </div>
+
+        <div class="space-y-2.5">
+          <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer">
+            <input type="checkbox" id="permCheckIdentity" checked class="mt-0.5 w-4 h-4 accent-blue-600" />
+            <div>
+              <strong class="text-slate-900 block">1. Google Identity &amp; 1-Device Session Lock</strong>
+              <span class="text-slate-500 text-[11px]">Allows Dr. Astro to verify your Gmail ID and enforce single-device session protection.</span>
+            </div>
+          </label>
+          <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer">
+            <input type="checkbox" id="permCheckFirestore" checked class="mt-0.5 w-4 h-4 accent-blue-600" />
+            <div>
+              <strong class="text-slate-900 block">2. Firestore Data Preservation (Saved Even After Plan Expiry)</strong>
+              <span class="text-slate-500 text-[11px]">Stores your encrypted API Vault and horoscope records so your data is never lost when your 1-year plan expires.</span>
+            </div>
+          </label>
+          <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer">
+            <input type="checkbox" id="permCheckPalmVision" checked class="mt-0.5 w-4 h-4 accent-blue-600" />
+            <div>
+              <strong class="text-slate-900 block">3. Camera &amp; Palm Image Upload for Samudrika AI</strong>
+              <span class="text-slate-500 text-[11px]">Permits uploading palm photographs and PDFs for multimodal Jyotish + Samudrika synthesis.</span>
+            </div>
+          </label>
+        </div>
+
+        <button type="button" onclick="proceedFromPermissionsToPayment()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-5 shadow-lg text-sm">
+          <span>✓ Grant Permissions &amp; Continue to ₹11 Payment ➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 4: SIGN-UP STEP 3 — ₹11 ANNUAL UPI QR CODE & APP DEEP LINKS -->
+    <div id="signupStep3PaymentView" class="hidden max-w-lg w-full mx-auto px-4 py-8 flex-1 flex items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-4 text-xs">
+        <div class="flex items-center justify-between text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
+          <span>Step 3 of 3 • ₹11 / Year UPI Activation</span>
+          <button type="button" onclick="showPublicSubView('signupStep2PermissionsView')" class="text-slate-400 hover:text-slate-700">⬅ Back</button>
+        </div>
+
+        <div id="renewalNoticeBanner" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-3 rounded-2xl text-[11px] font-medium">
+          ⏳ Your 1-Year subscription has expired. All your saved Firestore horoscopes and Cloud Vault settings are preserved — complete your ₹11 renewal below to continue right where you left off!
+        </div>
+
+        <div class="text-center space-y-1">
+          <h2 class="text-lg font-extrabold text-slate-900">Pay ₹11 INR Annually</h2>
+          <p class="text-[11px] text-slate-500">
+             activating 365-day access for <strong id="payStepEmailBadge" class="text-blue-700 font-clinical-mono">--</strong>
+          </p>
+        </div>
+
+        <!-- Scannable UPI QR Code for Laptop / PC Users -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col items-center space-y-2">
+          <span class="text-[11px] font-bold text-slate-700">💻 On Laptop / PC? Scan QR with Any Phone UPI App</span>
+          <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
+            <img id="upiQrCodeImg" src="" alt="Scan UPI QR Code for ₹11" class="w-44 h-44 object-contain mx-auto" />
+          </div>
+          <span id="upiVpaDisplayBadge" class="text-[11px] font-clinical-mono text-slate-500">Amount: ₹11.00 / Year</span>
+        </div>
+
+        <!-- Direct App Deep-Link Buttons for Mobile Phone Users -->
+        <div class="space-y-2">
+          <span class="block text-center text-[11px] font-bold text-slate-700">📱 On Mobile Phone? Tap Your Preferred UPI App</span>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <a id="btnUpiGpay" href="#" class="chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white py-2.5 px-3 text-xs shadow-xs">
+              GPay
+            </a>
+            <a id="btnUpiPhonePe" href="#" class="chrome-pill-btn justify-center bg-purple-600 hover:bg-purple-500 text-white py-2.5 px-3 text-xs shadow-xs">
+              PhonePe
+            </a>
+            <a id="btnUpiBhim" href="#" class="chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 px-3 text-xs shadow-xs">
+              BHIM UPI
+            </a>
+            <a id="btnUpiPaytm" href="#" class="chrome-pill-btn justify-center bg-sky-600 hover:bg-sky-500 text-white py-2.5 px-3 text-xs shadow-xs">
+              Paytm / Other
+            </a>
+          </div>
+        </div>
+
+        <!-- Payment Confirmation / 12-Digit UTR Input to Trigger Automatic Allowed-List Addition -->
+        <div class="border-t border-slate-200 pt-3 space-y-2.5">
+          <label class="block text-[11px] font-bold text-slate-700">
+            Enter 12-Digit UPI Ref / UTR Number (or Tap Activate After Paying ₹11):
+          </label>
+          <input id="upiUtrInput" type="text" placeholder="e.g., 432187654321 (Optional for instant verification)" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-clinical-mono bg-white" />
+          <button type="button" onclick="completeAnnualSubscriptionPayment()" class="w-full chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 shadow-lg text-sm">
+            <span>✅ Verify ₹11 Payment &amp; Open Questionnaire ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Public Landing Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-[11px] text-slate-500">
+      Dr. Astro — Jyotish &amp; Samudrika Shastra AI Portal • Created by Dr. Danny (Satyapriya Srinivash) • ₹11/Year Subscription Plan
+    </footer>
+  </div>
+
 <!-- ==========================================================================
      [SECTION 03] STICKY TOP HEADER (MORE MENU BUTTON, CASE SEARCH BAR & ACCOUNT POPUP)
      ========================================================================== -->
@@ -1885,6 +2337,11 @@
     window.ADMIN_OWNER_EMAIL = "satya.srinivash1234@gmail.com";
     window.BANNED_RESIDUE_EMAIL = "satya.srinivash123@gmail.com";
     window.STORE_REVIEWER_PASSCODE = "JYOTISH-REVIEW-2026";
+    // Replace with your receiving UPI ID (GPay / PhonePe / BHIM VPA) for ₹11/year payments:
+    window.MERCHANT_UPI_ID = "satya.srinivash1234-1@okicici";
+    window.MERCHANT_UPI_NAME = "Dr Astro Jyotish AI";
+    window.ANNUAL_PLAN_AMOUNT_INR = "11.00";
+    window.ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
     const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1d4ed8"/><circle cx="50" cy="36" r="18" fill="#ffffff"/><path d="M20 86c0-16.5 13.5-30 30-30s30 13.5 30 30" fill="#ffffff"/></svg>`
@@ -2435,6 +2892,245 @@ const pwaManifest = {
       }
     }
 
+       // Toggle '?' Help Strip Inside Each Section Card
+    function toggleSectionHelpStrip(secIdx, event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const strip = document.getElementById(`sectionHelpStrip_${secIdx}`);
+      const btn = document.getElementById(`sectionHelpBtn_${secIdx}`);
+      if (!strip) return;
+      const isHidden = strip.classList.contains('hidden');
+      strip.classList.toggle('hidden', !isHidden);
+      if (btn) btn.classList.toggle('help-active', isHidden);
+    }
+
+    function isPublicLandingActive() {
+      return document.body.classList.contains('public-landing-active');
+    }
+
+    function showPublicSubView(viewId) {
+      document.body.classList.add('public-landing-active');
+      document.documentElement.classList.remove('dark');
+      const wrapper = document.getElementById('publicLandingWrapper');
+      if (wrapper) wrapper.classList.remove('hidden');
+      ['landingHomeView', 'signupStep1EmailView', 'signupStep2PermissionsView', 'signupStep3PaymentView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', id !== viewId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function enterQuestionnaireWorkspace() {
+      const wrapper = document.getElementById('publicLandingWrapper');
+      if (wrapper) wrapper.classList.add('hidden');
+      document.body.classList.remove('public-landing-active');
+      initTheme();
+      computeFullHoroscope();
+      renderRightSectionRail();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    let pendingSignupAuthMode = null; // 'login' | 'signup'
+
+    function openSignupFlowStep1() {
+      pendingSignupAuthMode = 'signup';
+      showPublicSubView('signupStep1EmailView');
+      if (currentGoogleUser && currentGoogleUser.email) {
+        const card = document.getElementById('signupSelectedEmailCard');
+        const txt = document.getElementById('signupSelectedEmailText');
+        if (txt) txt.textContent = currentGoogleUser.email;
+        if (card) card.classList.remove('hidden');
+      }
+    }
+
+    async function selectGoogleAccountForSignup() {
+      pendingSignupAuthMode = 'signup';
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try {
+        const res = await auth.signInWithPopup(provider);
+        if (res && res.user) {
+          const email = normalizeEmail(res.user.email);
+          document.getElementById('signupSelectedEmailText').textContent = email;
+          document.getElementById('signupSelectedEmailCard').classList.remove('hidden');
+          document.getElementById('permStepEmailBadge').textContent = email;
+          showPublicSubView('signupStep2PermissionsView');
+        }
+      } catch (err) {
+        alert('Google Account Selection cancelled or blocked: ' + (err.message || err.code));
+      }
+    }
+
+    function proceedFromPermissionsToPayment() {
+      const c1 = document.getElementById('permCheckIdentity')?.checked;
+      const c2 = document.getElementById('permCheckFirestore')?.checked;
+      const c3 = document.getElementById('permCheckPalmVision')?.checked;
+      if (!c1 || !c2 || !c3) {
+        alert('Please check all 3 permissions to proceed to the ₹11 annual plan.');
+        return;
+      }
+      const email = normalizeEmail(currentGoogleUser?.email || document.getElementById('signupSelectedEmailText')?.textContent || '');
+      populateUpiPaymentStep(email, false);
+      showPublicSubView('signupStep3PaymentView');
+    }
+
+    function populateUpiPaymentStep(email, isExpiredRenewal = false) {
+      const cleanEmail = normalizeEmail(email) || 'user@gmail.com';
+      const badge = document.getElementById('payStepEmailBadge');
+      if (badge) badge.textContent = cleanEmail;
+      const renewalBanner = document.getElementById('renewalNoticeBanner');
+      if (renewalBanner) renewalBanner.classList.toggle('hidden', !isExpiredRenewal);
+
+      const pa = encodeURIComponent(window.MERCHANT_UPI_ID);
+      const pn = encodeURIComponent(window.MERCHANT_UPI_NAME);
+      const am = encodeURIComponent(window.ANNUAL_PLAN_AMOUNT_INR);
+      const tn = encodeURIComponent(`DrAstro 1Yr ${cleanEmail}`);
+      const queryParams = `pa=${pa}&pn=${pn}&am=${am}&cu=INR&tn=${tn}`;
+
+      const standardUpiUri = `upi://pay?${queryParams}`;
+      const gpayUri = `tez://upi/pay?${queryParams}`;
+      const phonepeUri = `phonepe://pay?${queryParams}`;
+      const bhimUri = `bhim://pay?${queryParams}`;
+      const paytmUri = `paytmmp://pay?${queryParams}`;
+
+      const qrImg = document.getElementById('upiQrCodeImg');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(standardUpiUri)}`;
+      }
+      const vpaBadge = document.getElementById('upiVpaDisplayBadge');
+      if (vpaBadge) vpaBadge.textContent = `UPI ID: ${window.MERCHANT_UPI_ID} • ₹11.00 / Year`;
+
+      const setHref = (id, uri) => { const el = document.getElementById(id); if (el) el.href = uri; };
+      setHref('btnUpiGpay', gpayUri);
+      setHref('btnUpiPhonePe', phonepeUri);
+      setHref('btnUpiBhim', bhimUri);
+      setHref('btnUpiPaytm', paytmUri);
+    }
+
+    async function completeAnnualSubscriptionPayment() {
+      if (!currentGoogleUser || !currentGoogleUser.email) {
+        alert('Please select your Gmail ID in Step 1 first.');
+        showPublicSubView('signupStep1EmailView');
+        return;
+      }
+      const emailKey = normalizeEmail(currentGoogleUser.email);
+      const utr = (document.getElementById('upiUtrInput')?.value || '').trim() || ('UPI11_' + Date.now());
+      const nowMs = Date.now();
+      const expiresAtMs = nowMs + window.ONE_YEAR_MS;
+
+      const subRecord = {
+        email: emailKey,
+        uid: currentGoogleUser.uid,
+        amountINR: 11,
+        utrNumber: utr,
+        subscribedAtISO: new Date(nowMs).toISOString(),
+        expiresAtMs: expiresAtMs,
+        expiresAtISO: new Date(expiresAtMs).toISOString(),
+        status: 'active'
+      };
+
+      // 1. Save 1-Year Subscription Record locally & in Firestore
+      localStorage.setItem('jyotish_sub_record_' + emailKey, JSON.stringify(subRecord));
+      try {
+        await db.collection('subscriptions').doc(emailKey).set(subRecord, { merge: true });
+      } catch (e) {}
+
+      // 2. Automatically add user's Gmail ID to the Allowed List (site_settings/access_control)
+      const cfg = getPrivacyConfig();
+      if (!cfg.emails.includes(emailKey) && emailKey !== normalizeEmail(window.ADMIN_OWNER_EMAIL)) {
+        cfg.emails.push(emailKey);
+      }
+      localStorage.setItem('jyotish_privacy_config_v3', JSON.stringify(cfg));
+      try {
+        await db.collection('site_settings').doc('access_control').set({
+          enabled: cfg.enabled,
+          emails: firebase.firestore.FieldValue.arrayUnion(emailKey)
+        }, { merge: true });
+      } catch (e) {}
+
+      pendingSignupAuthMode = null;
+      enterQuestionnaireWorkspace();
+      showStatusToast('✅ ₹11 Annual Plan Activated for 1 Year!');
+    }
+
+    // Checks 1-Year Subscription Expiry; Removes Email from Allowed List on Expiry WITHOUT Deleting Firestore Data
+    async function verifyOneYearSubscriptionAndRoute(user) {
+      if (!user || !user.email) {
+        showPublicSubView('landingHomeView');
+        return false;
+      }
+      const emailKey = normalizeEmail(user.email);
+
+      // Admin Owner has permanent lifetime access
+      if (isCurrentUserAdmin(user)) {
+        enterQuestionnaireWorkspace();
+        return true;
+      }
+
+      // If user is currently in the middle of the 3-step Sign-Up flow, let them complete Step 2/3
+      if (pendingSignupAuthMode === 'signup') {
+        document.getElementById('signupSelectedEmailText').textContent = emailKey;
+        document.getElementById('signupSelectedEmailCard').classList.remove('hidden');
+        document.getElementById('permStepEmailBadge').textContent = emailKey;
+        showPublicSubView('signupStep2PermissionsView');
+        return false;
+      }
+
+      // Check Firestore & Local Subscription Record for 1-Year Expiry
+      let subData = null;
+      try {
+        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
+        if (subSnap.exists) subData = subSnap.data();
+      } catch (e) {}
+      if (!subData) {
+        try { subData = JSON.parse(localStorage.getItem('jyotish_sub_record_' + emailKey) || 'null'); } catch {}
+      }
+
+      const nowMs = Date.now();
+      if (subData && subData.expiresAtMs && nowMs > subData.expiresAtMs) {
+        // 1 Year has passed: Remove email from Allowed List (site_settings/access_control)
+        // IMPORTANT: Do NOT delete jyotish_vault or saved horoscope data from Firestore!
+        const cfg = getPrivacyConfig();
+        cfg.emails = cfg.emails.filter(e => e !== emailKey);
+        localStorage.setItem('jyotish_privacy_config_v3', JSON.stringify(cfg));
+        try {
+          await db.collection('site_settings').doc('access_control').set({
+            emails: firebase.firestore.FieldValue.arrayRemove(emailKey)
+          }, { merge: true });
+          await db.collection('subscriptions').doc(emailKey).set({ status: 'expired' }, { merge: true });
+        } catch (e) {}
+
+        populateUpiPaymentStep(emailKey, true);
+        showPublicSubView('signupStep3PaymentView');
+        return false;
+      }
+
+      // Check if email is in Allowed List or has an active subscription
+      const { enabled, allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const hasActiveSub = Boolean(subData && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
+
+      if (hasActiveSub || allowedSet.has(emailKey) || !enabled) {
+        enterQuestionnaireWorkspace();
+        return true;
+      }
+
+      // Not registered yet -> route to Sign-Up Step 2 (Permissions -> ₹11 Payment)
+      document.getElementById('permStepEmailBadge').textContent = emailKey;
+      showPublicSubView('signupStep2PermissionsView');
+      return false;
+    }
+
+    async function handlePublicLoginClick() {
+      pendingSignupAuthMode = 'login';
+      if (currentGoogleUser && currentGoogleUser.email) {
+        await verifyOneYearSubscriptionAndRoute(currentGoogleUser);
+        return;
+      }
+      await signInWithGoogle('');
+    }
+
     auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
       if (user && user.email) {
@@ -2443,6 +3139,7 @@ const pwaManifest = {
       renderForensicWatermark();
       injectPrivacySettingsUI();
       await enforcePrivateAccessGate(user);
+      await verifyOneYearSubscriptionAndRoute(user);
       await renderDeviceAccountMatchers();
 
       const statusBox = document.getElementById('vaultSyncStatus');
@@ -3756,15 +4453,48 @@ async function triggerFinalGenerateAndPopup() {
       wrapper.appendChild(centerStage);
       document.body.appendChild(rightRail);
 
+const SECTION_HELP_TEXTS = [
+        "Ganita Siddhanta Rule: Enter the Native's Full Name, Date, Time, and Place of Birth to compute exact Local Mean Time (LMT), Suryodayadi Ishtakala Ghatis, Nirayana Lagna Sphuta, and Shadvargas. If exact birth time is unknown, switch Birth Time Mode to 'TOB Unknown (Surya Lagna)' or 'Prasna (Query Moment)'.",
+        "Samudrika Shastra Guide: Upload a clear photograph of the Right Palm (Active Karmic Hand) or Left Palm (Inherited Prarabdha Hand), select the Karatala Tattva, and tick the Rekhas & Chihnas you want Gemini Vision AI to cross-verify against the birth chart.",
+        "Shadvarga & Jaimini Guide: Inspect Special Ascendants (Hora, Ghatika, Shri Lagna), Arudha Lagna (AL), Upapada (UL), the 8 Chara Karakas (Atmakaraka to Darakaraka), and planetary dignities across D-1, D-2, D-3, D-9, D-12, and D-30.",
+        "Kundali & Sudarshan Chakra Guide: Toggle between South Indian (Rasi-Fixed) and North Indian (Diamond) diagrams for Rasi (D-1) and Navamsa (D-9), inspect the 3-Ring Sudarshan Chakra (Lagna, Moon, Sun), and select any house below to view its Direct Argala, Virodhargala, and Jaimini Rasi Drishti.",
+        "Ayurdaya, Vimshottari Dasa & Yogas Guide: Review the Jaimini 3-Pairs Longevity Compartment (Purnayu, Madhyayu, Alpayu), click any Mahadasa row in the 120-year Vimshottari table to explore its 9 Antardasas (Bhuktis), and inspect detected Classical Yogas and Tajaka Sahams.",
+        "AI Jyotish & Palm Synthesis Guide: Choose your Reading Focus (Complete, Career/Finance, Marriage/Progeny, or Longevity/Medical) and click 'Generate' to synthesize the Nirayana Kundali, Navamsa, Dasa, and uploaded Palm Photo into a formal report."
+      ];
+
       allSections.forEach((sec, idx) => {
         sec.open = true;
         sec.classList.add('orbit-section-card');
         if (idx === 0) sec.classList.add('orbit-active');
 
+        const contentDiv = sec.querySelector(':scope > div');
+        // Remove any old static always-visible ask-prompt strip at the top of the section
+        const oldStaticPrompt = contentDiv?.querySelector(':scope > .ask-prompt');
+        if (oldStaticPrompt) oldStaticPrompt.remove();
+
+        // Create collapsible help strip (hidden until '?' circle is clicked)
+        const helpStrip = document.createElement('div');
+        helpStrip.id = `sectionHelpStrip_${idx}`;
+        helpStrip.className = 'section-help-strip hidden no-print';
+        helpStrip.innerHTML = `<div class="flex items-start justify-between gap-2"><div><strong>ℹ️ Section ${idx + 1} Guide:</strong> ${SECTION_HELP_TEXTS[idx] || ''}</div><button type="button" onclick="toggleSectionHelpStrip(${idx}, event)" class="text-blue-700 dark:text-blue-300 font-bold text-sm leading-none px-1">&times;</button></div>`;
+        if (contentDiv) contentDiv.insertBefore(helpStrip, contentDiv.firstChild);
+
+        // Add '?' inside a circle at the top-right corner of the section card header (<summary>)
         const summaryEl = sec.querySelector(':scope > summary');
         if (summaryEl) {
           const secondSpan = summaryEl.querySelector('span:nth-child(2)');
           if (secondSpan) secondSpan.remove();
+
+          const helpBtn = document.createElement('button');
+          helpBtn.type = 'button';
+          helpBtn.id = `sectionHelpBtn_${idx}`;
+          helpBtn.className = 'section-help-btn no-print';
+          helpBtn.title = 'Click for section instructions';
+          helpBtn.setAttribute('aria-label', 'Section Instructions');
+          helpBtn.textContent = '?';
+          helpBtn.addEventListener('click', (e) => toggleSectionHelpStrip(idx, e));
+          summaryEl.appendChild(helpBtn);
+
           summaryEl.addEventListener('click', (e) => {
             e.preventDefault();
             sec.open = true;
@@ -3930,6 +4660,7 @@ function formatCrispSectionTitle(rawText) {
       }
 
       document.addEventListener('keydown', (e) => {
+           if (isPublicLandingActive()) return;
         // 1. CTRL + SHIFT: Close More, Rail, Profile, Settings, Storage, Ask Gemini & Any Open Modal
         if (e.ctrlKey && e.shiftKey && (e.key === 'Shift' || e.key === 'Control')) {
           e.preventDefault();
