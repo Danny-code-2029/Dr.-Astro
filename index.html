@@ -1095,12 +1095,16 @@
       </div>
     </div>
 
-    <!-- Public Landing Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 px-4 text-center text-[11px] text-slate-500">
-      Dr. Astro — Jyotish &amp; Samudrika Shastra AI Portal • Created by Dr. Danny (Satyapriya Srinivash) • ₹11/Year Subscription Plan
+<!-- Public Landing Footer & Classical Shastra Disclaimer (Visible Only Before Login) -->
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-[11px] text-slate-500 space-y-2">
+      <div class="font-bold text-slate-700">
+        Dr. Astro — Classical Vedic Horoscope (Jyotish) &amp; Samudrika Shastra Palm Analyzer • Created by Dr. Danny (Satyapriya Srinivash)
+      </div>
+      <p class="text-[10px] text-slate-500 max-w-3xl mx-auto leading-relaxed">
+        🪐 <strong>Traditional Shastra &amp; Educational Reference Disclaimer:</strong> Designed strictly as an academic &amp; cultural reference tool based on classical Sanskrit treatises (<em>Brihat Parashara Hora Shastra</em>, <em>Jaimini Upadesa Sutras</em>, <em>Brihat Jataka</em>, <em>Uttara Kalamrita</em>, <em>Brihat Samhita</em>, <em>Daivagya Kamadhenu</em>, Dr. B.V. Raman &amp; Pt. Sanjay Rath).
+      </p>
     </footer>
   </div>
-
 <!-- ==========================================================================
      [SECTION 03] STICKY TOP HEADER (MORE MENU BUTTON, CASE SEARCH BAR & ACCOUNT POPUP)
      ========================================================================== -->
@@ -1270,17 +1274,14 @@
   </aside>
 
 <!-- ==========================================================================
-     [SECTION 05] MAIN JYOTISH & SAMUDRIKA WORKSPACE — SECTIONS 1 & 2
+     [SECTION 05] MAIN JYOTISH & SAMUDRIKA WORKSPACE — ONLY THE ACTIVE CARD
      ========================================================================== -->
-  <main class="max-w-7xl mx-auto px-2 sm:px-4 pt-3 space-y-3 pb-20 lg:pb-6">
+  <main class="max-w-7xl mx-auto px-2 sm:px-4 pt-4 pb-20 lg:pb-6">
 
-    <!-- 5.1 Compact Auto-Save & Reset Strip -->
-    <div class="flex items-center justify-between gap-3 px-1 no-print">
-      <span id="ephemerisStatusBadge" class="text-[11px] text-amber-600 dark:text-amber-400 font-clinical-mono font-semibold">✨ Nirayana Ephemeris Ready</span>
-      <div class="flex items-center gap-3">
-        <span id="autoSaveBadge" class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">✓ Auto-saved locally</span>
-        <button onclick="resetForm()" class="text-[11px] text-rose-600 dark:text-rose-400 hover:underline font-semibold">Reset Form</button>
-      </div>
+    <!-- Hidden telemetry hooks so JS status updates never clutter the card view -->
+    <div class="hidden" aria-hidden="true">
+      <span id="ephemerisStatusBadge"></span>
+      <span id="autoSaveBadge"></span>
     </div>
 
     <!-- 5.2 Section 1: Birth & Terrestrial Data -->
@@ -1753,70 +1754,11 @@
           </div>
         </div>
 
-        <textarea id="inlineReadingOutput" rows="14" class="w-full border border-slate-300 rounded-2xl p-4 text-sm leading-relaxed font-clinical-serif bg-slate-50" placeholder="Tap 'Generate' to synthesize your Nirayana Kundali, Navamsa, Sudarshan Chakra, Vimshottari Dasa, and uploaded Palm Photo..."></textarea>
+<textarea id="inlineReadingOutput" rows="14" class="w-full border border-slate-300 rounded-2xl p-4 text-sm leading-relaxed font-clinical-serif bg-slate-50" placeholder="Tap 'Generate' to synthesize your Nirayana Kundali, Navamsa, Sudarshan Chakra, Vimshottari Dasa, and uploaded Palm Photo..."></textarea>
       </div>
     </details>
 
-<!-- ==========================================================================
-     [SECTION 10] FOOTER, SECURITY OVERLAYS & FLOATING GEMINI ASSISTANT BUTTON
-     ========================================================================== -->
-
-<!-- Crawlable SEO Guide & Classical Jyotish FAQ (Stays outside Orbit :scope > details) -->
-    <section aria-label="About Dr. Astro Vedic Astrology and Samudrika Shastra Guide" class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5 mt-4 space-y-4 text-xs text-slate-700 no-print">
-      <div class="space-y-1.5">
-        <h2 class="text-sm sm:text-base font-extrabold text-slate-900">
-          Dr. Astro: Classical Vedic Horoscope (Jyotish) &amp; Samudrika Shastra Palm Analyzer
-        </h2>
-        <p class="leading-relaxed">
-          <strong>Dr. Astro (Jyotish &amp; Samudrika AI)</strong> is a free web-based Vedic Astrology calculator and palm vision platform built by <strong>Dr. Danny</strong>. Unlike basic sun-sign generators, it computes exact astronomical <strong>Local Mean Time (LMT)</strong>, <strong>Suryodayadi Ishtakala Ghatis</strong>, and sidereal <strong>Nirayana Graha Sphutas</strong> using both <strong>Chitrapaksha (Lahiri)</strong> and <strong>Dr. B.V. Raman Ayanamsa</strong>.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <article class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-          <h3 class="font-bold text-slate-900">Parashara Kundali &amp; Shadvargas</h3>
-          <p class="text-[11px] leading-relaxed">
-            Generates interactive South Indian (Rasi-fixed) and North Indian (Diamond) charts for <strong>Rasi (D-1)</strong> and <strong>Navamsa (D-9)</strong> alongside the concentric 3-ring <strong>Sudarshan Chakra</strong> (Lagna, Moon, and Sun) and complete D-1, D-2 Hora, D-3 Drekkana, D-9, D-12, and D-30 Trimsamsa tables.
-          </p>
-        </article>
-        <article class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-          <h3 class="font-bold text-slate-900">Jaimini Arudha, Argala &amp; Ayurdaya</h3>
-          <p class="text-[11px] leading-relaxed">
-            Automatically calculates the 8 <strong>Chara Karakas</strong> (Atmakaraka to Darakaraka), Special Ascendants (Hora, Ghatika, Shri Lagna), <strong>Arudha Lagna (AL)</strong>, <strong>Upapada (UL)</strong>, house-wise <strong>Argala &amp; Rasi Drishti</strong>, Jaimini 3-Pairs longevity, Tajaka Sahams, and 120-year <strong>Vimshottari Dasa &amp; Bhuktis</strong>.
-          </p>
-        </article>
-        <article class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1">
-          <h3 class="font-bold text-slate-900">Samudrika Shastra Palm Vision AI</h3>
-          <p class="text-[11px] leading-relaxed">
-            Cross-verifies your Janma Kundali with uploaded right or left palm photographs, evaluating <strong>Graha Parvata</strong> (planetary mounts), <strong>Karatala Tattva</strong>, and major <strong>Rekhas</strong> (Jeevan, Mastishka, Hridaya, Bhagya, Surya, and Budha lines) using classical <em>Brihat Samhita</em> principles.
-          </p>
-        </article>
-      </div>
-
-      <div class="border-t border-slate-200 pt-3 space-y-2">
-        <h3 class="font-bold text-slate-900">Frequently Asked Questions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-[11px]">
-          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-            <strong class="block text-slate-900 mb-0.5">What if my exact Time of Birth is unknown?</strong>
-            Switch the Birth Time Mode in Section 1 to <em>TOB Unknown (Surya Lagna)</em> or <em>Prasna (Query Moment)</em> to evaluate planetary placements and palm markers without an exact birth clock.
-          </div>
-          <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-            <strong class="block text-slate-900 mb-0.5">Does Dr. Astro store my birth data or palm photo on a server?</strong>
-            No. Horoscope calculations run locally inside your browser, and saved horoscopes remain in your device's local storage unless you explicitly export them to your own Google Sheet.
-          </div>
-        </div>
-      </div>
-    </section>
-       
-       <footer class="text-center text-[11px] text-slate-400 pt-4 pb-2 space-y-1 max-w-3xl mx-auto px-3">
-      <div class="font-semibold text-slate-500 dark:text-slate-300">Jyotish &amp; Samudrika AI • Dr. Danny (danny-code-2029)</div>
-      <p class="text-[10px] text-slate-500 leading-relaxed">
-        🪐 <strong>Traditional Shastra &amp; Educational Reference Disclaimer:</strong> Designed strictly as an academic &amp; cultural reference tool based on classical Sanskrit treatises (<em>Brihat Jataka</em>, <em>Uttara Kalamrita</em>, <em>Brihat Samhita</em>, <em>Daivagya Kamadhenu</em>, Dr. B.V. Raman &amp; Pt. Sanjay Rath).
-      </p>
-    </footer>
-
   </main>
-
   <!-- 10.1 Forensic Diagonal Watermark Overlay (Deters Camera Leaks; Auto-Hidden for Admin) -->
   <div id="forensicWatermark" aria-hidden="true"></div>
 
@@ -3220,15 +3162,16 @@ const pwaManifest = {
       document.getElementById('loginModal').classList.add('hidden');
     }
 
-    async function handleMedicoLogout() {
+      async function handleMedicoLogout() {
       activeSessionKey = '';
       sessionStorage.removeItem('jyotish_active_session_key');
       closeAccountPopup();
       await releaseSingleDeviceSessionSlot(currentGoogleUser);
       await auth.signOut();
       updateAuthUI('logged_out');
+      showPublicSubView('landingHomeView');
     }
-
+       
     function updateAuthUI(state) {
       const loginBtn = document.getElementById('headerLoginBtn');
       const avatarBtn = document.getElementById('headerAvatarBtn');
