@@ -12,8 +12,8 @@
   <meta name="google-site-verification" content="I0785uVeIRkrW6Ue63YVX0HmrvEGWhRWJCt3I32gG9Q" />
 
 <!-- 1.2 SEO Title, Rich Meta Tags, Open Graph, Favicon & Dynamic Canonical -->
-  <title>Dr. Astro — Free Vedic Kundali, Sudarshan Chakra &amp; AI Palm Reading | Jyotish &amp; Samudrika AI</title>
-  <meta name="description" content="Free Vedic Astrology (Jyotish) Kundali &amp; Samudrika Shastra AI Palm Analyzer by Dr. Danny. Calculate D-1 Rasi, D-9 Navamsa, Shadvarga, Sudarshan Chakra, Jaimini Arudha Padas, Ayurdaya &amp; Vimshottari Dasa." />
+  <title>Dr. Astro — Vedic Kundali, Sudarshan Chakra &amp; AI Palm Reading | Jyotish &amp; Samudrika AI</title>
+  <meta name="description" content="Vedic Astrology (Jyotish) Kundali &amp; Samudrika Shastra AI Palm Analyzer by Dr. Danny. Calculate D-1 Rasi, D-9 Navamsa, Shadvarga, Sudarshan Chakra, Jaimini Arudha Padas, Ayurdaya &amp; Vimshottari Dasa." />
   <meta name="keywords" content="Dr. Astro, Dr. Danny Jyotish, Jyotish AI, Samudrika Shastra palm reading AI, free Vedic Kundali calculator, Sudarshan Chakra online, Jaimini Arudha Lagna Upapada calculator, Vimshottari Dasa Bhukti, Shadvarga calculator, danny-code-2029" />
   <meta name="author" content="Dr. Danny (Satyapriya Srinivash)" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -64,10 +64,10 @@
         "applicationCategory": "ReferenceApplication",
         "operatingSystem": "Web, Android, iOS, Windows, macOS",
         "browserRequirements": "Requires JavaScript",
-        "description": "Free online Vedic Astrology (Jyotish) horoscope calculator and Samudrika Shastra AI palm reader based on Parashara, Jaimini, Varahamihira, and Kalidasa.",
+     "description": "Online Vedic Astrology (Jyotish) horoscope calculator and Samudrika Shastra AI palm reader based on Parashara, Jaimini, Varahamihira, and Kalidasa.",
         "offers": {
           "@type": "Offer",
-          "price": "0",
+          "price": "11",
           "priceCurrency": "INR"
         },
         "featureList": [
@@ -1021,11 +1021,18 @@
               <span class="text-slate-500 text-[11px]">Stores your encrypted API Vault and horoscope records so your data is never lost when your 1-year plan expires.</span>
             </div>
           </label>
-          <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer">
+       <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200 cursor-pointer">
             <input type="checkbox" id="permCheckPalmVision" checked class="mt-0.5 w-4 h-4 accent-blue-600" />
             <div>
               <strong class="text-slate-900 block">3. Camera &amp; Palm Image Upload for Samudrika AI</strong>
               <span class="text-slate-500 text-[11px]">Permits uploading palm photographs and PDFs for multimodal Jyotish + Samudrika synthesis.</span>
+            </div>
+          </label>
+          <label class="flex items-start gap-3 p-3 rounded-2xl bg-amber-50 border border-amber-200 cursor-pointer">
+            <input type="checkbox" id="permCheckPersonalUse" checked class="mt-0.5 w-4 h-4 accent-amber-600" />
+            <div>
+              <strong class="text-amber-950 block">4. Strict Personal Use Only &amp; 1-Reset-Per-Year Policy</strong>
+              <span class="text-amber-900 text-[11px]">I agree to use Dr. Astro strictly for personal use (no commercial readings for others). I understand birth details are taken once per year with only 1 reset chance per ₹11 plan.</span>
             </div>
           </label>
         </div>
@@ -1292,6 +1299,39 @@
         <span class="text-xs text-blue-600 font-normal">Tap to collapse/expand</span>
       </summary>
       <div class="p-4 space-y-4">
+           <!-- Strict Personal Use Notice + Annual Input Lock & 1-Time Reset Control -->
+        <div id="annualLockNoticeBar" class="bg-amber-50 border border-amber-300 text-amber-950 p-3.5 rounded-2xl text-xs space-y-2.5">
+          <div class="flex flex-wrap items-start justify-between gap-2">
+            <div class="space-y-1 flex-1">
+              <div class="font-extrabold text-amber-900 flex items-center gap-1.5">
+                <span>⚠️ Strict Personal Use Only — Fill Your Details Truthfully</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                This portal is strictly for <strong>personal use only</strong>; commercial use (using a ₹11 plan to generate readings for paying clients) is prohibited. Your birth details are recorded <strong>once per annual plan</strong>, and every user receives only <strong>1 reset chance per year</strong>. If you enter incorrect details after using your reset, you must <strong>pay ₹11 INR again</strong> or wait for your next annual renewal.
+              </p>
+            </div>
+            <span id="annualLockStatusBadge" class="text-[10px] bg-blue-600/15 text-blue-800 border border-blue-400/40 px-2.5 py-1 rounded-full font-clinical-mono font-bold shrink-0">
+              🔓 Editable • 1 Reset Left
+            </span>
+          </div>
+
+          <div id="annualLockActionRow" class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-amber-200/80">
+            <span id="annualLockHintText" class="text-[11px] font-medium">
+              Double-check Name, DOB, Time &amp; Place before locking your annual profile.
+            </span>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btnLockAnnualProfile" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-1.5 shadow">
+                🔒 Confirm &amp; Lock Details for This Year
+              </button>
+              <button type="button" id="btnUsePlanReset" onclick="requestOneTimePlanReset()" class="hidden chrome-pill-btn bg-amber-600 hover:bg-amber-500 text-white text-xs px-4 py-1.5 shadow">
+                🔄 Use My 1 Reset Chance
+              </button>
+              <button type="button" id="btnPayToResetNow" onclick="triggerMidYearResetPayment()" class="hidden chrome-pill-btn bg-rose-600 hover:bg-rose-500 text-white text-xs px-4 py-1.5 shadow">
+                💳 0 Resets Left — Pay ₹11 to Reset Now
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="ask-prompt">
           <strong>Ganita Siddhanta Rule:</strong> Enter Date, Time, and Place of Birth to compute exact LMT, Suryodayadi Ishtakala Ghatis, Lagna Sphuta, and Shadvargas. If birth time is unknown, switch to <em>Surya Lagna / Prasna Mode</em>.
         </div>
@@ -2259,9 +2299,10 @@
      [SECTION 12] MODULAR JAVASCRIPT ENGINE
      (ASTRONOMICAL EPHEMERIS, ADMIN WATERMARK BYPASS, MOBILE BOTTOM RAIL & ORBIT)
      ========================================================================== -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -2276,6 +2317,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const functions = firebase.app().functions("asia-south1");
 
     window.ADMIN_OWNER_EMAIL = "satya.srinivash1234@gmail.com";
     window.BANNED_RESIDUE_EMAIL = "satya.srinivash123@gmail.com";
@@ -2285,6 +2327,267 @@
     window.MERCHANT_UPI_NAME = "Dr Astro Jyotish AI";
     window.ANNUAL_PLAN_AMOUNT_INR = "11.00";
     window.ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+
+    // ========================================================================
+    // OWNER-CONTROLLED MONETIZATION CONFIG, COMPANION DETECTOR & ANNUAL LOCK
+    // ========================================================================
+    window.MONETIZATION_CONFIG = {
+      activeMode: "OPTION_3_WEB_COMPANION",
+      priceINR: 11,
+      planDurationDays: 365,
+      merchantUpiId: "satya.srinivash1234-1@okicici",
+      merchantUpiName: "Dr Astro Jyotish AI",
+      webGatewayPaymentUrl: "",
+      playStoreProductId: "dr_astro_annual_11",
+      companionHidePayments: true
+    };
+
+    let currentUserSubscriptionState = {
+      profileLocked: false,
+      resetsRemaining: 1,
+      lockedProfile: null,
+      expiresAtISO: ""
+    };
+
+    const LOCKED_BIRTH_FIELD_IDS = [
+      "nativeName", "nativeGender", "birthDate", "birthTime",
+      "cityPresetSelect", "birthPlaceName", "birthLat", "birthLon", "timeAccuracyMode"
+    ];
+
+    function isPlayStoreCompanionApp() {
+      const params = new URLSearchParams(window.location.search);
+      const isFlagged = params.get("app") === "companion" || params.get("source") === "play_twa";
+      const isAndroidTwaReferrer = document.referrer && document.referrer.startsWith("android-app://");
+      if (isFlagged || isAndroidTwaReferrer) {
+        sessionStorage.setItem("dr_astro_companion_mode", "true");
+        return true;
+      }
+      return sessionStorage.getItem("dr_astro_companion_mode") === "true";
+    }
+
+    async function loadOwnerMonetizationConfig() {
+      try {
+        const snap = await db.collection("site_settings").doc("monetization_config").get();
+        if (snap.exists) {
+          window.MONETIZATION_CONFIG = { ...window.MONETIZATION_CONFIG, ...snap.data() };
+          localStorage.setItem("jyotish_monetization_cfg_cache", JSON.stringify(window.MONETIZATION_CONFIG));
+        }
+      } catch (e) {
+        try {
+          const cached = JSON.parse(localStorage.getItem("jyotish_monetization_cfg_cache") || "null");
+          if (cached) window.MONETIZATION_CONFIG = { ...window.MONETIZATION_CONFIG, ...cached };
+        } catch {}
+      }
+      window.MERCHANT_UPI_ID = window.MONETIZATION_CONFIG.merchantUpiId;
+      window.MERCHANT_UPI_NAME = window.MONETIZATION_CONFIG.merchantUpiName;
+      window.ANNUAL_PLAN_AMOUNT_INR = Number(window.MONETIZATION_CONFIG.priceINR || 11).toFixed(2);
+      window.ONE_YEAR_MS = Number(window.MONETIZATION_CONFIG.planDurationDays || 365) * 24 * 60 * 60 * 1000;
+      applyCompanionAppComplianceUI();
+    }
+
+    function applyCompanionAppComplianceUI() {
+      const inCompanion = isPlayStoreCompanionApp();
+      const shouldHidePayments = inCompanion
+        && window.MONETIZATION_CONFIG.activeMode === "OPTION_3_WEB_COMPANION"
+        && window.MONETIZATION_CONFIG.companionHidePayments;
+      document.querySelectorAll('button[onclick*="openSignupFlowStep1"]').forEach(btn => {
+        btn.classList.toggle("hidden", shouldHidePayments);
+      });
+    }
+
+    async function startUnifiedCheckout(email, isResetRepurchase = false) {
+      const mode = window.MONETIZATION_CONFIG.activeMode;
+
+      if (mode === "OPTION_1_PLAY_BILLING" && "getDigitalGoodsService" in window) {
+        try {
+          const service = await window.getDigitalGoodsService("https://play.google.com/billing");
+          if (service) {
+            const sku = window.MONETIZATION_CONFIG.playStoreProductId || "dr_astro_annual_11";
+            const paymentRequest = new PaymentRequest([{ supportedMethods: "https://play.google.com/billing", data: { sku } }]);
+            const paymentResponse = await paymentRequest.show();
+            const verifyFn = functions.httpsCallable("verifyPlayBillingSubscription");
+            await verifyFn({ purchaseToken: paymentResponse.details.purchaseToken, productId: sku });
+            await paymentResponse.complete("success");
+            await syncAnnualProfileLockFromServer(currentGoogleUser);
+            enterQuestionnaireWorkspace();
+            return;
+          }
+        } catch (err) {
+          alert("Google Play Billing could not complete: " + (err.message || err));
+          return;
+        }
+      }
+
+      if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
+        alert("This account does not have an active annual pass or remaining reset. Please manage your plan on the web portal.");
+        showPublicSubView("landingHomeView");
+        return;
+      }
+
+      const gwUrl = (window.MONETIZATION_CONFIG.webGatewayPaymentUrl || "").trim();
+      if (gwUrl) {
+        const sep = gwUrl.includes("?") ? "&" : "?";
+        window.open(`${gwUrl}${sep}email=${encodeURIComponent(email)}`, "_blank");
+      }
+
+      populateUpiPaymentStep(email, isResetRepurchase);
+      showPublicSubView("signupStep3PaymentView");
+    }
+
+    async function syncAnnualProfileLockFromServer(user) {
+      if (!user || !user.email) return;
+      if (isCurrentUserAdmin(user)) {
+        currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 999, lockedProfile: null, expiresAtISO: "Lifetime" };
+        applyAnnualProfileLockUI();
+        return;
+      }
+      const emailKey = normalizeEmail(user.email);
+      try {
+        const snap = await db.collection("subscriptions").doc(emailKey).get();
+        if (snap.exists) {
+          const data = snap.data();
+          currentUserSubscriptionState = {
+            profileLocked: Boolean(data.profileLocked),
+            resetsRemaining: typeof data.resetsRemaining === "number" ? data.resetsRemaining : 1,
+            lockedProfile: data.lockedProfile || null,
+            expiresAtISO: data.expiresAtISO || ""
+          };
+        } else {
+          currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 1, lockedProfile: null, expiresAtISO: "" };
+        }
+      } catch (e) {}
+
+      if (currentUserSubscriptionState.profileLocked && currentUserSubscriptionState.lockedProfile) {
+        const lp = currentUserSubscriptionState.lockedProfile;
+        LOCKED_BIRTH_FIELD_IDS.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && lp[id] !== undefined && lp[id] !== null) el.value = lp[id];
+        });
+        computeFullHoroscope();
+      }
+      applyAnnualProfileLockUI();
+    }
+
+    function applyAnnualProfileLockUI() {
+      const isAdmin = isCurrentUserAdmin();
+      const locked = !isAdmin && Boolean(currentUserSubscriptionState.profileLocked);
+      const resets = currentUserSubscriptionState.resetsRemaining;
+      const expiryDateStr = currentUserSubscriptionState.expiresAtISO
+        ? new Date(currentUserSubscriptionState.expiresAtISO).toLocaleDateString("en-IN")
+        : "next year";
+
+      LOCKED_BIRTH_FIELD_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.disabled = locked;
+          el.classList.toggle("opacity-60", locked);
+          el.classList.toggle("cursor-not-allowed", locked);
+        }
+      });
+
+      const badge = document.getElementById("annualLockStatusBadge");
+      const hint = document.getElementById("annualLockHintText");
+      const btnLock = document.getElementById("btnLockAnnualProfile");
+      const btnReset = document.getElementById("btnUsePlanReset");
+      const btnPayReset = document.getElementById("btnPayToResetNow");
+      if (!badge || !hint) return;
+
+      if (isAdmin) {
+        badge.textContent = "👑 Owner Mode (Unlimited)";
+        hint.textContent = "Owner account is exempt from the 1-input-per-year personal lock.";
+        btnLock?.classList.add("hidden");
+        btnReset?.classList.add("hidden");
+        btnPayReset?.classList.add("hidden");
+        return;
+      }
+
+      if (!locked) {
+        badge.textContent = `🔓 Editable • ${resets} Reset Left`;
+        hint.textContent = resets > 0
+          ? "Fill your birth details truthfully, then click Confirm & Lock. You get 1 reset chance per year."
+          : "⚠️ Final Entry (0 Resets Remaining): Verify carefully before locking, or next change costs ₹11.";
+        btnLock?.classList.remove("hidden");
+        btnReset?.classList.add("hidden");
+        btnPayReset?.classList.add("hidden");
+      } else {
+        badge.textContent = `🔒 Locked for Year • ${resets} Reset Left`;
+        btnLock?.classList.add("hidden");
+        if (resets > 0) {
+          hint.textContent = `Your personal details are locked until ${expiryDateStr}. Made a mistake? You have 1 reset chance left.`;
+          btnReset?.classList.remove("hidden");
+          btnPayReset?.classList.add("hidden");
+        } else {
+          hint.textContent = `0 reset chances left for this plan. Pay ₹11 INR again to unlock now, or wait until ${expiryDateStr}.`;
+          btnReset?.classList.add("hidden");
+          btnPayReset?.classList.remove("hidden");
+        }
+      }
+    }
+
+    async function confirmAndLockBirthProfile() {
+      if (isCurrentUserAdmin()) return;
+      if (!currentGoogleUser) { alert("Please sign in first."); return; }
+
+      const profile = {
+        nativeName: (document.getElementById("nativeName")?.value || "").trim(),
+        nativeGender: document.getElementById("nativeGender")?.value || "Male (Purusha Jataka)",
+        birthDate: document.getElementById("birthDate")?.value || "",
+        birthTime: document.getElementById("birthTime")?.value || "",
+        birthPlaceName: (document.getElementById("birthPlaceName")?.value || "").trim(),
+        birthLat: parseFloat(document.getElementById("birthLat")?.value || "20.30"),
+        birthLon: parseFloat(document.getElementById("birthLon")?.value || "85.82"),
+        timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT"
+      };
+
+      if (!profile.nativeName || !profile.birthDate || !profile.birthTime) {
+        alert("Please enter your Full Name, Date of Birth, and Time of Birth truthfully before locking.");
+        return;
+      }
+
+      const resets = currentUserSubscriptionState.resetsRemaining;
+      const msg = resets > 0
+        ? `Confirm & Lock these birth details for your annual plan?\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nNote: You will have 1 reset chance left this year if you spot a mistake.`
+        : `FINAL LOCK WARNING (0 Resets Left):\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nOnce locked, you will need to pay ₹11 again or wait until next year to change these details. Continue?`;
+
+      if (!confirm(msg)) return;
+
+      try {
+        showStatusToast("🔒 Locking personal birth details...");
+        const lockFn = functions.httpsCallable("lockUserBirthProfile");
+        const res = await lockFn({ profile });
+        currentUserSubscriptionState.profileLocked = true;
+        currentUserSubscriptionState.lockedProfile = res.data.lockedProfile || profile;
+        currentUserSubscriptionState.resetsRemaining = res.data.resetsRemaining;
+        applyAnnualProfileLockUI();
+        computeFullHoroscope();
+        showStatusToast("✅ Birth details locked for your annual plan!");
+      } catch (err) {
+        alert("Could not lock details: " + (err.message || err));
+      }
+    }
+
+    async function requestOneTimePlanReset() {
+      if (isCurrentUserAdmin()) return;
+      if (!confirm("Use your ONLY reset chance for this annual plan?\n\nAfter using this reset, any further mistake will require paying ₹11 INR again or waiting until next year's renewal.")) {
+        return;
+      }
+      try {
+        showStatusToast("🔄 Using your 1 plan reset chance...");
+        const resetFn = functions.httpsCallable("consumePlanResetChance");
+        const res = await resetFn({});
+        currentUserSubscriptionState.profileLocked = false;
+        currentUserSubscriptionState.resetsRemaining = res.data.resetsRemaining;
+        applyAnnualProfileLockUI();
+        showStatusToast("🔓 Form unlocked! Edit carefully and lock again (0 resets remaining).");
+      } catch (err) {
+        alert(err.message || "Unable to reset.");
+      }
+    }
+
+    function triggerMidYearResetPayment() {
+      const email = currentGoogleUser?.email || "";
+      startUnifiedCheckout(email, true);
+    }
 
 const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="22" fill="#1d4ed8"/><circle cx="50" cy="36" r="18" fill="#ffffff"/><path d="M20 86c0-16.5 13.5-30 30-30s30 13.5 30 30" fill="#ffffff"/></svg>`
@@ -2321,9 +2624,10 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       </svg>`
     );
 
-    // 1. Dynamic Custom Domain & Saturn PWA Manifest Auto-Generator
+// 1. Dynamic Custom Domain & Saturn PWA Manifest Auto-Generator
     (function initCustomDomainAndManifest() {
-      const currentOriginUrl = window.location.origin + window.location.pathname;
+      const cleanPath = window.location.pathname.replace(/index\.html$/i, '');
+      const currentOriginUrl = window.location.origin + (cleanPath.endsWith('/') ? cleanPath : cleanPath + '/');
       const canonEl = document.getElementById('dynamicCanonicalLink');
       if (canonEl && window.location.protocol.startsWith('http')) {
         canonEl.href = currentOriginUrl;
@@ -2362,13 +2666,23 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       }
     }
 
+let statusToastTimer = null;
     function showStatusToast(msg) {
-      const badge = document.getElementById('autoSaveBadge');
-      if (badge) {
-        const prev = badge.textContent;
-        badge.textContent = msg;
-        setTimeout(() => { badge.textContent = prev || '✓ Auto-saved locally'; }, 2600);
+      let pill = document.getElementById('drAstroFloatingToast');
+      if (!pill) {
+        pill = document.createElement('div');
+        pill.id = 'drAstroFloatingToast';
+        pill.className = 'fixed bottom-16 lg:bottom-6 left-1/2 -translate-x-1/2 z-[110] bg-slate-900 text-white border border-blue-500/60 px-4 py-2 rounded-full text-xs font-semibold shadow-2xl transition-opacity duration-200 pointer-events-none no-print';
+        document.body.appendChild(pill);
       }
+      pill.textContent = msg;
+      pill.style.opacity = '1';
+      pill.classList.remove('hidden');
+      clearTimeout(statusToastTimer);
+      statusToastTimer = setTimeout(() => {
+        pill.style.opacity = '0';
+        setTimeout(() => pill.classList.add('hidden'), 220);
+      }, 2800);
     }
 
 // 3. Mandatory In-App Account & Cloud Data Deletion (Isolated to jyotish_vault)
@@ -2471,6 +2785,7 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      loadOwnerMonetizationConfig();
       initTheme();
       initAntiCaptureProtection();
       renderForensicWatermark();
@@ -2525,13 +2840,19 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       wm.innerHTML = html;
     }
 
-    function triggerCaptureShield() { document.body.classList.add('capture-shield-active'); }
+let isAuthOrExternalActionActive = false;
+
+    function triggerCaptureShield() {
+      if (isPublicLandingActive() || isAuthOrExternalActionActive || isCurrentUserAdmin()) return;
+      document.body.classList.add('capture-shield-active');
+    }
     function dismissCaptureShield() { document.body.classList.remove('capture-shield-active'); }
 
     function initAntiCaptureProtection() {
       document.addEventListener('visibilitychange', () => { if (document.hidden) triggerCaptureShield(); });
       window.addEventListener('blur', () => { triggerCaptureShield(); });
       window.addEventListener('keydown', (e) => {
+        if (isPublicLandingActive()) return;
         if (e.key === 'PrintScreen' || (e.metaKey && e.shiftKey && ['3', '4', '5', 's', 'S'].includes(e.key))) {
           e.preventDefault();
           triggerCaptureShield();
@@ -2616,6 +2937,10 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
     function setTheme(mode) { localStorage.setItem('jyotish_theme_pref', mode); applyTheme(mode); }
     function applyTheme(mode) {
       const root = document.documentElement;
+      if (isPublicLandingActive()) {
+        root.classList.remove('dark');
+        return;
+      }
       const isDark = mode === 'dark' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
       root.classList.toggle('dark', isDark);
       ['Light', 'Dark', 'System'].forEach(m => {
@@ -2918,35 +3243,31 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       }
     }
 
-    async function selectGoogleAccountForSignup() {
+      async function selectGoogleAccountForSignup() {
       pendingSignupAuthMode = 'signup';
+      isAuthOrExternalActionActive = true;
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
       try {
-        const res = await auth.signInWithPopup(provider);
-        if (res && res.user) {
-          const email = normalizeEmail(res.user.email);
-          document.getElementById('signupSelectedEmailText').textContent = email;
-          document.getElementById('signupSelectedEmailCard').classList.remove('hidden');
-          document.getElementById('permStepEmailBadge').textContent = email;
-          showPublicSubView('signupStep2PermissionsView');
-        }
+        await auth.signInWithPopup(provider);
       } catch (err) {
         alert('Google Account Selection cancelled or blocked: ' + (err.message || err.code));
+      } finally {
+        isAuthOrExternalActionActive = false;
       }
     }
 
-    function proceedFromPermissionsToPayment() {
+function proceedFromPermissionsToPayment() {
       const c1 = document.getElementById('permCheckIdentity')?.checked;
       const c2 = document.getElementById('permCheckFirestore')?.checked;
       const c3 = document.getElementById('permCheckPalmVision')?.checked;
-      if (!c1 || !c2 || !c3) {
-        alert('Please check all 3 permissions to proceed to the ₹11 annual plan.');
+      const c4 = document.getElementById('permCheckPersonalUse')?.checked;
+      if (!c1 || !c2 || !c3 || !c4) {
+        alert('Please check all 4 permissions (including Personal Use Only) to proceed to the ₹11 annual plan.');
         return;
       }
       const email = normalizeEmail(currentGoogleUser?.email || document.getElementById('signupSelectedEmailText')?.textContent || '');
-      populateUpiPaymentStep(email, false);
-      showPublicSubView('signupStep3PaymentView');
+      startUnifiedCheckout(email, false);
     }
 
     function populateUpiPaymentStep(email, isExpiredRenewal = false) {
@@ -2963,25 +3284,21 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       const queryParams = `pa=${pa}&pn=${pn}&am=${am}&cu=INR&tn=${tn}`;
 
       const standardUpiUri = `upi://pay?${queryParams}`;
-      const gpayUri = `tez://upi/pay?${queryParams}`;
-      const phonepeUri = `phonepe://pay?${queryParams}`;
-      const bhimUri = `bhim://pay?${queryParams}`;
-      const paytmUri = `paytmmp://pay?${queryParams}`;
-
       const qrImg = document.getElementById('upiQrCodeImg');
       if (qrImg) {
         qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(standardUpiUri)}`;
       }
       const vpaBadge = document.getElementById('upiVpaDisplayBadge');
-      if (vpaBadge) vpaBadge.textContent = `UPI ID: ${window.MERCHANT_UPI_ID} • ₹11.00 / Year`;
+      if (vpaBadge) vpaBadge.textContent = `UPI ID: ${window.MERCHANT_UPI_ID} • ₹${window.ANNUAL_PLAN_AMOUNT_INR} / Year`;
 
       const setHref = (id, uri) => { const el = document.getElementById(id); if (el) el.href = uri; };
-      setHref('btnUpiGpay', gpayUri);
-      setHref('btnUpiPhonePe', phonepeUri);
-      setHref('btnUpiBhim', bhimUri);
-      setHref('btnUpiPaytm', paytmUri);
+      setHref('btnUpiGpay', `tez://upi/pay?${queryParams}`);
+      setHref('btnUpiPhonePe', `phonepe://pay?${queryParams}`);
+      setHref('btnUpiBhim', `bhim://pay?${queryParams}`);
+      setHref('btnUpiPaytm', `paytmmp://pay?${queryParams}`);
     }
 
+    // Verifies server-confirmed subscription from Firestore (blocks fake UTR client bypass)
     async function completeAnnualSubscriptionPayment() {
       if (!currentGoogleUser || !currentGoogleUser.email) {
         alert('Please select your Gmail ID in Step 1 first.');
@@ -2989,46 +3306,36 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
         return;
       }
       const emailKey = normalizeEmail(currentGoogleUser.email);
-      const utr = (document.getElementById('upiUtrInput')?.value || '').trim() || ('UPI11_' + Date.now());
-      const nowMs = Date.now();
-      const expiresAtMs = nowMs + window.ONE_YEAR_MS;
 
-      const subRecord = {
-        email: emailKey,
-        uid: currentGoogleUser.uid,
-        amountINR: 11,
-        utrNumber: utr,
-        subscribedAtISO: new Date(nowMs).toISOString(),
-        expiresAtMs: expiresAtMs,
-        expiresAtISO: new Date(expiresAtMs).toISOString(),
-        status: 'active'
-      };
-
-      // 1. Save 1-Year Subscription Record locally & in Firestore
-      localStorage.setItem('jyotish_sub_record_' + emailKey, JSON.stringify(subRecord));
-      try {
-        await db.collection('subscriptions').doc(emailKey).set(subRecord, { merge: true });
-      } catch (e) {}
-
-      // 2. Automatically add user's Gmail ID to the Allowed List (site_settings/access_control)
-      const cfg = getPrivacyConfig();
-      if (!cfg.emails.includes(emailKey) && emailKey !== normalizeEmail(window.ADMIN_OWNER_EMAIL)) {
-        cfg.emails.push(emailKey);
+      if (isCurrentUserAdmin(currentGoogleUser)) {
+        pendingSignupAuthMode = null;
+        enterQuestionnaireWorkspace();
+        return;
       }
-      localStorage.setItem('jyotish_privacy_config_v3', JSON.stringify(cfg));
-      try {
-        await db.collection('site_settings').doc('access_control').set({
-          enabled: cfg.enabled,
-          emails: firebase.firestore.FieldValue.arrayUnion(emailKey)
-        }, { merge: true });
-      } catch (e) {}
 
-      pendingSignupAuthMode = null;
-      enterQuestionnaireWorkspace();
-      showStatusToast('✅ ₹11 Annual Plan Activated for 1 Year!');
+      try {
+        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
+        const subData = subSnap.exists ? subSnap.data() : null;
+        const { allowedSet } = await fetchWebsiteAllowedEmailsSet();
+        const isServerActive = Boolean(
+          (subData && subData.status === 'active' && subData.expiresAtMs && Date.now() <= subData.expiresAtMs)
+          || allowedSet.has(emailKey)
+        );
+
+        if (isServerActive) {
+          pendingSignupAuthMode = null;
+          await syncAnnualProfileLockFromServer(currentGoogleUser);
+          enterQuestionnaireWorkspace();
+          showStatusToast('✅ ₹11 Annual Plan Verified!');
+        } else {
+          alert('⏳ Payment not detected yet.\n\nIf you just completed your ₹11 UPI payment via Razorpay, wait 5–10 seconds and tap Verify again. If you paid manually via direct UPI QR, send your UTR to the Owner for instant activation.');
+        }
+      } catch (err) {
+        alert('Could not verify payment status: ' + (err.message || err));
+      }
     }
 
-    // Checks 1-Year Subscription Expiry; Removes Email from Allowed List on Expiry WITHOUT Deleting Firestore Data
+    // Strict Server-Verified Access Router (Never leaks free access when Private Mode is OFF for SEO)
     async function verifyOneYearSubscriptionAndRoute(user) {
       if (!user || !user.email) {
         showPublicSubView('landingHomeView');
@@ -3036,13 +3343,39 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       }
       const emailKey = normalizeEmail(user.email);
 
-      // Admin Owner has permanent lifetime access
-      if (isCurrentUserAdmin(user)) {
+if (isCurrentUserAdmin(user)) {
+        pendingSignupAuthMode = null;
         enterQuestionnaireWorkspace();
         return true;
       }
 
-      // If user is currently in the middle of the 3-step Sign-Up flow, let them complete Step 2/3
+      let subData = null;
+      try {
+        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
+        if (subSnap.exists) subData = subSnap.data();
+      } catch (e) {}
+
+      const nowMs = Date.now();
+      const { allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const hasActiveSub = Boolean(subData && subData.status === 'active' && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
+
+      if (hasActiveSub || allowedSet.has(emailKey)) {
+        pendingSignupAuthMode = null;
+        enterQuestionnaireWorkspace();
+        return true;
+      }
+
+      if (subData && subData.expiresAtMs && nowMs > subData.expiresAtMs) {
+        if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
+          alert('Your 1-Year Dr. Astro pass has expired. Your saved data is safe—please renew on the web portal to continue.');
+          showPublicSubView('landingHomeView');
+        } else {
+          populateUpiPaymentStep(emailKey, true);
+          showPublicSubView('signupStep3PaymentView');
+        }
+        return false;
+      }
+
       if (pendingSignupAuthMode === 'signup') {
         document.getElementById('signupSelectedEmailText').textContent = emailKey;
         document.getElementById('signupSelectedEmailCard').classList.remove('hidden');
@@ -3051,45 +3384,12 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
         return false;
       }
 
-      // Check Firestore & Local Subscription Record for 1-Year Expiry
-      let subData = null;
-      try {
-        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
-        if (subSnap.exists) subData = subSnap.data();
-      } catch (e) {}
-      if (!subData) {
-        try { subData = JSON.parse(localStorage.getItem('jyotish_sub_record_' + emailKey) || 'null'); } catch {}
-      }
-
-      const nowMs = Date.now();
-      if (subData && subData.expiresAtMs && nowMs > subData.expiresAtMs) {
-        // 1 Year has passed: Remove email from Allowed List (site_settings/access_control)
-        // IMPORTANT: Do NOT delete jyotish_vault or saved horoscope data from Firestore!
-        const cfg = getPrivacyConfig();
-        cfg.emails = cfg.emails.filter(e => e !== emailKey);
-        localStorage.setItem('jyotish_privacy_config_v3', JSON.stringify(cfg));
-        try {
-          await db.collection('site_settings').doc('access_control').set({
-            emails: firebase.firestore.FieldValue.arrayRemove(emailKey)
-          }, { merge: true });
-          await db.collection('subscriptions').doc(emailKey).set({ status: 'expired' }, { merge: true });
-        } catch (e) {}
-
-        populateUpiPaymentStep(emailKey, true);
-        showPublicSubView('signupStep3PaymentView');
+      if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
+        alert('No active Dr. Astro access found for ' + emailKey + '.');
+        showPublicSubView('landingHomeView');
         return false;
       }
 
-      // Check if email is in Allowed List or has an active subscription
-      const { enabled, allowedSet } = await fetchWebsiteAllowedEmailsSet();
-      const hasActiveSub = Boolean(subData && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
-
-      if (hasActiveSub || allowedSet.has(emailKey) || !enabled) {
-        enterQuestionnaireWorkspace();
-        return true;
-      }
-
-      // Not registered yet -> route to Sign-Up Step 2 (Permissions -> ₹11 Payment)
       document.getElementById('permStepEmailBadge').textContent = emailKey;
       showPublicSubView('signupStep2PermissionsView');
       return false;
@@ -3112,7 +3412,10 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       renderForensicWatermark();
       injectPrivacySettingsUI();
       await enforcePrivateAccessGate(user);
-      await verifyOneYearSubscriptionAndRoute(user);
+      const enteredWorkspace = await verifyOneYearSubscriptionAndRoute(user);
+      if (enteredWorkspace) {
+        await syncAnnualProfileLockFromServer(user);
+      }
       await renderDeviceAccountMatchers();
 
       const statusBox = document.getElementById('vaultSyncStatus');
@@ -3151,27 +3454,31 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
         activeSessionKey = '';
         sessionStorage.removeItem('jyotish_active_session_key');
         updateAuthUI('needs_key');
-        document.getElementById('loginModal').classList.remove('hidden');
+        // Only pop open API Vault modal AFTER user enters the workspace (never over Sign-Up Steps 2/3)
+        if (!isPublicLandingActive()) {
+          document.getElementById('loginModal').classList.remove('hidden');
+        }
       }
     });
 
-    async function signInWithGoogle(hintEmail = '') {
+async function signInWithGoogle(hintEmail = '') {
+      isAuthOrExternalActionActive = true;
       const provider = new firebase.auth.GoogleAuthProvider();
       const cleanHint = normalizeEmail(hintEmail);
       if (cleanHint && cleanHint.includes('@')) {
-        // Direct sign-in for a matched account present on the device
         provider.setCustomParameters({ login_hint: cleanHint });
       } else {
-        // Opens Google's account chooser to login with other accounts on the device
         provider.setCustomParameters({ prompt: 'select_account' });
       }
       try {
         await auth.signInWithPopup(provider);
       } catch (err) {
         showStatusToast('⚠️ Sign-in popup closed or blocked (' + (err.code || 'check Authorized Domains') + ')');
+      } finally {
+        isAuthOrExternalActionActive = false;
       }
     }
-
+       
     async function saveKeyToCloudVault(inputElementId) {
       if (!currentGoogleUser) { showStatusToast('⚠️ Please sign in with Google first.'); return; }
       const rawKey = document.getElementById(inputElementId).value.trim();
@@ -3193,9 +3500,16 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       document.getElementById('loginModal').classList.add('hidden');
     }
 
-      async function handleMedicoLogout() {
+   async function handleMedicoLogout() {
       activeSessionKey = '';
       sessionStorage.removeItem('jyotish_active_session_key');
+      currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 1, lockedProfile: null, expiresAtISO: "" };
+      currentOrbitSectionIndex = 0;
+      const secs = getAllMainSections();
+      secs.forEach((s, i) => {
+        s.classList.remove('orbit-leaving', 'orbit-entering');
+        s.classList.toggle('orbit-active', i === 0);
+      });
       closeAccountPopup();
       await releaseSingleDeviceSessionSlot(currentGoogleUser);
       await auth.signOut();
@@ -3276,7 +3590,92 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       `;
       settingsContainer.appendChild(div);
       loadPrivacySettingsIntoUI();
+      injectOwnerMonetizationControlUI(settingsContainer);
     }
+       function injectOwnerMonetizationControlUI(settingsContainer) {
+   const existing = document.getElementById("ownerMonetizationSection");
+   if (existing) existing.remove();
+   if (!isCurrentUserAdmin()) return;
+
+   const cfg = window.MONETIZATION_CONFIG;
+   const box = document.createElement("div");
+   box.id = "ownerMonetizationSection";
+   box.className = "border-t border-slate-200 dark:border-slate-700 pt-3 space-y-3";
+   box.innerHTML = `
+     <div class="flex items-center justify-between">
+       <div>
+         <div class="font-bold text-amber-600 dark:text-amber-400">👑 Owner Only: Billing &amp; App Mode Switch</div>
+         <div class="text-[10px] text-slate-400">Strictly locked to ${window.ADMIN_OWNER_EMAIL} in Firestore</div>
+       </div>
+       <span class="text-[10px] bg-amber-500/15 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-clinical-mono font-bold">ADMIN</span>
+     </div>
+
+     <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5 text-xs">
+       <div>
+         <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Active Monetization Mode</label>
+         <select id="ownerBillingModeSelect" class="w-full border rounded-xl px-2.5 py-1.5 text-xs bg-white dark:bg-slate-900 font-semibold">
+           <option value="OPTION_3_WEB_COMPANION" ${cfg.activeMode === "OPTION_3_WEB_COMPANION" ? "selected" : ""}>Option 3: Zero-Commission Web Checkout + Free Companion App</option>
+           <option value="OPTION_1_PLAY_BILLING" ${cfg.activeMode === "OPTION_1_PLAY_BILLING" ? "selected" : ""}>Option 1: Google Play Billing (Native UPI / AutoPay)</option>
+         </select>
+       </div>
+       <div class="grid grid-cols-2 gap-2">
+         <div>
+           <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Annual Fee (INR)</label>
+           <input id="ownerPriceInrInput" type="number" min="1" value="${cfg.priceINR}" class="w-full border rounded-xl px-2.5 py-1.5 text-xs font-clinical-mono bg-white dark:bg-slate-900" />
+         </div>
+         <div>
+           <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Validity (Days)</label>
+           <input id="ownerDurationDaysInput" type="number" min="1" value="${cfg.planDurationDays}" class="w-full border rounded-xl px-2.5 py-1.5 text-xs font-clinical-mono bg-white dark:bg-slate-900" />
+         </div>
+       </div>
+       <div>
+         <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Merchant UPI ID (Option 3 QR &amp; Deep Links)</label>
+         <input id="ownerMerchantUpiInput" type="text" value="${cfg.merchantUpiId}" class="w-full border rounded-xl px-2.5 py-1.5 text-xs font-clinical-mono bg-white dark:bg-slate-900" />
+       </div>
+       <div>
+         <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Razorpay / Cashfree Payment Page URL</label>
+         <input id="ownerGatewayUrlInput" type="url" value="${cfg.webGatewayPaymentUrl || ""}" placeholder="https://rzp.io/l/dr-astro-11" class="w-full border rounded-xl px-2.5 py-1.5 text-xs bg-white dark:bg-slate-900" />
+       </div>
+       <div>
+         <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Play Store Subscription SKU (For Future Option 1)</label>
+         <input id="ownerPlaySkuInput" type="text" value="${cfg.playStoreProductId}" class="w-full border rounded-xl px-2.5 py-1.5 text-xs font-clinical-mono bg-white dark:bg-slate-900" />
+       </div>
+       <label class="flex items-center gap-2 pt-1 cursor-pointer">
+         <input type="checkbox" id="ownerCompanionHidePayToggle" ${cfg.companionHidePayments ? "checked" : ""} class="w-4 h-4 accent-blue-600" />
+         <span class="text-[11px] font-semibold">Hide Sign-Up &amp; Payments inside Play Companion App</span>
+       </label>
+       <button type="button" onclick="saveOwnerMonetizationConfig()" class="w-full chrome-pill-btn save-3d-blue-btn justify-center py-2 text-xs">
+         💾 Save Owner Billing Config
+       </button>
+     </div>
+   `;
+   settingsContainer.appendChild(box);
+ }
+
+ async function saveOwnerMonetizationConfig() {
+   if (!isCurrentUserAdmin()) { alert("Owner only."); return; }
+   const updated = {
+     activeMode: document.getElementById("ownerBillingModeSelect")?.value || "OPTION_3_WEB_COMPANION",
+     priceINR: Number(document.getElementById("ownerPriceInrInput")?.value || 11),
+     planDurationDays: Number(document.getElementById("ownerDurationDaysInput")?.value || 365),
+     merchantUpiId: (document.getElementById("ownerMerchantUpiInput")?.value || "").trim(),
+     merchantUpiName: window.MONETIZATION_CONFIG.merchantUpiName,
+     webGatewayPaymentUrl: (document.getElementById("ownerGatewayUrlInput")?.value || "").trim(),
+     playStoreProductId: (document.getElementById("ownerPlaySkuInput")?.value || "dr_astro_annual_11").trim(),
+     companionHidePayments: Boolean(document.getElementById("ownerCompanionHidePayToggle")?.checked),
+     updatedBy: window.ADMIN_OWNER_EMAIL,
+     updatedAtISO: new Date().toISOString()
+   };
+   window.MONETIZATION_CONFIG = updated;
+   localStorage.setItem("jyotish_monetization_cfg_cache", JSON.stringify(updated));
+   try {
+     await db.collection("site_settings").doc("monetization_config").set(updated, { merge: true });
+     await loadOwnerMonetizationConfig();
+     showStatusToast("✅ Owner Billing Config Saved!");
+   } catch (err) {
+     alert("Firestore save failed: " + err.message);
+   }
+ }
 
     function getPrivacyConfig() {
       try {
@@ -3436,10 +3835,11 @@ const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
       return data;
     }
 
-    function applyFormSnapshot(data) {
+function applyFormSnapshot(data) {
       if (!data) return;
       Object.keys(data).forEach(id => {
         if (id.startsWith('_')) return;
+        if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && LOCKED_BIRTH_FIELD_IDS.includes(id)) return;
         const el = document.getElementById(id);
         if (el && el.type !== 'file') {
           if (el.type === 'checkbox') el.checked = Boolean(data[id]);
@@ -3509,11 +3909,7 @@ function buildCaseShareUrl(caseObj) {
       setStoredCases(cases);
 
       if (showToast) {
-        const badge = document.getElementById('autoSaveBadge');
-        if (badge) {
-          badge.textContent = '💾 Saved to Horoscope Storage!';
-          setTimeout(() => { badge.textContent = '✓ Auto-saved locally'; }, 2200);
-        }
+        showStatusToast('💾 Saved to Horoscope Storage!');
       }
       return caseRecord;
     }
@@ -3557,11 +3953,16 @@ function buildCaseShareUrl(caseObj) {
         window.location.reload();
       }
     }
-    function resetForm() {
-      if (confirm('Reset current horoscope form to default values?')) {
-        startBlankHoroscope();
-      }
-    }
+  function resetForm() {
+  if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked) {
+    if (currentUserSubscriptionState.resetsRemaining > 0) requestOneTimePlanReset();
+    else triggerMidYearResetPayment();
+    return;
+  }
+  if (confirm('Reset current horoscope form to default values?')) {
+    startBlankHoroscope();
+  }
+}
 
     function renderStorageTable() {
       const tbody = document.getElementById('storageTableBody');
@@ -3767,11 +4168,11 @@ function handleCaseSearch(query) {
       } else {
         if (deg < 5) trimLord = "Venus"; else if (deg < 12) trimLord = "Mercury"; else if (deg < 20) trimLord = "Jupiter"; else if (deg < 25) trimLord = "Saturn"; else trimLord = "Mars";
       }
-      return {
+        return {
         rasiIdx, deg,
         d1: RASIS[rasiIdx].name, d1Lord: RASIS[rasiIdx].lord,
         d2Lord: RASIS[horaRasi].lord,
-        d3Rasi: drekRasi, d3Lord: RASIS[d3Rasi = drekRasi].lord,
+        d3Rasi: drekRasi, d3Lord: RASIS[drekRasi].lord,
         d9Rasi: navamsaRasi, d9Name: RASIS[navamsaRasi].name, d9Lord: RASIS[navamsaRasi].lord,
         d12Lord: RASIS[dwadRasi].lord,
         d30Lord: trimLord
@@ -3799,13 +4200,22 @@ function handleCaseSearch(query) {
       computeFullHoroscope();
     }
 
-    function computeFullHoroscope() {
-      const dobStr = document.getElementById('birthDate')?.value || '2003-07-07';
-      const tobStr = document.getElementById('birthTime')?.value || '10:30:00';
-      const lat = parseFloat(document.getElementById('birthLat')?.value || '20.30');
-      const lon = parseFloat(document.getElementById('birthLon')?.value || '85.82');
+function computeFullHoroscope() {
       const ayanMode = document.getElementById('ayanamsaMode')?.value || 'LAHIRI';
       const timeMode = document.getElementById('timeAccuracyMode')?.value || 'EXACT';
+      let dobStr = document.getElementById('birthDate')?.value || '2003-07-07';
+      let tobStr = document.getElementById('birthTime')?.value || '10:30:00';
+
+      if (timeMode === 'PRASNA') {
+        const nowIst = new Date(Date.now() + (new Date().getTimezoneOffset() + 330) * 60000);
+        dobStr = nowIst.toISOString().slice(0, 10);
+        tobStr = nowIst.toTimeString().slice(0, 8);
+      }
+
+      const parsedLat = parseFloat(document.getElementById('birthLat')?.value);
+      const parsedLon = parseFloat(document.getElementById('birthLon')?.value);
+      const lat = Number.isFinite(parsedLat) ? Math.max(-66, Math.min(66, parsedLat)) : 20.30;
+      const lon = Number.isFinite(parsedLon) ? Math.max(-180, Math.min(180, parsedLon)) : 85.82;
 
       const [yr, mo, dy] = dobStr.split('-').map(Number);
       const [hr, mn, sc] = (tobStr + ':00').split(':').map(Number);
@@ -4214,7 +4624,12 @@ function handleCaseSearch(query) {
     }
 
 async function triggerFinalGenerateAndPopup() {
-      const baseReport = buildOfflineClassicalSynthesis();
+  if (!isCurrentUserAdmin() && !currentUserSubscriptionState.profileLocked) {
+    await confirmAndLockBirthProfile();
+    if (!currentUserSubscriptionState.profileLocked) return;
+  }
+  // ...keep existing generate & popup lines below     
+     const baseReport = buildOfflineClassicalSynthesis();
       document.getElementById('inlineReadingOutput').value = baseReport;
       document.getElementById('outputParagraphs').value = baseReport;
       const caseRecord = saveCurrentCaseToStorage(false);
@@ -4354,12 +4769,13 @@ async function triggerFinalGenerateAndPopup() {
           return;
         }
         const parsed = JSON.parse(jsonMatch[0]);
-        Object.keys(parsed).forEach(id => {
-          const el = document.getElementById(id);
-          if (el && parsed[id] !== undefined && parsed[id] !== null && parsed[id] !== '') {
-            el.value = parsed[id];
-          }
-        });
+       Object.keys(parsed).forEach(id => {
+     if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && LOCKED_BIRTH_FIELD_IDS.includes(id)) return;
+     const el = document.getElementById(id);
+     if (el && parsed[id] !== undefined && parsed[id] !== null && parsed[id] !== '') {
+       el.value = parsed[id];
+     }
+   });
         computeFullHoroscope();
         saveActiveWorkingDraft();
         out.value = `✅ Form updated and horoscope recomputed:\n` + JSON.stringify(parsed, null, 2);
@@ -4899,9 +5315,14 @@ function formatCrispSectionTitle(rawText) {
       if (targetIdx >= 0 && targetIdx < sections.length) switchToOrbitSection(targetIdx);
     }
 
-    function switchToOrbitSection(targetIndex) {
+      function switchToOrbitSection(targetIndex) {
       const sections = getAllMainSections();
       if (targetIndex === currentOrbitSectionIndex || targetIndex < 0 || targetIndex >= sections.length || isOrbitAnimating) return;
+      if (!isCurrentUserAdmin() && targetIndex > 0 && !currentUserSubscriptionState.profileLocked) {
+        showStatusToast('🔒 Confirm & Lock your personal birth details in Section 1 first.');
+        document.getElementById('annualLockNoticeBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
       const oldSec = sections[currentOrbitSectionIndex];
       const newSec = sections[targetIndex];
       if (!oldSec || !newSec) return;
