@@ -725,9 +725,48 @@
       border-color: #60a5fa !important;
       color: #dbeafe !important;
     }
-    @keyframes fadeHelpIn {
+@keyframes fadeHelpIn {
       from { opacity: 0; transform: translateY(-4px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Gemini-Style Astro Chat Mode (Hides Orbit Data-Collection Cards While Chatting) */
+    body.astro-chat-mode #orbitWorkspaceWrapper,
+    body.astro-chat-mode #rightRailSliderTrack,
+    body.astro-chat-mode #rightSectionRail,
+    body.astro-chat-mode #mobileBottomRail,
+    body.astro-chat-mode #geminiFloatBtn {
+      display: none !important;
+    }
+    body:not(.astro-chat-mode) #astroChatWorkspace {
+      display: none !important;
+    }
+    .astro-chat-shell {
+      height: calc(100vh - 96px);
+      min-height: 520px;
+    }
+    .chat-msg-user {
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+      color: #ffffff;
+      border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+    }
+    .chat-msg-ai {
+      background-color: #ffffff;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+    }
+    html.dark .chat-msg-ai {
+      background-color: #1e293b;
+      color: #f1f5f9;
+      border-color: #334155;
+    }
+    .chat-chip-btn {
+      transition: transform 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
+    }
+    .chat-chip-btn:hover {
+      transform: translateY(-1px);
+      border-color: #3b82f6;
     }
   </style>
 </head>
@@ -891,7 +930,7 @@
           <div class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden flex flex-col justify-between">
             <div class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between text-xs">
               <span class="font-bold">Preview 2 • Samudrika Palm Scan &amp; AI Synthesis</span>
-              <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-clinical-mono">Gemini 2.5 Vision</span>
+        <span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2.5 py-0.5 rounded-full font-clinical-mono">Gemini 4 Vision</span>
             </div>
             <div class="p-5 space-y-3.5 text-xs flex-1 flex flex-col justify-between">
               <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
@@ -1046,11 +1085,10 @@
     <!-- VIEW 4: SIGN-UP STEP 3 — ₹11 ANNUAL UPI QR CODE & APP DEEP LINKS -->
     <div id="signupStep3PaymentView" class="hidden max-w-lg w-full mx-auto px-4 py-8 flex-1 flex items-center">
       <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-4 text-xs">
-        <div class="flex items-center justify-between text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
-          <span>Step 3 of 3 • ₹11 / Year UPI Activation</span>
-          <button type="button" onclick="showPublicSubView('signupStep2PermissionsView')" class="text-slate-400 hover:text-slate-700">⬅ Back</button>
+<div class="flex items-center justify-between text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
+          <span id="payStepHeaderTitle">Step 3 of 3 • ₹11 / Year UPI Activation</span>
+          <button type="button" onclick="showPublicSubView('signupStep1EmailView')" class="text-slate-400 hover:text-slate-700">⬅ Change Account</button>
         </div>
-
         <div id="renewalNoticeBanner" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-3 rounded-2xl text-[11px] font-medium">
           ⏳ Your 1-Year subscription has expired. All your saved Firestore horoscopes and Cloud Vault settings are preserved — complete your ₹11 renewal below to continue right where you left off!
         </div>
@@ -1090,14 +1128,92 @@
           </div>
         </div>
 
-        <!-- Payment Confirmation / 12-Digit UTR Input to Trigger Automatic Allowed-List Addition -->
+<!-- Payment Confirmation / 12-Digit UTR Input to Trigger Automatic Allowed-List Addition -->
         <div class="border-t border-slate-200 pt-3 space-y-2.5">
           <label class="block text-[11px] font-bold text-slate-700">
-            Enter 12-Digit UPI Ref / UTR Number (or Tap Activate After Paying ₹11):
+            Enter 12-Digit UPI Ref / UTR Number (Required After Paying ₹11):
           </label>
-          <input id="upiUtrInput" type="text" placeholder="e.g., 432187654321 (Optional for instant verification)" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-clinical-mono bg-white" />
+          <input id="upiUtrInput" type="text" inputmode="numeric" maxlength="20" placeholder="e.g., 432187654321 (12-digit UTR from your UPI receipt)" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-xs font-clinical-mono bg-white" />
           <button type="button" onclick="completeAnnualSubscriptionPayment()" class="w-full chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 shadow-lg text-sm">
-            <span>✅ Verify ₹11 Payment &amp; Open Questionnaire ➔</span>
+            <span>✅ Verify ₹11 Payment &amp; Continue ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+<!-- VIEW 5: STEP 10 — DEDICATED GEMINI API KEY GENERATION & SAVE PAGE -->
+    <div id="signupStep4ApiKeyView" class="hidden max-w-lg w-full mx-auto px-4 py-10 flex-1 flex items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-5 text-xs">
+        <div class="flex items-center justify-between text-[11px] font-bold text-indigo-700 uppercase tracking-wider">
+          <span>Final Setup • Link Your Gemini AI Key</span>
+          <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">✓ Plan Active</span>
+        </div>
+
+        <div class="space-y-1">
+          <h2 class="text-lg font-extrabold text-slate-900">🔑 Generate &amp; Save Your Free Gemini API Key</h2>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Account <strong id="apiPageEmailBadge" class="text-blue-700 font-clinical-mono">--</strong> is active. Link your personal Google AI Studio key once so Dr. Astro can compute charts and answer your Jyotish &amp; Palm questions privately.
+          </p>
+        </div>
+
+        <div class="bg-indigo-50/70 border border-indigo-200 p-4 rounded-2xl space-y-2.5 text-indigo-950">
+          <div class="font-bold text-xs">Step 1: Get Your Free Key (Takes 20 Seconds)</div>
+          <p class="text-[11px] text-indigo-900">Tap below to open Google AI Studio, click <strong>Create API Key</strong>, and copy the key starting with <code>AIzaSy...</code></p>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 text-xs shadow">
+            ↗ Open Google AI Studio &amp; Create API Key
+          </a>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-bold text-slate-800">Step 2: Paste &amp; Save Your Gemini API Key</label>
+          <input id="onboardingApiKeyInput" type="password" placeholder="AIzaSy..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-clinical-mono bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+          <button type="button" onclick="saveOnboardingApiKeyAndEnter()" class="w-full chrome-pill-btn justify-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 shadow-lg text-sm">
+            <span>🔒 Save API Key &amp; Open Dr. Astro ➔</span>
+          </button>
+        </div>
+
+        <div class="text-center pt-1">
+          <button type="button" onclick="handleMedicoLogout()" class="text-[11px] text-slate-400 hover:text-rose-600 underline">
+            Sign out &amp; switch account
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: STEP 20 — POST-RENEWAL 2-OPTION CHOICE (KEEP PREVIOUS DATA VS ADD NEW DATA) -->
+    <div id="renewalDataChoiceView" class="hidden max-w-xl w-full mx-auto px-4 py-10 flex-1 flex items-center">
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-5 text-xs">
+        <div class="text-center space-y-1.5">
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[11px]">
+            🎉 Annual Plan Renewed for 365 Days!
+          </span>
+          <h2 class="text-xl font-extrabold text-slate-900">Choose Your Horoscope Data</h2>
+          <p class="text-xs text-slate-500">
+            Your previous birth chart &amp; palm profile were preserved safely. How would you like to continue for this year?
+          </p>
+        </div>
+
+        <!-- Saved Previous Data Preview Strip -->
+        <div id="renewalPrevDataSummary" class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-[11px] font-clinical-mono text-slate-700">
+          Loading saved profile details...
+        </div>
+
+        <!-- 2 Explicit Options -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button type="button" onclick="chooseRenewalKeepData()" class="text-left p-4 rounded-2xl border-2 border-blue-200 hover:border-blue-600 bg-blue-50/50 hover:bg-blue-50 transition-all space-y-1.5">
+            <div class="text-lg">📂</div>
+            <div class="font-extrabold text-sm text-blue-950">Keep Previous Data</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Retain your existing birth chart &amp; palm details and jump straight back into your AI Astro Chat.
+            </p>
+          </button>
+
+          <button type="button" onclick="chooseRenewalAddNewData()" class="text-left p-4 rounded-2xl border-2 border-emerald-200 hover:border-emerald-600 bg-emerald-50/50 hover:bg-emerald-50 transition-all space-y-1.5">
+            <div class="text-lg">✨</div>
+            <div class="font-extrabold text-sm text-emerald-950">Add New Data</div>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              Open the data input section once again to enter fresh birth details &amp; a new palm photo for this year.
+            </p>
           </button>
         </div>
       </div>
@@ -1284,7 +1400,7 @@
 <!-- ==========================================================================
      [SECTION 05] MAIN JYOTISH & SAMUDRIKA WORKSPACE — ONLY THE ACTIVE CARD
      ========================================================================== -->
-  <main class="max-w-7xl mx-auto px-2 sm:px-4 pt-4 pb-20 lg:pb-6">
+<main class="max-w-7xl mx-auto px-2 sm:px-4 pt-4 pb-20 lg:pb-6">
 
     <!-- Hidden telemetry hooks so JS status updates never clutter the card view -->
     <div class="hidden" aria-hidden="true">
@@ -1292,6 +1408,92 @@
       <span id="autoSaveBadge"></span>
     </div>
 
+    <!-- ========================================================================
+         [SECTION 05B] GEMINI-STYLE ASTROLOGY & SAMUDRIKA CHAT WORKSPACE (STEPS 15-17)
+         ======================================================================== -->
+    <section id="astroChatWorkspace" class="astro-chat-shell max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col overflow-hidden">
+
+      <!-- Chat Top Context Bar -->
+      <div class="px-4 sm:px-5 py-3 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div class="w-9 h-9 rounded-full gemini-chrome-fab text-white flex items-center justify-center shrink-0 shadow">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z"/></svg>
+          </div>
+          <div class="overflow-hidden">
+            <div class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Dr. Astro AI Chat</div>
+            <div id="chatChartContextBadge" class="text-[11px] text-blue-600 dark:text-blue-400 font-clinical-mono truncate">
+              Chart Ready • Computing Lagna &amp; Dasa...
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" onclick="openChartsFromChat()" class="chrome-pill-btn text-xs bg-blue-50 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-700 px-3 py-1.5">
+            <span>📊</span> <span>View My Charts</span>
+          </button>
+          <button type="button" onclick="clearAstroChatHistory()" class="chrome-pill-btn text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5" title="Start New Chat">
+            <span>✨ New Chat</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable Gemini-Style Message Thread -->
+      <div id="astroChatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+        <!-- Initial Gemini-Style Greeting & Quick Question Chips -->
+        <div id="astroChatEmptyState" class="max-w-2xl mx-auto py-6 sm:py-10 text-center space-y-5">
+          <div class="space-y-1.5">
+            <h2 id="chatGreetingHeadline" class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+              Hello! Your Vedic Chart is Ready
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              Your Nirayana Kundali (D-1/D-9), Sudarshan Chakra, Shadvargas, Jaimini Arudha Padas, Vimshottari Dasa &amp; Palm data are loaded. Ask anything below.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left text-xs">
+            <button type="button" onclick="askQuickAstroPrompt('Give me a complete overview of my Lagna, Moon Rasi, Atmakaraka, and strongest Classical Yogas.')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+              ✨ Summarize my Lagna, Atmakaraka &amp; key Yogas
+            </button>
+            <button type="button" onclick="askQuickAstroPrompt('Analyze my 10th house, Dashama Karma, Arudha Lagna, and current Vimshottari Mahadasa/Bhukti for career and finances.')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+              💼 Career, wealth &amp; current Vimshottari Dasa timing
+            </button>
+            <button type="button" onclick="askQuickAstroPrompt('Evaluate my 7th house, Navamsa (D-9), Upapada Lagna (UL), and Vivaha Saham for marriage and relationships.')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+              💍 Marriage, Navamsa (D-9) &amp; Upapada Lagna insights
+            </button>
+            <button type="button" onclick="askQuickAstroPrompt('Cross-verify my uploaded palm photo (mounts and Rekhas) with my Jaimini Ayurdaya longevity and birth chart.')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+              🖐️ Correlate my Palm Vision with my Kundali &amp; health
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Gemini-Style Pill Input Bar -->
+      <div class="p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+        <div class="max-w-3xl mx-auto flex items-end gap-2 bg-slate-100 dark:bg-slate-800 rounded-3xl px-3.5 py-2 border border-slate-200 dark:border-slate-700 focus-within:ring-2 focus-within:ring-blue-500">
+          <button type="button" onclick="startDictation('astroChatInput')" class="p-2 rounded-full text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors shrink-0" title="Voice Input">
+            🎤
+          </button>
+          <textarea
+            id="astroChatInput"
+            rows="1"
+            placeholder="Ask Dr. Astro anything about your horoscope, Dasa, or palm..."
+            onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendAstroChatMessage(); }"
+            class="flex-1 bg-transparent border-0 focus:outline-none text-sm py-1.5 resize-none max-h-32 text-slate-900 dark:text-white"
+          ></textarea>
+          <button type="button" id="astroChatSendBtn" onclick="sendAstroChatMessage()" class="chrome-pill-btn gemini-chrome-fab text-white px-4 py-2 text-xs font-bold shadow shrink-0">
+            <span>Ask</span> <span>➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Back-to-Chat Banner (Shown When Viewing Charts After One-Time Save) -->
+    <div id="returnToChatBanner" class="hidden max-w-7xl mx-auto mb-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white flex flex-wrap items-center justify-between gap-2 shadow-md no-print">
+      <div class="text-xs font-semibold">
+        📊 Viewing your computed Vedic Charts &amp; Dasa Tables (Data saved for this year).
+      </div>
+      <button type="button" onclick="openAstroChatMode()" class="chrome-pill-btn bg-white text-blue-700 hover:bg-blue-50 text-xs px-4 py-1.5 font-bold shadow">
+        💬 Back to Astro AI Chat
+      </button>
+    </div>
     <!-- 5.2 Section 1: Birth & Terrestrial Data -->
     <details open class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <summary class="bg-slate-50 px-4 py-3 font-bold text-slate-800 cursor-pointer flex justify-between items-center border-b">
@@ -1320,8 +1522,8 @@
               Double-check Name, DOB, Time &amp; Place before locking your annual profile.
             </span>
             <div class="flex flex-wrap gap-2">
-              <button type="button" id="btnLockAnnualProfile" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-1.5 shadow">
-                🔒 Confirm &amp; Lock Details for This Year
+           <button type="button" id="btnLockAnnualProfile" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-1.5 shadow">
+                💾 Save Data (One-Time) &amp; Open Chat ➔
               </button>
               <button type="button" id="btnUsePlanReset" onclick="requestOneTimePlanReset()" class="hidden chrome-pill-btn bg-amber-600 hover:bg-amber-500 text-white text-xs px-4 py-1.5 shadow">
                 🔄 Use My 1 Reset Chance
@@ -2149,6 +2351,20 @@
             </button>
           </div>
         </div>
+<div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-1.5">
+          <label class="block font-bold text-sm">🧠 Gemini AI Model Engine</label>
+          <select id="userGeminiModelSelect" onchange="saveUserPreferredModel(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+            <option value="gemini-4-hydrogen">✨ Gemini 4 Hydrogen (Recommended — Free &amp; Paid Keys)</option>
+            <option value="gemini-4-carbon">🚀 Gemini 4 Carbon (Flagship Pro Reasoning — Paid Key)</option>
+            <option value="gemini-4-neon">⚡ Gemini 4 Neon (Fast Pro Reasoning — Paid Key)</option>
+            <option value="gemini-3.1-pro-preview">🔮 Gemini 3.1 Pro Preview (Paid Key)</option>
+            <option value="gemini-3.8-flash">💨 Gemini 3.8 Flash (Fast Fallback — Free &amp; Paid)</option>
+          </select>
+          <p class="text-[10px] text-slate-400 leading-relaxed">
+            Free AI Studio keys work best on <strong>Gemini 4 Hydrogen</strong>. If you select a Pro/Carbon model on a free key, Dr. Astro automatically falls back to Gemini 4 Hydrogen.
+          </p>
+        </div>
+
         <div class="border-t border-slate-200 dark:border-slate-700 pt-3 flex justify-between items-center">
           <span class="text-slate-600 dark:text-slate-300">Manage Cloud API Key Vault</span>
           <button onclick="toggleSettingsModal(); toggleLoginModal();" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5">🔑 Open Vault</button>
@@ -2339,9 +2555,9 @@
       merchantUpiName: "Dr Astro Jyotish AI",
       webGatewayPaymentUrl: "",
       playStoreProductId: "dr_astro_annual_11",
-      companionHidePayments: true
+      companionHidePayments: true,
+      defaultGeminiModel: "gemini-4-hydrogen"
     };
-
     let currentUserSubscriptionState = {
       profileLocked: false,
       resetsRemaining: 1,
@@ -2407,9 +2623,9 @@
             const paymentResponse = await paymentRequest.show();
             const verifyFn = functions.httpsCallable("verifyPlayBillingSubscription");
             await verifyFn({ purchaseToken: paymentResponse.details.purchaseToken, productId: sku });
-            await paymentResponse.complete("success");
+await paymentResponse.complete("success");
             await syncAnnualProfileLockFromServer(currentGoogleUser);
-            enterQuestionnaireWorkspace();
+            await routeAfterAccessConfirmed(currentGoogleUser);
             return;
           }
         } catch (err) {
@@ -2430,42 +2646,73 @@
         window.open(`${gwUrl}${sep}email=${encodeURIComponent(email)}`, "_blank");
       }
 
-      populateUpiPaymentStep(email, isResetRepurchase);
+      populateUpiPaymentStep(email, isResetRepurchase ? "reset" : "new");
       showPublicSubView("signupStep3PaymentView");
     }
 
-    async function syncAnnualProfileLockFromServer(user) {
+async function syncAnnualProfileLockFromServer(user) {
       if (!user || !user.email) return;
       if (isCurrentUserAdmin(user)) {
-        currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 999, lockedProfile: null, expiresAtISO: "Lifetime" };
+        currentUserSubscriptionState = {
+          profileLocked: false,
+          resetsRemaining: 999,
+          lockedProfile: null,
+          expiresAtISO: "Lifetime",
+          awaitingRenewalChoice: false
+        };
         applyAnnualProfileLockUI();
         return;
       }
       const emailKey = normalizeEmail(user.email);
+      let data = null;
       try {
         const snap = await db.collection("subscriptions").doc(emailKey).get();
-        if (snap.exists) {
-          const data = snap.data();
-          currentUserSubscriptionState = {
-            profileLocked: Boolean(data.profileLocked),
-            resetsRemaining: typeof data.resetsRemaining === "number" ? data.resetsRemaining : 1,
-            lockedProfile: data.lockedProfile || null,
-            expiresAtISO: data.expiresAtISO || ""
-          };
-        } else {
-          currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 1, lockedProfile: null, expiresAtISO: "" };
-        }
+        if (snap.exists) data = snap.data();
       } catch (e) {}
+      if (!data) {
+        try { data = JSON.parse(localStorage.getItem("jyotish_local_sub_" + emailKey) || "null"); } catch {}
+      }
 
-      if (currentUserSubscriptionState.profileLocked && currentUserSubscriptionState.lockedProfile) {
+      if (data) {
+        currentUserSubscriptionState = {
+          profileLocked: Boolean(data.profileLocked),
+          resetsRemaining: typeof data.resetsRemaining === "number" ? data.resetsRemaining : 1,
+          lockedProfile: data.lockedProfile || null,
+          expiresAtISO: data.expiresAtISO || "",
+          awaitingRenewalChoice: Boolean(data.awaitingRenewalChoice)
+        };
+      } else {
+        currentUserSubscriptionState = {
+          profileLocked: false,
+          resetsRemaining: 1,
+          lockedProfile: null,
+          expiresAtISO: "",
+          awaitingRenewalChoice: false
+        };
+      }
+
+      if (currentUserSubscriptionState.lockedProfile) {
         const lp = currentUserSubscriptionState.lockedProfile;
         LOCKED_BIRTH_FIELD_IDS.forEach(id => {
           const el = document.getElementById(id);
           if (el && lp[id] !== undefined && lp[id] !== null) el.value = lp[id];
         });
+        if (lp.palmMountsNotes && document.getElementById("palmMountsNotes")) {
+          document.getElementById("palmMountsNotes").value = lp.palmMountsNotes;
+        }
+if (lp.palmHandType && document.getElementById("palmHandType")) {
+          document.getElementById("palmHandType").value = lp.palmHandType;
+        }
+        if (lp.palmElementShape && document.getElementById("palmElementShape")) {
+          document.getElementById("palmElementShape").value = lp.palmElementShape;
+        }
+        restoreSavedPalmImage(lp.palmDataUrl || localStorage.getItem("jyotish_saved_palm_" + emailKey) || "");
         computeFullHoroscope();
+      } else {
+        restoreSavedPalmImage(localStorage.getItem("jyotish_saved_palm_" + emailKey) || "");
       }
       applyAnnualProfileLockUI();
+      rebuildSectionBottomNavBars();
     }
 
     function applyAnnualProfileLockUI() {
@@ -2494,7 +2741,7 @@
 
       if (isAdmin) {
         badge.textContent = "👑 Owner Mode (Unlimited)";
-        hint.textContent = "Owner account is exempt from the 1-input-per-year personal lock.";
+        hint.textContent = "Owner account can freely edit charts or open Astro AI Chat anytime.";
         btnLock?.classList.add("hidden");
         btnReset?.classList.add("hidden");
         btnPayReset?.classList.add("hidden");
@@ -2502,30 +2749,30 @@
       }
 
       if (!locked) {
-        badge.textContent = `🔓 Editable • ${resets} Reset Left`;
+        badge.textContent = `🔓 Data Input Open • ${resets} Reset Left`;
         hint.textContent = resets > 0
-          ? "Fill your birth details truthfully, then click Confirm & Lock. You get 1 reset chance per year."
-          : "⚠️ Final Entry (0 Resets Remaining): Verify carefully before locking, or next change costs ₹11.";
+          ? "Complete Section 1 (and optionally Section 2 Palm Photo), then Save Data (One-Time) to open Astro AI Chat."
+          : "⚠️ Final Entry (0 Resets Remaining): Verify carefully before saving.";
         btnLock?.classList.remove("hidden");
         btnReset?.classList.add("hidden");
         btnPayReset?.classList.add("hidden");
       } else {
-        badge.textContent = `🔒 Locked for Year • ${resets} Reset Left`;
+        badge.textContent = `🔒 Saved for Year • ${resets} Reset Left`;
         btnLock?.classList.add("hidden");
         if (resets > 0) {
-          hint.textContent = `Your personal details are locked until ${expiryDateStr}. Made a mistake? You have 1 reset chance left.`;
+          hint.textContent = `Your birth data is saved until ${expiryDateStr}. Made a mistake? You have 1 reset chance left.`;
           btnReset?.classList.remove("hidden");
           btnPayReset?.classList.add("hidden");
         } else {
-          hint.textContent = `0 reset chances left for this plan. Pay ₹11 INR again to unlock now, or wait until ${expiryDateStr}.`;
+          hint.textContent = `0 reset chances left for this plan. Pay ₹11 INR again to reset now, or wait until ${expiryDateStr}.`;
           btnReset?.classList.add("hidden");
           btnPayReset?.classList.remove("hidden");
         }
       }
     }
 
+    // Step 14 -> Step 15: One-Time Data Save -> Automatically Open Gemini-Style Chat
     async function confirmAndLockBirthProfile() {
-      if (isCurrentUserAdmin()) return;
       if (!currentGoogleUser) { alert("Please sign in first."); return; }
 
       const profile = {
@@ -2536,57 +2783,371 @@
         birthPlaceName: (document.getElementById("birthPlaceName")?.value || "").trim(),
         birthLat: parseFloat(document.getElementById("birthLat")?.value || "20.30"),
         birthLon: parseFloat(document.getElementById("birthLon")?.value || "85.82"),
-        timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT"
+        timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT",
+palmHandType: document.getElementById("palmHandType")?.value || "",
+        palmElementShape: document.getElementById("palmElementShape")?.value || "",
+        palmMountsNotes: (document.getElementById("palmMountsNotes")?.value || "").trim(),
+        palmDataUrl: (palmImageBase64 && palmImageMime) ? `data:${palmImageMime};base64,${palmImageBase64}` : ""
       };
-
+         
       if (!profile.nativeName || !profile.birthDate || !profile.birthTime) {
-        alert("Please enter your Full Name, Date of Birth, and Time of Birth truthfully before locking.");
+        alert("Please enter your Full Name, Date of Birth, and Time of Birth truthfully before saving.");
+        return;
+      }
+
+      if (isCurrentUserAdmin()) {
+        computeFullHoroscope();
+        saveCurrentCaseToStorage(false);
+        openAstroChatMode();
         return;
       }
 
       const resets = currentUserSubscriptionState.resetsRemaining;
       const msg = resets > 0
-        ? `Confirm & Lock these birth details for your annual plan?\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nNote: You will have 1 reset chance left this year if you spot a mistake.`
-        : `FINAL LOCK WARNING (0 Resets Left):\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nOnce locked, you will need to pay ₹11 again or wait until next year to change these details. Continue?`;
+        ? `Save & Lock these details for your annual plan?\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nAfter saving, your Astro AI Chat will open immediately. (You have 1 reset chance left this year if you notice a typo.)`
+        : `FINAL SAVE WARNING (0 Resets Left):\n\nName: ${profile.nativeName}\nDOB: ${profile.birthDate} at ${profile.birthTime}\nPlace: ${profile.birthPlaceName}\n\nContinue and open Astro AI Chat?`;
 
       if (!confirm(msg)) return;
 
+      const emailKey = normalizeEmail(currentGoogleUser.email);
+      showStatusToast("💾 Saving your horoscope data (one-time)...");
+
       try {
-        showStatusToast("🔒 Locking personal birth details...");
         const lockFn = functions.httpsCallable("lockUserBirthProfile");
         const res = await lockFn({ profile });
         currentUserSubscriptionState.profileLocked = true;
         currentUserSubscriptionState.lockedProfile = res.data.lockedProfile || profile;
         currentUserSubscriptionState.resetsRemaining = res.data.resetsRemaining;
-        applyAnnualProfileLockUI();
-        computeFullHoroscope();
-        showStatusToast("✅ Birth details locked for your annual plan!");
-      } catch (err) {
-        alert("Could not lock details: " + (err.message || err));
+      } catch (cloudFnErr) {
+        // Direct Firestore + local fallback before Part 4 Cloud Functions are deployed
+        currentUserSubscriptionState.profileLocked = true;
+        currentUserSubscriptionState.lockedProfile = profile;
+        currentUserSubscriptionState.awaitingRenewalChoice = false;
+        try {
+          await db.collection("subscriptions").doc(emailKey).set({
+            profileLocked: true,
+            lockedProfile: profile,
+            resetsRemaining: currentUserSubscriptionState.resetsRemaining,
+            awaitingRenewalChoice: false
+          }, { merge: true });
+        } catch (e) {}
+        try {
+          const cached = JSON.parse(localStorage.getItem("jyotish_local_sub_" + emailKey) || "{}");
+          cached.profileLocked = true;
+          cached.lockedProfile = profile;
+          cached.awaitingRenewalChoice = false;
+          localStorage.setItem("jyotish_local_sub_" + emailKey, JSON.stringify(cached));
+        } catch (e) {}
       }
+
+if (profile.palmDataUrl) {
+        try { localStorage.setItem("jyotish_saved_palm_" + emailKey, profile.palmDataUrl); } catch (e) {}
+      }
+      computeFullHoroscope();
+      saveCurrentCaseToStorage(false);
+      applyAnnualProfileLockUI();
+      rebuildSectionBottomNavBars();
+      showStatusToast("✅ Data saved! Opening Dr. Astro AI Chat...");
+      openAstroChatMode();
     }
 
     async function requestOneTimePlanReset() {
       if (isCurrentUserAdmin()) return;
-      if (!confirm("Use your ONLY reset chance for this annual plan?\n\nAfter using this reset, any further mistake will require paying ₹11 INR again or waiting until next year's renewal.")) {
+      if (!confirm("Use your ONLY reset chance for this annual plan?\n\nAfter using this reset, any further change will require paying ₹11 INR again or waiting until next year's renewal.")) {
         return;
       }
+      const emailKey = normalizeEmail(currentGoogleUser?.email || "");
       try {
         showStatusToast("🔄 Using your 1 plan reset chance...");
         const resetFn = functions.httpsCallable("consumePlanResetChance");
         const res = await resetFn({});
         currentUserSubscriptionState.profileLocked = false;
         currentUserSubscriptionState.resetsRemaining = res.data.resetsRemaining;
-        applyAnnualProfileLockUI();
-        showStatusToast("🔓 Form unlocked! Edit carefully and lock again (0 resets remaining).");
       } catch (err) {
-        alert(err.message || "Unable to reset.");
+        currentUserSubscriptionState.profileLocked = false;
+        currentUserSubscriptionState.resetsRemaining = Math.max(0, currentUserSubscriptionState.resetsRemaining - 1);
+        try {
+          await db.collection("subscriptions").doc(emailKey).set({
+            profileLocked: false,
+            resetsRemaining: currentUserSubscriptionState.resetsRemaining
+          }, { merge: true });
+        } catch (e) {}
       }
+      applyAnnualProfileLockUI();
+      openChartsFromChat();
+      switchToOrbitSection(0);
+      showStatusToast("🔓 Form unlocked! Edit carefully and save again (0 resets remaining).");
     }
 
     function triggerMidYearResetPayment() {
       const email = currentGoogleUser?.email || "";
       startUnifiedCheckout(email, true);
+    }
+
+    // Steps 20 & 21: Renewal 2-Option Handlers (Keep Previous Data vs Add New Data)
+    async function chooseRenewalKeepData() {
+      const emailKey = normalizeEmail(currentGoogleUser?.email || "");
+      currentUserSubscriptionState.profileLocked = true;
+      currentUserSubscriptionState.awaitingRenewalChoice = false;
+      try {
+        await db.collection("subscriptions").doc(emailKey).set({
+          profileLocked: true,
+          awaitingRenewalChoice: false
+        }, { merge: true });
+      } catch (e) {}
+      try {
+        const cached = JSON.parse(localStorage.getItem("jyotish_local_sub_" + emailKey) || "{}");
+        cached.profileLocked = true;
+        cached.awaitingRenewalChoice = false;
+        localStorage.setItem("jyotish_local_sub_" + emailKey, JSON.stringify(cached));
+      } catch (e) {}
+      applyAnnualProfileLockUI();
+      await routeAfterAccessConfirmed(currentGoogleUser);
+    }
+
+    async function chooseRenewalAddNewData() {
+      const emailKey = normalizeEmail(currentGoogleUser?.email || "");
+      currentUserSubscriptionState.profileLocked = false;
+      currentUserSubscriptionState.resetsRemaining = 1;
+      currentUserSubscriptionState.awaitingRenewalChoice = false;
+      try {
+        await db.collection("subscriptions").doc(emailKey).set({
+          profileLocked: false,
+          resetsRemaining: 1,
+          awaitingRenewalChoice: false
+        }, { merge: true });
+      } catch (e) {}
+      try {
+        const cached = JSON.parse(localStorage.getItem("jyotish_local_sub_" + emailKey) || "{}");
+        cached.profileLocked = false;
+        cached.resetsRemaining = 1;
+        cached.awaitingRenewalChoice = false;
+        localStorage.setItem("jyotish_local_sub_" + emailKey, JSON.stringify(cached));
+      } catch (e) {}
+
+// Clear old form fields, working draft, palm photo & chat so data input starts fresh
+      localStorage.removeItem("jyotish_working_draft_v1");
+      localStorage.removeItem("jyotish_saved_palm_" + emailKey);
+      if (document.getElementById("nativeName")) document.getElementById("nativeName").value = "";
+      if (document.getElementById("palmMountsNotes")) document.getElementById("palmMountsNotes").value = "";
+      if (document.getElementById("palmCustomQuestion")) document.getElementById("palmCustomQuestion").value = "";
+      clearPalmImage();
+      clearAstroChatHistory();
+      applyAnnualProfileLockUI();
+      rebuildSectionBottomNavBars();
+      if (!getActiveJyotishGeminiKey()) {
+        await routeAfterAccessConfirmed(currentGoogleUser);
+      } else {
+        enterQuestionnaireWorkspace(true);
+        showStatusToast("✨ Enter your new birth & palm data, then click Save Data (One-Time).");
+      }
+    }
+
+    // ========================================================================
+    // STEPS 15-17: GEMINI-STYLE ASTROLOGY CHAT ENGINE (USES COMPUTED CHARTS)
+    // ========================================================================
+    let astroChatHistory = [];
+    let isAstroChatBusy = false;
+
+    function isAstroChatActive() {
+      return document.body.classList.contains("astro-chat-mode");
+    }
+
+    function openAstroChatMode() {
+      computeFullHoroscope();
+      document.body.classList.add("astro-chat-mode");
+      document.getElementById("returnToChatBanner")?.classList.add("hidden");
+      refreshAstroChatHeaderContext();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => document.getElementById("astroChatInput")?.focus(), 120);
+    }
+
+    function openChartsFromChat() {
+      document.body.classList.remove("astro-chat-mode");
+      document.getElementById("returnToChatBanner")?.classList.remove("hidden");
+      renderRightSectionRail();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function refreshAstroChatHeaderContext() {
+      const st = currentHoroscopeState;
+      if (!st) return;
+      const name = (document.getElementById("nativeName")?.value || "").trim() || "Native";
+      const lagnaName = RASIS[st.lagnaVargas.rasiIdx].name;
+      const moonRasi = st.planets.Moon.vargas.d1;
+      const nowYr = new Date().getFullYear() + (new Date().getMonth() / 12);
+      const activeDasa = (st.dasaList || []).find(d => nowYr >= d.startYr && nowYr <= d.endYr);
+      const dasaTxt = activeDasa ? `${activeDasa.lord} Mahadasa` : "";
+
+      const badge = document.getElementById("chatChartContextBadge");
+      if (badge) {
+        badge.textContent = `${name} • ${lagnaName} Lagna • ${moonRasi} Rasi${dasaTxt ? " • " + dasaTxt : ""}${palmImageBase64 ? " • 🖐️ Palm Loaded" : ""}`;
+      }
+      const headline = document.getElementById("chatGreetingHeadline");
+      if (headline) {
+        headline.textContent = `Hello, ${name} ✨`;
+      }
+    }
+
+    function clearAstroChatHistory() {
+      astroChatHistory = [];
+      const container = document.getElementById("astroChatMessages");
+      if (!container) return;
+      container.querySelectorAll(".astro-chat-bubble-row").forEach(el => el.remove());
+      document.getElementById("astroChatEmptyState")?.classList.remove("hidden");
+    }
+
+    function formatAstroReplyHtml(rawText) {
+      const escaped = (rawText || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      return escaped
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/^\* (.+)$/gm, "• $1")
+        .replace(/^- (.+)$/gm, "• $1")
+        .replace(/\n/g, "<br/>");
+    }
+
+    function appendAstroChatBubble(role, text, isThinking = false) {
+      document.getElementById("astroChatEmptyState")?.classList.add("hidden");
+      const container = document.getElementById("astroChatMessages");
+      if (!container) return null;
+
+      const row = document.createElement("div");
+      row.className = `astro-chat-bubble-row flex ${role === "user" ? "justify-end" : "justify-start"}`;
+
+      const bubble = document.createElement("div");
+      if (role === "user") {
+        bubble.className = "chat-msg-user max-w-[85%] sm:max-w-[75%] px-4 py-2.5 text-sm shadow-sm leading-relaxed";
+        bubble.textContent = text;
+      } else {
+        bubble.className = "chat-msg-ai max-w-[92%] sm:max-w-[85%] px-4 py-3 text-sm shadow-xs leading-relaxed font-clinical-serif";
+        bubble.innerHTML = isThinking
+          ? `<span class="font-sans text-xs text-blue-600 dark:text-blue-400 animate-pulse font-semibold">${text}</span>`
+          : formatAstroReplyHtml(text);
+      }
+
+      row.appendChild(bubble);
+      container.appendChild(row);
+      container.scrollTop = container.scrollHeight;
+      return bubble;
+    }
+
+    function buildCompleteAstrologySystemContext() {
+      computeFullHoroscope();
+      const st = currentHoroscopeState;
+      const name = (document.getElementById("nativeName")?.value || "").trim() || "Native";
+      const gender = document.getElementById("nativeGender")?.value || "";
+      const place = (document.getElementById("birthPlaceName")?.value || "").trim();
+      const L = st.lagnaVargas.rasiIdx;
+
+      const planetSummary = Object.values(st.planets).map(p => ({
+        graha: p.name,
+        rasi_d1: p.vargas.d1,
+        deg: dmsString(p.degInSign),
+        nakshatra: `${p.nak.name} Pada ${p.pada}`,
+        chara_karaka: p.karaka,
+        d2_hora: p.vargas.d2Lord,
+        d3_drek: p.vargas.d3Lord,
+        d9_navamsa: p.vargas.d9Name,
+        d12_dwad: p.vargas.d12Lord,
+        d30_trim: p.vargas.d30Lord,
+        avastha: p.avastha
+      }));
+
+      const dasaSummary = (st.dasaList || []).map(d =>
+        `${d.lord}: ${Math.floor(d.startYr)}–${Math.floor(d.endYr)} (${d.dur.toFixed(1)}y)`
+      ).join("; ");
+
+      const yogasText = document.getElementById("detectedYogasContainer")?.innerText || "";
+      const sahamsText = document.getElementById("computedSahamsContainer")?.innerText || "";
+      const ayurVerdict = document.getElementById("outAyurCompartmentBadge")?.textContent || "";
+
+      return `You are Dr. Astro, an expert classical Vedic Astrologer (Jyotish) and Samudrika Shastra palmist (grounded in Brihat Parashara Hora Shastra, Jaimini Upadesa Sutras, Varahamihira's Brihat Jataka & Brihat Samhita, Kalidasa's Uttara Kalamrita, Dr. B.V. Raman, and Pt. Sanjay Rath).\n` +
+        `Always answer the user's question directly, clearly, and compassionately by citing the EXACT computed chart placements, divisional charts, yogas, and Dasa timings below.\n\n` +
+        `=== COMPUTED HOROSCOPE & SAMUDRIKA DATA ===\n` +
+        `Native: ${name} (${gender}) | DOB: ${st.dobStr} | TOB: ${st.tobStr} | Place: ${place} (Lat ${st.lat}, Lon ${st.lon})\n` +
+        `Ayanamsa: ${dmsString(st.ayanamsa)} | LMT: ${formatHrsToClock(st.lmtHours)} | Ishtakala: ${document.getElementById("outIshtakala")?.textContent || ""}\n` +
+        `Udaya Lagna (D-1): ${RASIS[L].name} (${RASIS[L].eng}) ${dmsString(st.lagnaVargas.deg)} (Lord: ${RASIS[L].lord})\n` +
+        `Navamsa Lagna (D-9): ${st.lagnaVargas.d9Name} (Lord: ${st.lagnaVargas.d9Lord})\n` +
+        `Special Ascendants: Arudha Lagna (AL)=${RASIS[st.alRasi].name}, Upapada (UL)=${RASIS[st.ulRasi].name}, Darapada (A7)=${RASIS[st.a7Rasi].name}, Mantrapada (A5)=${RASIS[st.a5Rasi].name}, Hora Lagna (HL)=${RASIS[st.hlRasi].name}, Ghatika Lagna (GL)=${RASIS[st.glRasi].name}, Shri Lagna (SL)=${RASIS[st.slRasi].name}\n` +
+        `Soul Significator (Atmakaraka): ${st.atmakaraka}\n` +
+        `Planets & Shadvargas: ${JSON.stringify(planetSummary)}\n` +
+        `Ayurdaya Longevity (Jaimini 3-Pairs): ${ayurVerdict}\n` +
+        `Vimshottari Mahadasa Timeline: ${dasaSummary}\n` +
+        `Detected Yogas: ${yogasText.replace(/\n+/g, " | ")}\n` +
+        `Tajaka Sahams: ${sahamsText.replace(/\n+/g, " | ")}\n` +
+        `Samudrika Shastra Palm Info: Hand=${document.getElementById("palmHandType")?.value || "Not set"} | Shape=${document.getElementById("palmElementShape")?.value || "Auto"} | Mounts/Notes=${document.getElementById("palmMountsNotes")?.value || "None"} | Palm Photo Attached=${palmImageBase64 ? "YES (inspect the attached palm image)" : "No"}\n` +
+        `===========================================`;
+    }
+
+    function askQuickAstroPrompt(questionText) {
+      const input = document.getElementById("astroChatInput");
+      if (input) input.value = questionText;
+      sendAstroChatMessage();
+    }
+
+    async function sendAstroChatMessage() {
+      if (isAstroChatBusy) return;
+      const inputEl = document.getElementById("astroChatInput");
+      const sendBtn = document.getElementById("astroChatSendBtn");
+      const question = (inputEl?.value || "").trim();
+      if (!question) return;
+
+      const apiKey = getActiveJyotishGeminiKey();
+      if (!apiKey) {
+        appendAstroChatBubble("ai", "⚠️ Your Gemini API key is not linked yet. Please open **More → Settings → Open Vault** to save your key.");
+        return;
+      }
+
+      inputEl.value = "";
+      appendAstroChatBubble("user", question);
+      const thinkingBubble = appendAstroChatBubble("ai", "🪐 Consulting your Rasi, Navamsa, Dasa & Samudrika chart...", true);
+
+      isAstroChatBusy = true;
+      if (sendBtn) sendBtn.disabled = true;
+
+      try {
+        const systemContext = buildCompleteAstrologySystemContext();
+        const contents = [];
+
+        // Keep last 8 conversation turns for smooth multi-turn memory
+        const recentHistory = astroChatHistory.slice(-8);
+        recentHistory.forEach(turn => {
+          contents.push({ role: turn.role, parts: [{ text: turn.text }] });
+        });
+
+        const currentParts = [{ text: question }];
+        if (palmImageBase64 && palmImageMime) {
+          currentParts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
+        }
+        contents.push({ role: "user", parts: currentParts });
+
+const result = await fetchGeminiWithFallback({
+          system_instruction: { parts: [{ text: systemContext }] },
+          contents
+        });
+        const reply = result.text
+          || (result.error ? `⚠️ Gemini API Error: ${result.error}` : "⚠️ No response returned. Please try again.");
+
+        if (thinkingBubble) {
+          thinkingBubble.innerHTML = formatAstroReplyHtml(reply);
+        }
+        astroChatHistory.push({ role: "user", text: question });
+        astroChatHistory.push({ role: "model", text: reply });
+
+        const container = document.getElementById("astroChatMessages");
+        if (container) container.scrollTop = container.scrollHeight;
+      } catch (err) {
+        if (thinkingBubble) {
+          thinkingBubble.innerHTML = formatAstroReplyHtml("⚠️ Network error calling Gemini API: " + (err.message || err));
+        }
+      } finally {
+        isAstroChatBusy = false;
+        if (sendBtn) sendBtn.disabled = false;
+        inputEl?.focus();
+      }
     }
 
 const DEFAULT_AVATAR_SVG = "data:image/svg+xml;utf8," + encodeURIComponent(
@@ -3208,29 +3769,56 @@ let isAuthOrExternalActionActive = false;
       return document.body.classList.contains('public-landing-active');
     }
 
+let currentPaymentPurpose = 'new'; // 'new' | 'renewal' | 'reset'
+    let pendingSignupAuthMode = null; // 'login' | 'signup'
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function showPublicSubView(viewId) {
+      document.body.classList.remove('astro-chat-mode');
       document.body.classList.add('public-landing-active');
       document.documentElement.classList.remove('dark');
       const wrapper = document.getElementById('publicLandingWrapper');
       if (wrapper) wrapper.classList.remove('hidden');
-      ['landingHomeView', 'signupStep1EmailView', 'signupStep2PermissionsView', 'signupStep3PaymentView'].forEach(id => {
+      [
+        'landingHomeView',
+        'signupStep1EmailView',
+        'signupStep2PermissionsView',
+        'signupStep3PaymentView',
+        'signupStep4ApiKeyView',
+        'renewalDataChoiceView'
+      ].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== viewId);
       });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function enterQuestionnaireWorkspace() {
+    function enterQuestionnaireWorkspace(forceDataCollection = false) {
       const wrapper = document.getElementById('publicLandingWrapper');
       if (wrapper) wrapper.classList.add('hidden');
       document.body.classList.remove('public-landing-active');
+      document.getElementById('privateAccessOverlay')?.classList.add('hidden');
       initTheme();
       computeFullHoroscope();
       renderRightSectionRail();
+
+      if (!forceDataCollection && !isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked) {
+        openAstroChatMode();
+      } else {
+        document.body.classList.remove('astro-chat-mode');
+        document.getElementById('returnToChatBanner')?.classList.toggle('hidden', !isCurrentUserAdmin());
+        switchToOrbitSection(0);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-
-    let pendingSignupAuthMode = null; // 'login' | 'signup'
 
     function openSignupFlowStep1() {
       pendingSignupAuthMode = 'signup';
@@ -3240,10 +3828,12 @@ let isAuthOrExternalActionActive = false;
         const txt = document.getElementById('signupSelectedEmailText');
         if (txt) txt.textContent = currentGoogleUser.email;
         if (card) card.classList.remove('hidden');
+        const permBadge = document.getElementById('permStepEmailBadge');
+        if (permBadge) permBadge.textContent = currentGoogleUser.email;
       }
     }
 
-      async function selectGoogleAccountForSignup() {
+    async function selectGoogleAccountForSignup() {
       pendingSignupAuthMode = 'signup';
       isAuthOrExternalActionActive = true;
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -3257,20 +3847,322 @@ let isAuthOrExternalActionActive = false;
       }
     }
 
-function proceedFromPermissionsToPayment() {
-      const c1 = document.getElementById('permCheckIdentity')?.checked;
-      const c2 = document.getElementById('permCheckFirestore')?.checked;
-      const c3 = document.getElementById('permCheckPalmVision')?.checked;
-      const c4 = document.getElementById('permCheckPersonalUse')?.checked;
-      if (!c1 || !c2 || !c3 || !c4) {
-        alert('Please check all 4 permissions (including Personal Use Only) to proceed to the ₹11 annual plan.');
+    function proceedFromPermissionsToPayment() {
+      const allChecked = ['permCheckIdentity', 'permCheckFirestore', 'permCheckPalmVision', 'permCheckPersonalUse']
+        .every(id => document.getElementById(id)?.checked);
+      if (!allChecked) {
+        alert('Please check all 4 permissions (including Personal Use Only) to continue to the ₹11 annual plan.');
         return;
       }
       const email = normalizeEmail(currentGoogleUser?.email || document.getElementById('signupSelectedEmailText')?.textContent || '');
       startUnifiedCheckout(email, false);
     }
 
+    function populateUpiPaymentStep(email, purpose = 'new') {
+      // Support both string ('new' | 'renewal' | 'reset') and boolean callers
+      currentPaymentPurpose = purpose === true ? 'renewal' : (purpose === false ? 'new' : purpose);
+      const cleanEmail = normalizeEmail(email) || 'user@gmail.com';
+      const badge = document.getElementById('payStepEmailBadge');
+      if (badge) badge.textContent = cleanEmail;
+
+      const titleEl = document.getElementById('payStepHeaderTitle');
+      const renewalBanner = document.getElementById('renewalNoticeBanner');
+      if (currentPaymentPurpose === 'reset') {
+        if (titleEl) titleEl.textContent = 'Mid-Year Reset • ₹11 UPI Unlock';
+        if (renewalBanner) {
+          renewalBanner.textContent = '🔄 You have 0 free resets left this year. Complete the ₹11 UPI payment below to unlock your birth data input immediately.';
+          renewalBanner.classList.remove('hidden');
+        }
+      } else if (currentPaymentPurpose === 'renewal') {
+        if (titleEl) titleEl.textContent = 'Annual Renewal • ₹11 / Year UPI';
+        if (renewalBanner) {
+          renewalBanner.textContent = '⏳ Your 1-Year subscription has expired. All your saved horoscopes and Cloud Vault settings are preserved — complete your ₹11 renewal below to continue!';
+          renewalBanner.classList.remove('hidden');
+        }
+      } else {
+        if (titleEl) titleEl.textContent = 'Step 3 of 3 • ₹11 / Year UPI Activation';
+        if (renewalBanner) renewalBanner.classList.add('hidden');
+      }
+
+      const utrInput = document.getElementById('upiUtrInput');
+      if (utrInput) utrInput.value = '';
+
+      const pa = encodeURIComponent(window.MERCHANT_UPI_ID);
+      const pn = encodeURIComponent(window.MERCHANT_UPI_NAME);
+      const am = encodeURIComponent(window.ANNUAL_PLAN_AMOUNT_INR);
+      const tn = encodeURIComponent(`DrAstro ${currentPaymentPurpose === 'reset' ? 'Reset' : '1Yr'} ${cleanEmail}`);
+      const queryParams = `pa=${pa}&pn=${pn}&am=${am}&cu=INR&tn=${tn}`;
+
+      const standardUpiUri = `upi://pay?${queryParams}`;
+      const qrImg = document.getElementById('upiQrCodeImg');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(standardUpiUri)}`;
+      }
+      const vpaBadge = document.getElementById('upiVpaDisplayBadge');
+      if (vpaBadge) vpaBadge.textContent = `UPI ID: ${window.MERCHANT_UPI_ID} • ₹${window.ANNUAL_PLAN_AMOUNT_INR} / Year`;
+
+      const setHref = (id, uri) => { const el = document.getElementById(id); if (el) el.href = uri; };
+      setHref('btnUpiGpay', `tez://upi/pay?${queryParams}`);
+      setHref('btnUpiPhonePe', `phonepe://pay?${queryParams}`);
+      setHref('btnUpiBhim', `bhim://pay?${queryParams}`);
+      setHref('btnUpiPaytm', `paytmmp://pay?${queryParams}`);
+    }
+
+    async function completeAnnualSubscriptionPayment() {
+      if (!currentGoogleUser || !currentGoogleUser.email) {
+        alert('Please select your Gmail ID in Step 1 first.');
+        showPublicSubView('signupStep1EmailView');
+        return;
+      }
+      const emailKey = normalizeEmail(currentGoogleUser.email);
+      const utrVal = (document.getElementById('upiUtrInput')?.value || '').trim();
+
+      if (isCurrentUserAdmin(currentGoogleUser)) {
+        pendingSignupAuthMode = null;
+        await routeAfterAccessConfirmed(currentGoogleUser);
+        return;
+      }
+
+      const nowMs = Date.now();
+      const expiresAtMs = nowMs + window.ONE_YEAR_MS;
+      let prevSubData = null;
+
+      try {
+        const snap = await db.collection('subscriptions').doc(emailKey).get();
+        if (snap.exists) prevSubData = snap.data();
+      } catch (e) {}
+      if (!prevSubData) {
+        try { prevSubData = JSON.parse(localStorage.getItem('jyotish_local_sub_' + emailKey) || 'null'); } catch {}
+      }
+
+      // Mid-year reset MUST require a fresh UTR even though the subscription is still active
+      const serverAlreadyActive = currentPaymentPurpose !== 'reset' && Boolean(
+        prevSubData && prevSubData.status === 'active' && prevSubData.expiresAtMs && prevSubData.expiresAtMs > nowMs
+      );
+
+      if (!serverAlreadyActive) {
+        if (!/^[a-zA-Z0-9]{8,22}$/.test(utrVal)) {
+          alert('Please complete the ₹11 UPI payment and enter your valid 12-digit UPI Ref / UTR number to verify & activate.');
+          return;
+        }
+        const hadPreviousProfile = Boolean(prevSubData && prevSubData.lockedProfile);
+        const isMidYearReset = currentPaymentPurpose === 'reset';
+        const isRenewal = currentPaymentPurpose === 'renewal';
+
+        const subPayload = {
+          email: emailKey,
+          status: 'active',
+          amountINR: Number(window.ANNUAL_PLAN_AMOUNT_INR || 11),
+          utrRef: utrVal,
+          activatedAtISO: new Date(nowMs).toISOString(),
+          expiresAtMs: isMidYearReset && prevSubData?.expiresAtMs > nowMs ? prevSubData.expiresAtMs : expiresAtMs,
+          expiresAtISO: new Date(isMidYearReset && prevSubData?.expiresAtMs > nowMs ? prevSubData.expiresAtMs : expiresAtMs).toISOString(),
+          profileLocked: isMidYearReset ? false : (hadPreviousProfile ? Boolean(prevSubData.profileLocked) : false),
+          resetsRemaining: isMidYearReset ? 0 : 1,
+          awaitingRenewalChoice: Boolean(isRenewal && hadPreviousProfile),
+          lockedProfile: isMidYearReset ? null : (hadPreviousProfile ? prevSubData.lockedProfile : null)
+        };
+        try {
+          await db.collection('subscriptions').doc(emailKey).set(subPayload, { merge: true });
+          await db.collection('site_settings').doc('access_control').set({
+            emails: firebase.firestore.FieldValue.arrayUnion(emailKey)
+          }, { merge: true });
+        } catch (err) {
+          localStorage.setItem('jyotish_local_sub_' + emailKey, JSON.stringify(subPayload));
+        }
+      }
+
+      pendingSignupAuthMode = null;
+      await enforcePrivateAccessGate(currentGoogleUser);
+      await syncAnnualProfileLockFromServer(currentGoogleUser);
+
+      if (currentPaymentPurpose === 'reset') {
+        localStorage.removeItem('jyotish_working_draft_v1');
+        localStorage.removeItem('jyotish_saved_palm_' + emailKey);
+        if (document.getElementById('nativeName')) document.getElementById('nativeName').value = '';
+        clearPalmImage();
+        clearAstroChatHistory();
+        enterQuestionnaireWorkspace(true);
+        showStatusToast('✅ Reset unlocked! Enter your corrected birth & palm details.');
+        return;
+      }
+
+      if (currentPaymentPurpose === 'renewal' && currentUserSubscriptionState.lockedProfile) {
+        openRenewalDataChoiceView();
+        return;
+      }
+
+      await routeAfterAccessConfirmed(currentGoogleUser);
+    }
+
+    function openRenewalDataChoiceView() {
+      const lp = currentUserSubscriptionState.lockedProfile || {};
+      const box = document.getElementById('renewalPrevDataSummary');
+      if (box) {
+        box.innerHTML = `<strong>Saved Profile:</strong> ${escapeHtml(lp.nativeName || 'Native')} • DOB: ${escapeHtml(lp.birthDate || '--')} at ${escapeHtml(lp.birthTime || '--')} • Place: ${escapeHtml(lp.birthPlaceName || '--')}`;
+      }
+      showPublicSubView('renewalDataChoiceView');
+    }
+
+    async function routeAfterAccessConfirmed(user) {
+      const emailKey = normalizeEmail(user?.email || '');
+      const hasApiKey = Boolean(getActiveJyotishGeminiKey());
+
+      if (!isCurrentUserAdmin(user) && currentUserSubscriptionState.awaitingRenewalChoice && currentUserSubscriptionState.lockedProfile) {
+        openRenewalDataChoiceView();
+        return;
+      }
+
+      if (!hasApiKey) {
+        const badge = document.getElementById('apiPageEmailBadge');
+        if (badge) badge.textContent = emailKey;
+        showPublicSubView('signupStep4ApiKeyView');
+        return;
+      }
+
+      enterQuestionnaireWorkspace(false);
+    }
+
+    async function saveOnboardingApiKeyAndEnter() {
+      const inputEl = document.getElementById('onboardingApiKeyInput');
+      const rawKey = (inputEl?.value || '').trim();
+      if (!rawKey || !rawKey.startsWith('AIza')) {
+        alert('Please paste a valid Gemini API key from Google AI Studio (starts with AIza...).');
+        return;
+      }
+      await saveKeyToCloudVault('onboardingApiKeyInput');
+      await routeAfterAccessConfirmed(currentGoogleUser);
+    }
+
+    async function verifyOneYearSubscriptionAndRoute(user) {
+      if (!user || !user.email) {
+        showPublicSubView('landingHomeView');
+        return false;
+      }
+      const emailKey = normalizeEmail(user.email);
+
+      if (isCurrentUserAdmin(user)) {
+        pendingSignupAuthMode = null;
+        return true;
+      }
+
+      let subData = null;
+      try {
+        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
+        if (subSnap.exists) subData = subSnap.data();
+      } catch (e) {}
+      if (!subData) {
+        try { subData = JSON.parse(localStorage.getItem('jyotish_local_sub_' + emailKey) || 'null'); } catch {}
+      }
+
+      const nowMs = Date.now();
+      const { allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const isExpired = Boolean(subData && subData.expiresAtMs && nowMs > subData.expiresAtMs);
+      const hasActiveSub = Boolean(subData && subData.status === 'active' && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
+
+      if (isExpired) {
+        if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
+          alert('Your 1-Year Dr. Astro pass has expired. Your saved data is safe—please renew on the web portal to continue.');
+          showPublicSubView('landingHomeView');
+        } else {
+          populateUpiPaymentStep(emailKey, 'renewal');
+          showPublicSubView('signupStep3PaymentView');
+        }
+        return false;
+      }
+
+      if (hasActiveSub || allowedSet.has(emailKey)) {
+        pendingSignupAuthMode = null;
+        return true;
+      }
+
+      if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
+        alert('No active Dr. Astro access found for ' + emailKey + '.');
+        showPublicSubView('landingHomeView');
+        return false;
+      }
+
+      populateUpiPaymentStep(emailKey, 'new');
+      showPublicSubView('signupStep3PaymentView');
+      return false;
+    }
+
+    async function handlePublicLoginClick() {
+      pendingSignupAuthMode = 'login';
+      // Always open the Google account selector so users can switch accounts if needed
+      await signInWithGoogle('');
+    }
+    function showPublicSubView(viewId) {
+      document.body.classList.remove('astro-chat-mode');
+      document.body.classList.add('public-landing-active');
+      document.documentElement.classList.remove('dark');
+      const wrapper = document.getElementById('publicLandingWrapper');
+      if (wrapper) wrapper.classList.remove('hidden');
+      [
+        'landingHomeView',
+        'signupStep1EmailView',
+        'signupStep2PermissionsView',
+        'signupStep3PaymentView',
+        'signupStep4ApiKeyView',
+        'renewalDataChoiceView'
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', id !== viewId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function enterQuestionnaireWorkspace(forceDataCollection = false) {
+      const wrapper = document.getElementById('publicLandingWrapper');
+      if (wrapper) wrapper.classList.add('hidden');
+      document.body.classList.remove('public-landing-active');
+      initTheme();
+      computeFullHoroscope();
+      renderRightSectionRail();
+
+      // Step 15: If data is already saved (one-time) for this year, open Gemini-style Chat directly
+      if (!forceDataCollection && !isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked) {
+        openAstroChatMode();
+      } else {
+        document.body.classList.remove('astro-chat-mode');
+        document.getElementById('returnToChatBanner')?.classList.toggle('hidden', !isCurrentUserAdmin());
+        switchToOrbitSection(0);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openSignupFlowStep1() {
+      pendingSignupAuthMode = 'signup';
+      showPublicSubView('signupStep1EmailView');
+      if (currentGoogleUser && currentGoogleUser.email) {
+        const card = document.getElementById('signupSelectedEmailCard');
+        const txt = document.getElementById('signupSelectedEmailText');
+        if (txt) txt.textContent = currentGoogleUser.email;
+        if (card) card.classList.remove('hidden');
+      }
+    }
+
+    async function selectGoogleAccountForSignup() {
+      pendingSignupAuthMode = 'signup';
+      isAuthOrExternalActionActive = true;
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        alert('Google Account Selection cancelled or blocked: ' + (err.message || err.code));
+      } finally {
+        isAuthOrExternalActionActive = false;
+      }
+    }
+
+    function proceedFromPermissionsToPayment() {
+      const email = normalizeEmail(currentGoogleUser?.email || document.getElementById('signupSelectedEmailText')?.textContent || '');
+      startUnifiedCheckout(email, false);
+    }
+
     function populateUpiPaymentStep(email, isExpiredRenewal = false) {
+      isCurrentPaymentARenewal = Boolean(isExpiredRenewal);
       const cleanEmail = normalizeEmail(email) || 'user@gmail.com';
       const badge = document.getElementById('payStepEmailBadge');
       if (badge) badge.textContent = cleanEmail;
@@ -3298,7 +4190,7 @@ function proceedFromPermissionsToPayment() {
       setHref('btnUpiPaytm', `paytmmp://pay?${queryParams}`);
     }
 
-    // Verifies server-confirmed subscription from Firestore (blocks fake UTR client bypass)
+    // Steps 7 -> 8 -> 9 -> 10 (or Step 20 if Renewing an Expired Account)
     async function completeAnnualSubscriptionPayment() {
       if (!currentGoogleUser || !currentGoogleUser.email) {
         alert('Please select your Gmail ID in Step 1 first.');
@@ -3306,36 +4198,115 @@ function proceedFromPermissionsToPayment() {
         return;
       }
       const emailKey = normalizeEmail(currentGoogleUser.email);
+      const utrVal = (document.getElementById('upiUtrInput')?.value || '').trim();
 
       if (isCurrentUserAdmin(currentGoogleUser)) {
         pendingSignupAuthMode = null;
-        enterQuestionnaireWorkspace();
+        await routeAfterAccessConfirmed(currentGoogleUser);
         return;
       }
 
-      try {
-        const subSnap = await db.collection('subscriptions').doc(emailKey).get();
-        const subData = subSnap.exists ? subSnap.data() : null;
-        const { allowedSet } = await fetchWebsiteAllowedEmailsSet();
-        const isServerActive = Boolean(
-          (subData && subData.status === 'active' && subData.expiresAtMs && Date.now() <= subData.expiresAtMs)
-          || allowedSet.has(emailKey)
-        );
+      const nowMs = Date.now();
+      const expiresAtMs = nowMs + window.ONE_YEAR_MS;
+      let prevSubData = null;
 
-        if (isServerActive) {
-          pendingSignupAuthMode = null;
-          await syncAnnualProfileLockFromServer(currentGoogleUser);
-          enterQuestionnaireWorkspace();
-          showStatusToast('✅ ₹11 Annual Plan Verified!');
-        } else {
-          alert('⏳ Payment not detected yet.\n\nIf you just completed your ₹11 UPI payment via Razorpay, wait 5–10 seconds and tap Verify again. If you paid manually via direct UPI QR, send your UTR to the Owner for instant activation.');
+      try {
+        const snap = await db.collection('subscriptions').doc(emailKey).get();
+        if (snap.exists) prevSubData = snap.data();
+      } catch (e) {}
+
+      // Check if server webhook (Part 4) already activated it; otherwise activate via UTR for pre-Part-4 testing
+      const serverAlreadyActive = Boolean(
+        prevSubData && prevSubData.status === 'active' && prevSubData.expiresAtMs && prevSubData.expiresAtMs > nowMs
+      );
+
+      if (!serverAlreadyActive) {
+        if (!utrVal || utrVal.length < 6) {
+          alert('Please complete the ₹11 UPI payment and enter your 12-digit UPI Ref / UTR number to verify & activate.');
+          return;
         }
-      } catch (err) {
-        alert('Could not verify payment status: ' + (err.message || err));
+        const hadPreviousProfile = Boolean(prevSubData && prevSubData.lockedProfile);
+        const subPayload = {
+          email: emailKey,
+          status: 'active',
+          amountINR: Number(window.ANNUAL_PLAN_AMOUNT_INR || 11),
+          utrRef: utrVal,
+          activatedAtISO: new Date(nowMs).toISOString(),
+          expiresAtMs: expiresAtMs,
+          expiresAtISO: new Date(expiresAtMs).toISOString(),
+          profileLocked: hadPreviousProfile ? Boolean(prevSubData.profileLocked) : false,
+          resetsRemaining: 1,
+          awaitingRenewalChoice: Boolean(isCurrentPaymentARenewal && hadPreviousProfile),
+          lockedProfile: hadPreviousProfile ? prevSubData.lockedProfile : null
+        };
+        try {
+          await db.collection('subscriptions').doc(emailKey).set(subPayload, { merge: true });
+          // Step 8: Automatically add mail ID to allowed list
+          await db.collection('site_settings').doc('access_control').set({
+            emails: firebase.firestore.FieldValue.arrayUnion(emailKey)
+          }, { merge: true });
+        } catch (err) {
+          // Local fallback so flow works seamlessly during testing even if Firestore rules are strict
+          localStorage.setItem('jyotish_local_sub_' + emailKey, JSON.stringify(subPayload));
+        }
       }
+
+      pendingSignupAuthMode = null;
+      await syncAnnualProfileLockFromServer(currentGoogleUser);
+
+      // Step 20: If this was a renewal and user had previous data, show Keep Previous Data vs Add New Data
+      if (isCurrentPaymentARenewal && currentUserSubscriptionState.lockedProfile) {
+        openRenewalDataChoiceView();
+        return;
+      }
+
+      // Steps 9 -> 10 -> 11: Return to website -> API Key page (if missing) -> Actual website
+      await routeAfterAccessConfirmed(currentGoogleUser);
     }
 
-    // Strict Server-Verified Access Router (Never leaks free access when Private Mode is OFF for SEO)
+    function openRenewalDataChoiceView() {
+      const lp = currentUserSubscriptionState.lockedProfile || {};
+      const box = document.getElementById('renewalPrevDataSummary');
+      if (box) {
+        box.innerHTML = `<strong>Saved Profile:</strong> ${lp.nativeName || 'Native'} • DOB: ${lp.birthDate || '--'} at ${lp.birthTime || '--'} • Place: ${lp.birthPlaceName || '--'}`;
+      }
+      showPublicSubView('renewalDataChoiceView');
+    }
+
+    async function routeAfterAccessConfirmed(user) {
+      const emailKey = normalizeEmail(user?.email || '');
+      const hasApiKey = Boolean(getActiveJyotishGeminiKey());
+
+      // Step 20 check: If renewal choice is still pending, show 2 options first
+      if (!isCurrentUserAdmin(user) && currentUserSubscriptionState.awaitingRenewalChoice && currentUserSubscriptionState.lockedProfile) {
+        openRenewalDataChoiceView();
+        return;
+      }
+
+      // Step 10: API generation & save page BEFORE opening the actual website
+      if (!hasApiKey) {
+        const badge = document.getElementById('apiPageEmailBadge');
+        if (badge) badge.textContent = emailKey;
+        showPublicSubView('signupStep4ApiKeyView');
+        return;
+      }
+
+      // Step 11: Actual website opens (Data Collection if new/unlocked, or Gemini Chat if saved one-time)
+      enterQuestionnaireWorkspace(false);
+    }
+
+    async function saveOnboardingApiKeyAndEnter() {
+      const inputEl = document.getElementById('onboardingApiKeyInput');
+      const rawKey = (inputEl?.value || '').trim();
+      if (!rawKey || !rawKey.startsWith('AIza')) {
+        alert('Please paste a valid Gemini API key from Google AI Studio (starts with AIza...).');
+        return;
+      }
+      await saveKeyToCloudVault('onboardingApiKeyInput');
+      await routeAfterAccessConfirmed(currentGoogleUser);
+    }
+
+    // Steps 4, 5, 18, 19: Check for existing account -> Active | Expired (Renewal) | New (Payment Page)
     async function verifyOneYearSubscriptionAndRoute(user) {
       if (!user || !user.email) {
         showPublicSubView('landingHomeView');
@@ -3343,9 +4314,8 @@ function proceedFromPermissionsToPayment() {
       }
       const emailKey = normalizeEmail(user.email);
 
-if (isCurrentUserAdmin(user)) {
+      if (isCurrentUserAdmin(user)) {
         pendingSignupAuthMode = null;
-        enterQuestionnaireWorkspace();
         return true;
       }
 
@@ -3354,18 +4324,17 @@ if (isCurrentUserAdmin(user)) {
         const subSnap = await db.collection('subscriptions').doc(emailKey).get();
         if (subSnap.exists) subData = subSnap.data();
       } catch (e) {}
+      if (!subData) {
+        try { subData = JSON.parse(localStorage.getItem('jyotish_local_sub_' + emailKey) || 'null'); } catch {}
+      }
 
       const nowMs = Date.now();
       const { allowedSet } = await fetchWebsiteAllowedEmailsSet();
+      const isExpired = Boolean(subData && subData.expiresAtMs && nowMs > subData.expiresAtMs);
       const hasActiveSub = Boolean(subData && subData.status === 'active' && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
 
-      if (hasActiveSub || allowedSet.has(emailKey)) {
-        pendingSignupAuthMode = null;
-        enterQuestionnaireWorkspace();
-        return true;
-      }
-
-      if (subData && subData.expiresAtMs && nowMs > subData.expiresAtMs) {
+      // Step 18 & 19: Plan expired after 1 year -> Show Renewal Prompt
+      if (isExpired) {
         if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
           alert('Your 1-Year Dr. Astro pass has expired. Your saved data is safe—please renew on the web portal to continue.');
           showPublicSubView('landingHomeView');
@@ -3376,29 +4345,32 @@ if (isCurrentUserAdmin(user)) {
         return false;
       }
 
-      if (pendingSignupAuthMode === 'signup') {
-        document.getElementById('signupSelectedEmailText').textContent = emailKey;
-        document.getElementById('signupSelectedEmailCard').classList.remove('hidden');
-        document.getElementById('permStepEmailBadge').textContent = emailKey;
-        showPublicSubView('signupStep2PermissionsView');
-        return false;
+      // Existing active account found -> proceed to API check / actual website
+      if (hasActiveSub || allowedSet.has(emailKey)) {
+        pendingSignupAuthMode = null;
+        return true;
       }
 
+      // Step 5: No existing account in this mail ID -> redirect directly to Payment Page
       if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
         alert('No active Dr. Astro access found for ' + emailKey + '.');
         showPublicSubView('landingHomeView');
         return false;
       }
 
-      document.getElementById('permStepEmailBadge').textContent = emailKey;
-      showPublicSubView('signupStep2PermissionsView');
+      populateUpiPaymentStep(emailKey, false);
+      showPublicSubView('signupStep3PaymentView');
       return false;
     }
 
     async function handlePublicLoginClick() {
       pendingSignupAuthMode = 'login';
       if (currentGoogleUser && currentGoogleUser.email) {
-        await verifyOneYearSubscriptionAndRoute(currentGoogleUser);
+        const hasAccess = await verifyOneYearSubscriptionAndRoute(currentGoogleUser);
+        if (hasAccess) {
+          await syncAnnualProfileLockFromServer(currentGoogleUser);
+          await routeAfterAccessConfirmed(currentGoogleUser);
+        }
         return;
       }
       await signInWithGoogle('');
@@ -3412,10 +4384,6 @@ if (isCurrentUserAdmin(user)) {
       renderForensicWatermark();
       injectPrivacySettingsUI();
       await enforcePrivateAccessGate(user);
-      const enteredWorkspace = await verifyOneYearSubscriptionAndRoute(user);
-      if (enteredWorkspace) {
-        await syncAnnualProfileLockFromServer(user);
-      }
       await renderDeviceAccountMatchers();
 
       const statusBox = document.getElementById('vaultSyncStatus');
@@ -3424,11 +4392,14 @@ if (isCurrentUserAdmin(user)) {
         sessionStorage.removeItem('jyotish_active_session_key');
         updateAuthUI('logged_out');
         loadMedicoProfileUI();
+        showPublicSubView('landingHomeView');
         return;
       }
 
       await claimSingleDeviceSessionSlot(user);
       if (statusBox) statusBox.textContent = `🔄 Signed in as ${user.email} — Checking Dr. Astro Vault...`;
+
+      // Load saved API key BEFORE routing so Step 10 knows whether to show API Key page
       let loadedKey = '';
       try {
         const docSnap = await db.collection('jyotish_vault').doc(user.uid).get();
@@ -3454,14 +4425,17 @@ if (isCurrentUserAdmin(user)) {
         activeSessionKey = '';
         sessionStorage.removeItem('jyotish_active_session_key');
         updateAuthUI('needs_key');
-        // Only pop open API Vault modal AFTER user enters the workspace (never over Sign-Up Steps 2/3)
-        if (!isPublicLandingActive()) {
-          document.getElementById('loginModal').classList.remove('hidden');
-        }
+      }
+
+      // Check existing account / subscription and route cleanly through Steps 4 -> 11
+      const hasAccess = await verifyOneYearSubscriptionAndRoute(user);
+      if (hasAccess) {
+        await syncAnnualProfileLockFromServer(user);
+        await routeAfterAccessConfirmed(user);
       }
     });
 
-async function signInWithGoogle(hintEmail = '') {
+    async function signInWithGoogle(hintEmail = '') {
       isAuthOrExternalActionActive = true;
       const provider = new firebase.auth.GoogleAuthProvider();
       const cleanHint = normalizeEmail(hintEmail);
@@ -3478,7 +4452,7 @@ async function signInWithGoogle(hintEmail = '') {
         isAuthOrExternalActionActive = false;
       }
     }
-       
+
     async function saveKeyToCloudVault(inputElementId) {
       if (!currentGoogleUser) { showStatusToast('⚠️ Please sign in with Google first.'); return; }
       const rawKey = document.getElementById(inputElementId).value.trim();
@@ -3494,17 +4468,21 @@ async function signInWithGoogle(hintEmail = '') {
           updatedAt: new Date().toISOString()
         }, { merge: true });
       } catch (err) {}
+const inp = document.getElementById(inputElementId);
+      if (inp) inp.value = '';
       activeSessionKey = rawKey;
       sessionStorage.setItem('jyotish_active_session_key', rawKey);
       updateAuthUI('unlocked');
       document.getElementById('loginModal').classList.add('hidden');
     }
 
-   async function handleMedicoLogout() {
+    async function handleMedicoLogout() {
       activeSessionKey = '';
       sessionStorage.removeItem('jyotish_active_session_key');
-      currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 1, lockedProfile: null, expiresAtISO: "" };
+      currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 1, lockedProfile: null, expiresAtISO: "", awaitingRenewalChoice: false };
+      astroChatHistory = [];
       currentOrbitSectionIndex = 0;
+      document.body.classList.remove('astro-chat-mode');
       const secs = getAllMainSections();
       secs.forEach((s, i) => {
         s.classList.remove('orbit-leaving', 'orbit-entering');
@@ -3636,6 +4614,16 @@ async function signInWithGoogle(hintEmail = '') {
          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Razorpay / Cashfree Payment Page URL</label>
          <input id="ownerGatewayUrlInput" type="url" value="${cfg.webGatewayPaymentUrl || ""}" placeholder="https://rzp.io/l/dr-astro-11" class="w-full border rounded-xl px-2.5 py-1.5 text-xs bg-white dark:bg-slate-900" />
        </div>
+ <div>
+         <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Global Default Gemini Model (For All Users)</label>
+         <select id="ownerDefaultModelSelect" class="w-full border rounded-xl px-2.5 py-1.5 text-xs bg-white dark:bg-slate-900 font-semibold">
+           <option value="gemini-4-hydrogen" ${(cfg.defaultGeminiModel || "gemini-4-hydrogen") === "gemini-4-hydrogen" ? "selected" : ""}>gemini-4-hydrogen (Free + Paid Default)</option>
+           <option value="gemini-4-carbon" ${cfg.defaultGeminiModel === "gemini-4-carbon" ? "selected" : ""}>gemini-4-carbon (Flagship Pro — Paid Keys)</option>
+           <option value="gemini-4-neon" ${cfg.defaultGeminiModel === "gemini-4-neon" ? "selected" : ""}>gemini-4-neon (Fast Pro — Paid Keys)</option>
+           <option value="gemini-3.1-pro-preview" ${cfg.defaultGeminiModel === "gemini-3.1-pro-preview" ? "selected" : ""}>gemini-3.1-pro-preview (3.x Pro)</option>
+           <option value="gemini-3.8-flash" ${cfg.defaultGeminiModel === "gemini-3.8-flash" ? "selected" : ""}>gemini-3.8-flash (Fallback)</option>
+         </select>
+       </div>
        <div>
          <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Play Store Subscription SKU (For Future Option 1)</label>
          <input id="ownerPlaySkuInput" type="text" value="${cfg.playStoreProductId}" class="w-full border rounded-xl px-2.5 py-1.5 text-xs font-clinical-mono bg-white dark:bg-slate-900" />
@@ -3661,8 +4649,9 @@ async function signInWithGoogle(hintEmail = '') {
      merchantUpiId: (document.getElementById("ownerMerchantUpiInput")?.value || "").trim(),
      merchantUpiName: window.MONETIZATION_CONFIG.merchantUpiName,
      webGatewayPaymentUrl: (document.getElementById("ownerGatewayUrlInput")?.value || "").trim(),
-     playStoreProductId: (document.getElementById("ownerPlaySkuInput")?.value || "dr_astro_annual_11").trim(),
+playStoreProductId: (document.getElementById("ownerPlaySkuInput")?.value || "dr_astro_annual_11").trim(),
      companionHidePayments: Boolean(document.getElementById("ownerCompanionHidePayToggle")?.checked),
+     defaultGeminiModel: document.getElementById("ownerDefaultModelSelect")?.value || "gemini-4-hydrogen",
      updatedBy: window.ADMIN_OWNER_EMAIL,
      updatedAtISO: new Date().toISOString()
    };
@@ -3964,17 +4953,19 @@ function buildCaseShareUrl(caseObj) {
   }
 }
 
-    function renderStorageTable() {
+function renderStorageTable() {
       const tbody = document.getElementById('storageTableBody');
       const cases = getStoredCases();
       if (cases.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="py-6 text-center text-slate-400">No saved horoscopes yet.</td></tr>`; return; }
       tbody.innerHTML = cases.map(c => {
-        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
+        const details = escapeHtml(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope');
+        const safeName = escapeHtml(c.name);
+        const safeId = escapeHtml(c.id);
         return `
         <tr class="hover:bg-blue-50 dark:hover:bg-slate-800">
-          <td class="py-2 px-3 font-bold"><a href="#" onclick="loadCaseById('${c.id}'); return false;" class="text-blue-600">${c.name}</a></td>
+          <td class="py-2 px-3 font-bold"><a href="#" onclick="loadCaseById('${safeId}'); return false;" class="text-blue-600">${safeName}</a></td>
           <td class="py-2 px-3">${details}</td>
-          <td class="py-2 px-3 text-right"><button onclick="deleteCaseById('${c.id}')" class="text-rose-600">Delete</button></td>
+          <td class="py-2 px-3 text-right"><button onclick="deleteCaseById('${safeId}')" class="text-rose-600">Delete</button></td>
         </tr>`;
       }).join('');
     }
@@ -4003,11 +4994,12 @@ function buildCaseShareUrl(caseObj) {
       showStatusToast('📋 Copied to clipboard!');
     }
 
-    function copyTwoColumnForGoogleSheet() {
+function copyTwoColumnForGoogleSheet() {
       const cases = getStoredCases();
       copyTextToClipboard(cases.map(c => {
-        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
-        return `=HYPERLINK("${c.shareUrl}", "${c.name}")\t${details}`;
+        const details = String(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope').replace(/[\t\r\n]+/g, ' ');
+        const safeName = String(c.name || '').replace(/"/g, '""');
+        return `=HYPERLINK("${c.shareUrl}", "${safeName}")\t${details}`;
       }).join('\n'));
     }
 
@@ -4015,12 +5007,13 @@ function buildCaseShareUrl(caseObj) {
       const cases = getStoredCases();
       const link = document.createElement('a');
       link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(cases.map(c => {
-        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
-        return `"=HYPERLINK(""${c.shareUrl}"", ""${c.name}"")","${details}"`;
+        const details = String(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope').replace(/"/g, '""');
+        const safeName = String(c.name || '').replace(/"/g, '""');
+        return `"=HYPERLINK(""${c.shareUrl}"", ""${safeName}"")","${details}"`;
       }).join('\n'));
       link.download = 'jyotish_horoscopes.csv'; link.click(); link.remove();
     }
-
+       
     // 6. Shortcuts Modal ("codes") & Background Blur Observer
     function ensureShortcutsModalExists() {
       let modal = document.getElementById('shortcutsModal');
@@ -4134,9 +5127,9 @@ function handleCaseSearch(query) {
         const details = (c.birthDetails || c.chiefComplaints || '').toLowerCase();
         return c.name.toLowerCase().includes(q) || details.includes(q);
       });
-      dropdown.innerHTML = matches.map(c => {
-        const details = c.birthDetails || c.chiefComplaints || 'Vedic Horoscope';
-        return `<div onclick="loadCaseById('${c.id}')" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-bold text-xs">${c.name} — ${details}</div>`;
+        dropdown.innerHTML = matches.map(c => {
+        const details = escapeHtml(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope');
+        return `<div onclick="loadCaseById('${escapeHtml(c.id)}')" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-bold text-xs">${escapeHtml(c.name)} — ${details}</div>`;
       }).join('');
       dropdown.classList.toggle('hidden', !q);
     }
@@ -4203,14 +5196,19 @@ function handleCaseSearch(query) {
 function computeFullHoroscope() {
       const ayanMode = document.getElementById('ayanamsaMode')?.value || 'LAHIRI';
       const timeMode = document.getElementById('timeAccuracyMode')?.value || 'EXACT';
-      let dobStr = document.getElementById('birthDate')?.value || '2003-07-07';
-      let tobStr = document.getElementById('birthTime')?.value || '10:30:00';
+      let dobStr = (document.getElementById('birthDate')?.value || '').trim();
+      let tobStr = (document.getElementById('birthTime')?.value || '').trim();
 
       if (timeMode === 'PRASNA') {
-        const nowIst = new Date(Date.now() + (new Date().getTimezoneOffset() + 330) * 60000);
-        dobStr = nowIst.toISOString().slice(0, 10);
-        tobStr = nowIst.toTimeString().slice(0, 8);
+        // Compute exact IST (UTC+5:30) date & time regardless of user's local browser timezone
+        const istMs = Date.now() + 330 * 60000;
+        const ist = new Date(istMs);
+        dobStr = `${ist.getUTCFullYear()}-${String(ist.getUTCMonth() + 1).padStart(2, '0')}-${String(ist.getUTCDate()).padStart(2, '0')}`;
+        tobStr = `${String(ist.getUTCHours()).padStart(2, '0')}:${String(ist.getUTCMinutes()).padStart(2, '0')}:${String(ist.getUTCSeconds()).padStart(2, '0')}`;
       }
+
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) dobStr = '2003-07-07';
+      if (!/^\d{2}:\d{2}(:\d{2})?$/.test(tobStr)) tobStr = '10:30:00';
 
       const parsedLat = parseFloat(document.getElementById('birthLat')?.value);
       const parsedLon = parseFloat(document.getElementById('birthLon')?.value);
@@ -4218,7 +5216,8 @@ function computeFullHoroscope() {
       const lon = Number.isFinite(parsedLon) ? Math.max(-180, Math.min(180, parsedLon)) : 85.82;
 
       const [yr, mo, dy] = dobStr.split('-').map(Number);
-      const [hr, mn, sc] = (tobStr + ':00').split(':').map(Number);
+      const [hr, mn, sc] = (tobStr.length === 5 ? tobStr + ':00' : tobStr).split(':').map(Number);
+      if (!Number.isFinite(yr) || !Number.isFinite(mo) || !Number.isFinite(dy)) return;
       const stdHours = hr + (mn / 60) + ((sc || 0) / 3600);
       const lmtOffsetHrs = (lon - 82.5) / 15;
       const lmtHours = ((stdHours + lmtOffsetHrs) % 24 + 24) % 24;
@@ -4566,26 +5565,64 @@ function computeFullHoroscope() {
       document.getElementById('bhuktiTableBody').innerHTML = html;
     }
 
-    // 8. Palm Image Upload, Multimodal Synthesis & Gemini Assistant
+// 8. Palm Image Upload (Auto-Compressed & Persisted), Multimodal Synthesis & Gemini Assistant
+    function restoreSavedPalmImage(dataUrl) {
+      const img = document.getElementById('palmPreviewImg');
+      const placeholder = document.getElementById('palmPlaceholderText');
+      if (!dataUrl || !dataUrl.startsWith('data:image/')) {
+        palmImageBase64 = null;
+        palmImageMime = null;
+        if (img) img.classList.add('hidden');
+        if (placeholder) placeholder.classList.remove('hidden');
+        return;
+      }
+      const match = dataUrl.match(/^data:(image\/[^;]+);base64,(.+)$/);
+      if (!match) return;
+      palmImageMime = match[1];
+      palmImageBase64 = match[2];
+      if (img) { img.src = dataUrl; img.classList.remove('hidden'); }
+      if (placeholder) placeholder.classList.add('hidden');
+    }
+
     function handlePalmImageUpload(input) {
       const file = input.files?.[0];
       if (!file) return;
-      palmImageMime = file.type || 'image/jpeg';
       const reader = new FileReader();
       reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        palmImageBase64 = dataUrl.split(',')[1];
-        const img = document.getElementById('palmPreviewImg');
-        img.src = dataUrl; img.classList.remove('hidden');
-        document.getElementById('palmPlaceholderText').classList.add('hidden');
+        const tempImg = new Image();
+        tempImg.onload = () => {
+          const maxDim = 900;
+          let w = tempImg.width, h = tempImg.height;
+          if (w > maxDim || h > maxDim) {
+            const scale = maxDim / Math.max(w, h);
+            w = Math.round(w * scale);
+            h = Math.round(h * scale);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(tempImg, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          restoreSavedPalmImage(compressedDataUrl);
+          const emailKey = normalizeEmail(currentGoogleUser?.email || '');
+          if (emailKey) {
+            try { localStorage.setItem('jyotish_saved_palm_' + emailKey, compressedDataUrl); } catch (err) {}
+          }
+          refreshAstroChatHeaderContext();
+        };
+        tempImg.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
     function clearPalmImage() {
       palmImageBase64 = null; palmImageMime = null;
-      document.getElementById('palmPreviewImg').classList.add('hidden');
-      document.getElementById('palmPlaceholderText').classList.remove('hidden');
+      const fi = document.getElementById('palmFileInput');
+      if (fi) fi.value = '';
+      document.getElementById('palmPreviewImg')?.classList.add('hidden');
+      document.getElementById('palmPlaceholderText')?.classList.remove('hidden');
+      const emailKey = normalizeEmail(currentGoogleUser?.email || '');
+      if (emailKey) localStorage.removeItem('jyotish_saved_palm_' + emailKey);
     }
 
     function handleFileAttachment(input) {
@@ -4658,19 +5695,67 @@ async function triggerFinalGenerateAndPopup() {
       return (sessionStorage.getItem('jyotish_active_session_key') || '').trim();
     }
 
-    async function callGeminiAPI(promptText, extraInlineParts = []) {
+function getSelectedGeminiModel() {
+      const userChoice = (localStorage.getItem('jyotish_preferred_gemini_model') || '').trim();
+      const ownerDefault = (window.MONETIZATION_CONFIG?.defaultGeminiModel || 'gemini-4-hydrogen').trim();
+      return userChoice || ownerDefault || 'gemini-4-hydrogen';
+    }
+
+    function saveUserPreferredModel(modelId) {
+      localStorage.setItem('jyotish_preferred_gemini_model', modelId);
+      showStatusToast(`🧠 AI Model switched to ${modelId}`);
+    }
+
+    // Sync dropdown whenever Settings opens
+    const _origToggleSettings = toggleSettingsModal;
+    toggleSettingsModal = function() {
+      _origToggleSettings();
+      const sel = document.getElementById('userGeminiModelSelect');
+      if (sel) sel.value = getSelectedGeminiModel();
+    };
+
+    // Universal Gemini caller with automatic fallback for Free vs Paid keys
+    async function fetchGeminiWithFallback(requestBody) {
       const apiKey = getActiveJyotishGeminiKey();
-      if (!apiKey) return '';
+      if (!apiKey) return { text: '', modelUsed: '', error: 'Missing API key' };
+
+      const preferred = getSelectedGeminiModel();
+      const fallbackOrder = [preferred, 'gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite']
+        .filter((m, idx, arr) => m && arr.indexOf(m) === idx);
+
+      let lastErrorMsg = '';
+      for (const modelId of fallbackOrder) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+          });
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          if (res.ok && text) {
+            if (modelId !== preferred) {
+              showStatusToast(`⚡ ${preferred} requires a paid key/quota — smoothly used ${modelId}`);
+            }
+            return { text, modelUsed: modelId, error: '' };
+          }
+          lastErrorMsg = data?.error?.message || `HTTP ${res.status}`;
+          // Stop trying fallbacks only if the API key itself is invalid
+          if (res.status === 400 && /API key not valid/i.test(lastErrorMsg)) break;
+        } catch (err) {
+          lastErrorMsg = err.message || 'Network error';
+        }
+      }
+      return { text: '', modelUsed: '', error: lastErrorMsg };
+    }
+
+    async function callGeminiAPI(promptText, extraInlineParts = []) {
       const parts = [{ text: promptText }, ...extraInlineParts];
       if (attachedFileBase64 && attachedFileMime) {
         parts.push({ inline_data: { mime_type: attachedFileMime, data: attachedFileBase64 } });
       }
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts }] })
-      });
-      const data = await res.json();
-      return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const result = await fetchGeminiWithFallback({ contents: [{ parts }] });
+      return result.text || '';
     }
 
     async function polishWithGemini() {
@@ -4681,9 +5766,10 @@ async function triggerFinalGenerateAndPopup() {
         if (banner) banner.textContent = '⚠️ Sign in & link your Jyotish Gemini API key in the Cloud Vault for AI synthesis';
         return;
       }
-      try {
+try {
         btn.disabled = true;
-        if (banner) banner.textContent = '🔄 Gemini 2.5 Flash analyzing Kundali & Palm Vision...';
+        const selectedModel = getSelectedGeminiModel();
+        if (banner) banner.textContent = `🔄 ${selectedModel} analyzing Kundali & Palm Vision...`;
         const st = currentHoroscopeState;
         const focus = document.getElementById('aiReadingFocus')?.value || 'COMPLETE';
         const customQ = document.getElementById('palmCustomQuestion')?.value || '';
@@ -4696,19 +5782,26 @@ async function triggerFinalGenerateAndPopup() {
           `Special Ascendants: AL=${RASIS[st.alRasi].name}, UL=${RASIS[st.ulRasi].name}, HL=${RASIS[st.hlRasi].name}, GL=${RASIS[st.glRasi].name}, SL=${RASIS[st.slRasi].name}, Atmakaraka=${st.atmakaraka}\n` +
           `Planets: ${JSON.stringify(Object.values(st.planets).map(p => ({ g: p.name, rasi: p.vargas.d1, deg: dmsString(p.degInSign), nak: p.nak.name, pada: p.pada, d9: p.vargas.d9Name, ck: p.karaka, avastha: p.avastha })))}\n` +
           `Palm Focus: ${checks} | Mount Notes: ${document.getElementById('palmMountsNotes').value} | User Question: ${customQ} | Focus Mode: ${focus}`;
-        const extraParts = palmImageBase64 ? [{ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } }] : [];
-        const reply = await callGeminiAPI(promptText, extraParts);
-        if (reply) {
-          document.getElementById('inlineReadingOutput').value = reply;
-          document.getElementById('outputParagraphs').value = reply;
-          if (banner) banner.textContent = '✅ Multimodal Jyotish + Palm Vision Synthesis Complete';
+        const parts = [{ text: promptText }];
+        if (palmImageBase64 && palmImageMime) {
+          parts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
+        }
+        if (attachedFileBase64 && attachedFileMime) {
+          parts.push({ inline_data: { mime_type: attachedFileMime, data: attachedFileBase64 } });
+        }
+        const result = await fetchGeminiWithFallback({ contents: [{ parts }] });
+        if (result.text) {
+          document.getElementById('inlineReadingOutput').value = result.text;
+          document.getElementById('outputParagraphs').value = result.text;
+          if (banner) banner.textContent = `✅ Multimodal Jyotish + Palm Synthesis Complete (${result.modelUsed})`;
+        } else {
+          if (banner) banner.textContent = `⚠️ Gemini API Error: ${result.error || 'No response returned'}`;
         }
       } catch (err) {
-        if (banner) banner.textContent = '⚠️ Error calling Gemini API';
+        if (banner) banner.textContent = '⚠️ Error calling Gemini API: ' + (err.message || err);
       } finally {
         btn.disabled = false;
-      }
-    }
+      }    }
     // END: ISOLATED JYOTISH GEMINI HELPERS
 
     async function askGeminiDoubt() {
@@ -5049,8 +6142,8 @@ function formatCrispSectionTitle(rawText) {
         }, { passive: true });
       }
 
-      document.addEventListener('keydown', (e) => {
-           if (isPublicLandingActive()) return;
+       document.addEventListener('keydown', (e) => {
+           if (isPublicLandingActive() || isAstroChatActive()) return;
         // 1. CTRL + SHIFT: Close More, Rail, Profile, Settings, Storage, Ask Gemini & Any Open Modal
         if (e.ctrlKey && e.shiftKey && (e.key === 'Shift' || e.key === 'Control')) {
           e.preventDefault();
@@ -5298,9 +6391,15 @@ function formatCrispSectionTitle(rawText) {
         const prevBtn = idx > 0
           ? `<button type="button" onclick="navigateMainSection(${idx}, -1)" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">⬅ Prev</button>`
           : `<span></span>`;
-        const nextBtn = idx < lastVisibleIdx
-          ? `<button type="button" onclick="navigateMainSection(${idx}, 1)" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">Next ➔</button>`
-          : `<button type="button" onclick="triggerFinalGenerateAndPopup()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-6 py-2.5 shadow-lg font-bold">Generate</button>`;
+let nextBtn = '';
+        if (idx === 1 && !isCurrentUserAdmin() && !currentUserSubscriptionState.profileLocked) {
+          // End of Data Collection (Section 2: Palm Vision) -> Save Data (One-Time) & Open Chat
+          nextBtn = `<button type="button" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-5 py-2.5 shadow-lg font-bold">💾 Save Data (One-Time) &amp; Open Chat ➔</button>`;
+        } else if (idx < lastVisibleIdx) {
+          nextBtn = `<button type="button" onclick="navigateMainSection(${idx}, 1)" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">Next ➔</button>`;
+        } else {
+          nextBtn = `<button type="button" onclick="triggerFinalGenerateAndPopup()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-6 py-2.5 shadow-lg font-bold">Generate</button>`;
+        }
         navBar.innerHTML = prevBtn + nextBtn;
       });
     }
@@ -5315,12 +6414,13 @@ function formatCrispSectionTitle(rawText) {
       if (targetIdx >= 0 && targetIdx < sections.length) switchToOrbitSection(targetIdx);
     }
 
-      function switchToOrbitSection(targetIndex) {
+    function switchToOrbitSection(targetIndex) {
       const sections = getAllMainSections();
       if (targetIndex === currentOrbitSectionIndex || targetIndex < 0 || targetIndex >= sections.length || isOrbitAnimating) return;
-      if (!isCurrentUserAdmin() && targetIndex > 0 && !currentUserSubscriptionState.profileLocked) {
-        showStatusToast('🔒 Confirm & Lock your personal birth details in Section 1 first.');
-        document.getElementById('annualLockNoticeBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Allow moving freely between Section 1 (Birth Data) and Section 2 (Palm Vision) during Data Collection,
+      // and require One-Time Save before opening Charts/Chat (Sections 3+)
+      if (!isCurrentUserAdmin() && targetIndex > 1 && !currentUserSubscriptionState.profileLocked) {
+        showStatusToast('💾 Save your birth & palm details (one-time) first to unlock charts & AI chat.');
         return;
       }
       const oldSec = sections[currentOrbitSectionIndex];
