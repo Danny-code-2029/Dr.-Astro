@@ -3911,11 +3911,12 @@ let currentPaymentPurpose = 'new'; // 'new' | 'renewal' | 'reset'
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function enterQuestionnaireWorkspace(forceDataCollection = false) {
+function enterQuestionnaireWorkspace(forceDataCollection = false) {
       const wrapper = document.getElementById('publicLandingWrapper');
       if (wrapper) wrapper.classList.add('hidden');
       document.body.classList.remove('public-landing-active');
       document.getElementById('privateAccessOverlay')?.classList.add('hidden');
+      initOrbitWorkspaceLayout();
       initTheme();
       computeFullHoroscope();
       renderRightSectionRail();
@@ -3925,7 +3926,14 @@ let currentPaymentPurpose = 'new'; // 'new' | 'renewal' | 'reset'
       } else {
         document.body.classList.remove('astro-chat-mode');
         document.getElementById('returnToChatBanner')?.classList.toggle('hidden', !isCurrentUserAdmin());
-        switchToOrbitSection(0);
+        const sections = getAllMainSections();
+        sections.forEach((sec, idx) => {
+          sec.open = true;
+          sec.classList.remove('orbit-leaving', 'orbit-entering');
+          sec.classList.toggle('orbit-active', idx === 0);
+        });
+        currentOrbitSectionIndex = 0;
+        updateRailActiveStateFast();
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -4088,7 +4096,7 @@ async function continueSignupWithSelectedAccount() {
           expiresAtMs: isMidYearReset && prevSubData?.expiresAtMs > nowMs ? prevSubData.expiresAtMs : expiresAtMs,
           expiresAtISO: new Date(isMidYearReset && prevSubData?.expiresAtMs > nowMs ? prevSubData.expiresAtMs : expiresAtMs).toISOString(),
           profileLocked: isMidYearReset ? false : (hadPreviousProfile ? Boolean(prevSubData.profileLocked) : false),
-          resetsRemaining: 0
+          resetsRemaining: 0,
           awaitingRenewalChoice: Boolean(isRenewal && hadPreviousProfile),
           lockedProfile: isMidYearReset ? null : (hadPreviousProfile ? prevSubData.lockedProfile : null)
         };
