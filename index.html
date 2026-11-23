@@ -4190,8 +4190,9 @@ try {
           );
           return;
         }
+      }
       pendingSignupAuthMode = null;
-      await enforcePrivateAccessGate(currentGoogleUser);
+         await enforcePrivateAccessGate(currentGoogleUser);
       await syncAnnualProfileLockFromServer(currentGoogleUser);
 
       if (currentPaymentPurpose === 'reset') {
@@ -4375,6 +4376,11 @@ try {
     });
 
 async function signInWithGoogle(hintEmail = '') {
+      if (window.location.protocol === 'file:') {
+        alert('Google Sign-In cannot run from a local file:// path. Open the live https://danny-code-2029.github.io/Dr.-Astro/ URL instead.');
+        return;
+      }
+      if (isAuthOrExternalActionActive) return;
       isAuthOrExternalActionActive = true;
       const prevUid = auth.currentUser?.uid || null;
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -4394,7 +4400,13 @@ async function signInWithGoogle(hintEmail = '') {
           }
         }
       } catch (err) {
-        showStatusToast('⚠️ Sign-in popup closed or blocked (' + (err.code || 'check Authorized Domains') + ')');
+        console.error('Google Sign-In Error:', err);
+        if (err.code === 'auth/popup-blocked') {
+          alert('Popup blocked by browser. Allow popups for this site (or lower Brave Shields) and click Log in again.');
+        } else if (err.code !== 'auth/popup-closed-by-user') {
+          alert('Google Sign-In failed (' + (err.code || 'unknown') + '): ' + (err.message || err));
+        }
+        showStatusToast('⚠️ Sign-in error: ' + (err.code || 'popup blocked'));
       } finally {
         isAuthOrExternalActionActive = false;
       }
