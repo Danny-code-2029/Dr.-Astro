@@ -5663,7 +5663,58 @@ function buildOfflineClassicalSynthesis() {
       }
       return (sessionStorage.getItem('jyotish_active_session_key') || '').trim();
     }
+       
+// Automatic model fallback helper (gemini-2.5-flash -> gemini-2.0-flash -> gemini-1.5-flash)
+    async function fetchGeminiWithFallback(arg1, arg2, arg3) {
+      let apiKey = getActiveJyotishGeminiKey();
+      let payload = null;
 
+      // Support both (apiKey, payload) and (payload) and (promptText, extraParts, systemInstruction)
+      if (typeof arg1 === 'string' && arg2 && typeof arg2 === 'object' && !Array.isArray(arg2)) {
+        apiKey = arg1.trim() || apiKey;
+        payload = arg2;
+      } else if (arg1 && typeof arg1 === 'object') {
+        payload = arg1;
+        if (typeof arg2 === 'string' && arg2.trim()) apiKey = arg2.trim();
+      } else if (typeof arg1 === 'string') {
+        const parts = [{ text: arg1 }, ...(Array.isArray(arg2) ? arg2 : [])];
+        payload = { contents: [{ role: 'user', parts }] };
+        if (typeof arg3 === 'string' && arg3.trim()) {
+          payload.system_instruction = { parts: [{ text: arg3 }] };
+        }
+      }
+
+      if (!apiKey) throw new Error('Gemini API key is missing. Unlock your Cloud API Vault first.');
+
+      // Enforce current Simple English / Astrologer Mode if no system_instruction was attached
+      if (payload && !payload.system_instruction && typeof getModeSystemInstruction === 'function' && typeof currentOutputMode !== 'undefined') {
+        payload.system_instruction = { parts: [{ text: getModeSystemInstruction(currentOutputMode) }] };
+      }
+
+      const models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+      let lastError = null;
+
+      for (const model of models) {
+        try {
+          const res = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            }
+          );
+          const data = await res.json();
+          if (res.ok && data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            return data; // <-- If your caller expects plain text (Case B), change this line to: return data.candidates[0].content.parts[0].text;
+          }
+          lastError = new Error(data?.error?.message || `HTTP ${res.status} on ${model}`);
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      throw lastError || new Error('All Gemini fallback models failed.');
+    }
     async function callGeminiAPI(promptText, extraInlineParts = [], systemInstructionText = '') {
       const apiKey = getActiveJyotishGeminiKey();
       if (!apiKey) return '';
