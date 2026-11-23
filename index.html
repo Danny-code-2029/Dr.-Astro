@@ -1981,7 +1981,7 @@
         <span class="text-xs text-blue-600 font-normal">Multimodal Kundali + Samudrika Vision Report</span>
       </summary>
       <div class="p-4 space-y-4">
-        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs">
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs">
           <div class="flex flex-wrap items-center gap-2">
             <label class="font-bold">Reading Focus:</label>
             <select id="aiReadingFocus" class="border rounded-xl px-3 py-1.5 bg-white text-xs">
@@ -1990,6 +1990,11 @@
               <option value="MARRIAGE_CHILDREN">Marriage (7th/Upapada/Navamsa), Progeny (5th/Saptamsa) &amp; Hridaya Rekha</option>
               <option value="LONGEVITY_HEALTH">Longevity (Ayurdaya 3-Pairs), Medical Jyotish, Jeevan Rekha &amp; Vedic Remedies</option>
             </select>
+            <!-- Simple English / Astrologer Mode Toggle -->
+            <div class="inline-flex items-center bg-slate-200 dark:bg-slate-800 p-0.5 rounded-full border border-slate-300 dark:border-slate-700" role="group" aria-label="Output Language Mode">
+              <button type="button" onclick="setOutputMode('simple')" data-mode-btn="simple" class="chrome-pill-btn px-3 py-1 text-[11px] bg-blue-600 text-white shadow-xs">🗣️ Simple English</button>
+              <button type="button" onclick="setOutputMode('astrologer')" data-mode-btn="astrologer" class="chrome-pill-btn px-3 py-1 text-[11px] text-slate-700 dark:text-slate-300">🪐 Astrologer Mode</button>
+            </div>
           </div>
           <div class="flex flex-wrap gap-2">
             <button type="button" onclick="triggerFinalGenerateAndPopup()" id="mainAiGenerateBtn" class="chrome-pill-btn gemini-chrome-fab text-white text-xs px-4 py-2 shadow-lg font-bold">
@@ -2057,8 +2062,14 @@
       <div class="p-4 sm:p-5 space-y-3 overflow-y-auto flex-1">
         <!-- Top Action & Share Controls -->
         <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-2xl border no-print">
-          <div class="text-xs text-slate-600" id="vaultStatusBanner">
-            🔒 Using Firebase Cloud API Vault
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="text-xs text-slate-600" id="vaultStatusBanner">
+              🔒 Using Firebase Cloud API Vault
+            </div>
+            <div class="inline-flex items-center bg-slate-200 dark:bg-slate-800 p-0.5 rounded-full border border-slate-300 dark:border-slate-700" role="group" aria-label="Output Language Mode">
+              <button type="button" onclick="setOutputMode('simple')" data-mode-btn="simple" class="chrome-pill-btn px-2.5 py-1 text-[11px] bg-blue-600 text-white shadow-xs">🗣️ Simple English</button>
+              <button type="button" onclick="setOutputMode('astrologer')" data-mode-btn="astrologer" class="chrome-pill-btn px-2.5 py-1 text-[11px] text-slate-700 dark:text-slate-300">🪐 Astrologer Mode</button>
+            </div>
           </div>
           <div class="flex flex-wrap gap-2">
             <button onclick="polishWithGemini()" id="aiBtn" class="chrome-pill-btn gemini-chrome-fab text-white text-xs px-3.5 py-2 shadow">
@@ -2426,6 +2437,14 @@
           <textarea id="geminiUserPrompt" rows="3" class="w-full border rounded-2xl p-2.5 text-sm" placeholder="Examples:&#10;• PDF Reference: 'Compare this native's Arudha Lagna &amp; Upapada against the attached classical PDF.'&#10;• Dynamic Command: 'Fill this form for Swami Vivekananda born 12 Jan 1863 at 06:33 in Kolkata.'"></textarea>
         </div>
 
+<div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 dark:bg-slate-800/60 px-3 py-2 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs">
+          <span class="font-bold text-slate-700 dark:text-slate-200">Answer Language Style (Updates Current &amp; Next Reply):</span>
+          <div class="inline-flex items-center bg-slate-200 dark:bg-slate-900 p-0.5 rounded-full border border-slate-300 dark:border-slate-700" role="group" aria-label="Output Language Mode">
+            <button type="button" onclick="setOutputMode('simple')" data-mode-btn="simple" class="chrome-pill-btn px-3 py-1 text-[11px] bg-blue-600 text-white shadow-xs">🗣️ Simple English</button>
+            <button type="button" onclick="setOutputMode('astrologer')" data-mode-btn="astrologer" class="chrome-pill-btn px-3 py-1 text-[11px] text-slate-700 dark:text-slate-300">🪐 Astrologer Mode</button>
+          </div>
+        </div>
+
         <div class="flex flex-wrap gap-2">
           <button onclick="askGeminiDoubt()" class="chrome-pill-btn bg-purple-700 hover:bg-purple-800 text-white text-xs px-3.5 py-2">
             💬 Ask Doubt / Check PDF
@@ -2446,7 +2465,7 @@
             <label class="text-xs font-semibold text-slate-600">Gemini Output / Viva / Diagnostic Report</label>
             <button onclick="copyGeminiOutput()" class="text-[11px] text-blue-600 hover:underline">Copy Output</button>
           </div>
-          <textarea id="geminiModalOutput" rows="9" readonly class="w-full border rounded-2xl p-3 text-xs bg-slate-50 font-clinical-mono leading-relaxed" placeholder="Gemini's response, PDF analysis, viva questions, or code flaw report will appear here..."></textarea>
+             <textarea id="geminiModalOutput" rows="9" readonly class="w-full border rounded-2xl p-3 text-xs bg-slate-50 font-clinical-mono leading-relaxed" placeholder="Gemini's response, PDF analysis, viva questions, or code flaw report will appear here..."></textarea>
         </div>
       </div>
     </div>
@@ -5566,7 +5585,74 @@ function buildOfflineClassicalSynthesis() {
       window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
     }
 
-    // START: ISOLATED JYOTISH GEMINI HELPERS
+// START: ISOLATED JYOTISH GEMINI HELPERS (WITH INSTANT SIMPLE ENGLISH / ASTROLOGER SWITCH)
+    let currentOutputMode = localStorage.getItem('jyotish_output_mode_v1') || 'simple'; // 'simple' | 'astrologer'
+    let lastSynthesisCache = { key: '', simple: '', astrologer: '' };
+    let lastDoubtCache = { key: '', question: '', simple: '', astrologer: '' };
+
+    function getModeSystemInstruction(mode) {
+      if (mode === 'simple') {
+        return (
+          "You are Dr. Astro's personal guide explaining astrology and palmistry findings in warm, crystal-clear, everyday English. " +
+          "STRICT RULES: Do NOT use Sanskrit words or technical astrology jargon (NO Lagna, Bhava, Rasi, D-1, D-9, Navamsa, Shadvarga, Dasa, Bhukti, Antardasa, Arudha, Upapada, Atmakaraka, Argala, Nakshatra, Rekha, Parvata, or Yoga names). " +
+          "Translate every planetary and palm factor directly into plain real-life personality traits, career/relationship insights, calendar year/month timelines, and practical guidance."
+        );
+      }
+      return (
+        "You are a classical Vedic Astrologer (versed in Parashara's BPHS, Jaimini Sutras, Varahamihira's Brihat Jataka & Brihat Samhita, Kalidasa's Uttara Kalamrita, Dr. B.V. Raman, and Pt. Sanjay Rath) and Samudrika Shastra scholar. " +
+        "STRICT RULES: Give an authoritative technical reading citing exact houses (Bhavas), Rasi/Navamsa (D-1/D-9) placements, Shadvarga dignities, Chara Karakas, Arudha Padas (AL/UL), Yogic combinations, Vimshottari Mahadasa/Bhukti periods, and palm Rekhas/Graha Parvatas."
+      );
+    }
+
+    function syncOutputModeToggleButtons() {
+      document.querySelectorAll('[data-mode-btn]').forEach(btn => {
+        const isActive = btn.dataset.modeBtn === currentOutputMode;
+        btn.className = isActive
+          ? 'chrome-pill-btn px-3 py-1 text-[11px] bg-blue-600 text-white shadow-xs'
+          : 'chrome-pill-btn px-3 py-1 text-[11px] text-slate-700 dark:text-slate-300 hover:text-blue-600';
+      });
+    }
+    window.addEventListener('DOMContentLoaded', syncOutputModeToggleButtons);
+
+    async function setOutputMode(newMode) {
+      if (newMode !== 'simple' && newMode !== 'astrologer') return;
+      const modeChanged = newMode !== currentOutputMode;
+      currentOutputMode = newMode;
+      localStorage.setItem('jyotish_output_mode_v1', newMode);
+      syncOutputModeToggleButtons();
+      if (!modeChanged) return;
+
+      showStatusToast(newMode === 'simple' ? '🗣️ Switched to Simple English' : '🪐 Switched to Astrologer Mode');
+
+      // 1. If the Ask Gemini modal is open and already has a question answered, update it immediately
+      const geminiModal = document.getElementById('geminiModal');
+      const geminiOut = document.getElementById('geminiModalOutput');
+      if (geminiModal && !geminiModal.classList.contains('hidden') && lastDoubtCache.question) {
+        if (lastDoubtCache[newMode]) {
+          geminiOut.value = lastDoubtCache[newMode];
+        } else {
+          await askGeminiDoubt(true);
+        }
+        return;
+      }
+
+      // 2. If a main reading (Section 6 or Summary Popup) was already generated with AI, update it immediately
+      if (lastSynthesisCache.key) {
+        if (lastSynthesisCache[newMode]) {
+          document.getElementById('inlineReadingOutput').value = lastSynthesisCache[newMode];
+          document.getElementById('outputParagraphs').value = lastSynthesisCache[newMode];
+          const banner = document.getElementById('vaultStatusBanner');
+          if (banner) {
+            banner.textContent = newMode === 'simple'
+              ? '✅ Showing Simple English Synthesis (Cached)'
+              : '✅ Showing Classical Astrologer Synthesis (Cached)';
+          }
+        } else if (getActiveJyotishGeminiKey()) {
+          await polishWithGemini();
+        }
+      }
+    }
+
     function getActiveJyotishGeminiKey() {
       if (activeSessionKey) return activeSessionKey.trim();
       if (currentGoogleUser) {
@@ -5578,67 +5664,26 @@ function buildOfflineClassicalSynthesis() {
       return (sessionStorage.getItem('jyotish_active_session_key') || '').trim();
     }
 
-function getSelectedGeminiModel() {
-      const userChoice = (localStorage.getItem('jyotish_preferred_gemini_model') || '').trim();
-      const ownerDefault = (window.MONETIZATION_CONFIG?.defaultGeminiModel || 'gemini-4-hydrogen').trim();
-      return userChoice || ownerDefault || 'gemini-4-hydrogen';
-    }
-
-    function saveUserPreferredModel(modelId) {
-      localStorage.setItem('jyotish_preferred_gemini_model', modelId);
-      showStatusToast(`🧠 AI Model switched to ${modelId}`);
-    }
-
-    // Sync dropdown whenever Settings opens
-    const _origToggleSettings = toggleSettingsModal;
-    toggleSettingsModal = function() {
-      _origToggleSettings();
-      const sel = document.getElementById('userGeminiModelSelect');
-      if (sel) sel.value = getSelectedGeminiModel();
-    };
-
-    // Universal Gemini caller with automatic fallback for Free vs Paid keys
-    async function fetchGeminiWithFallback(requestBody) {
+    async function callGeminiAPI(promptText, extraInlineParts = [], systemInstructionText = '') {
       const apiKey = getActiveJyotishGeminiKey();
-      if (!apiKey) return { text: '', modelUsed: '', error: 'Missing API key' };
-
-      const preferred = getSelectedGeminiModel();
-      const fallbackOrder = [preferred, 'gemini-4-hydrogen', 'gemini-3.8-flash', 'gemini-3.5-flash-lite']
-        .filter((m, idx, arr) => m && arr.indexOf(m) === idx);
-
-      let lastErrorMsg = '';
-      for (const modelId of fallbackOrder) {
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-          });
-          const data = await res.json();
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          if (res.ok && text) {
-            if (modelId !== preferred) {
-              showStatusToast(`⚡ ${preferred} requires a paid key/quota — smoothly used ${modelId}`);
-            }
-            return { text, modelUsed: modelId, error: '' };
-          }
-          lastErrorMsg = data?.error?.message || `HTTP ${res.status}`;
-          // Stop trying fallbacks only if the API key itself is invalid
-          if (res.status === 400 && /API key not valid/i.test(lastErrorMsg)) break;
-        } catch (err) {
-          lastErrorMsg = err.message || 'Network error';
-        }
-      }
-      return { text: '', modelUsed: '', error: lastErrorMsg };
-    }
-
-    async function callGeminiAPI(promptText, extraInlineParts = []) {
+      if (!apiKey) return '';
       const parts = [{ text: promptText }, ...extraInlineParts];
       if (attachedFileBase64 && attachedFileMime) {
         parts.push({ inline_data: { mime_type: attachedFileMime, data: attachedFileBase64 } });
       }
-      const result = await fetchGeminiWithFallback({ contents: [{ parts }] });
-      return result.text || '';
+      const payload = {
+        contents: [{ role: 'user', parts }]
+      };
+      if (systemInstructionText) {
+        payload.system_instruction = { parts: [{ text: systemInstructionText }] };
+      }
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data?.error?.message) return `⚠️ Gemini API Error: ${data.error.message}`;
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     }
 
     async function polishWithGemini() {
@@ -5649,70 +5694,102 @@ function getSelectedGeminiModel() {
         if (banner) banner.textContent = '⚠️ Sign in & link your Jyotish Gemini API key in the Cloud Vault for AI synthesis';
         return;
       }
-try {
+      const mode = currentOutputMode;
+      const st = currentHoroscopeState;
+      const focus = document.getElementById('aiReadingFocus')?.value || 'COMPLETE';
+      const customQ = document.getElementById('palmCustomQuestion')?.value || '';
+      const checks = Array.from(document.querySelectorAll('.palm-focus-check:checked')).map(c => c.value).join('; ');
+      const synthKey = `${st.dobStr}|${st.tobStr}|${st.lat}|${st.lon}|${focus}|${customQ}|${palmImageBase64 ? 1 : 0}`;
+
+      if (lastSynthesisCache.key !== synthKey) {
+        lastSynthesisCache = { key: synthKey, simple: '', astrologer: '' };
+      }
+
+      try {
         btn.disabled = true;
-        const selectedModel = getSelectedGeminiModel();
-        if (banner) banner.textContent = `🔄 ${selectedModel} building your clear, specific reading...`;
-        const focusMap = {
-          COMPLETE: "Full Personal Life Reading (Personality, Career & Money, Relationships, Health/Vitality, and Next 2 Years Timing)",
-          CAREER_FINANCE: "Career Direction, Specific Best-Fit Professions, Income Growth Patterns, and Exact Timing Windows",
-          MARRIAGE_CHILDREN: "Love, Marriage Timing, Ideal Partner Personality, Relationship Challenges, and Family Life",
-          LONGEVITY_HEALTH: "Energy Levels, Health Stress Points to Watch, Lifestyle Habits, and Practical Well-Being Steps"
-        };
-        const focusCode = document.getElementById('aiReadingFocus')?.value || 'COMPLETE';
-        const focusLabel = focusMap[focusCode] || focusMap.COMPLETE;
-        const customQ = (document.getElementById('palmCustomQuestion')?.value || '').trim();
-        const dataBlock = buildStructuredChartDataBlock();
-
-        const promptText = `${getModeFormattingInstructions(getAstroReadingMode())}\n\n` +
-          `Requested Focus: ${focusLabel}\n` +
-          (customQ ? `User's Specific Question (Answer this first): ${customQ}\n` : '') +
-          `\n${dataBlock}`;
-
-        const parts = [{ text: promptText }];
-        if (palmImageBase64 && palmImageMime) {
-          parts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
+        if (banner) {
+          banner.textContent = mode === 'simple'
+            ? '🔄 Generating Simple English Reading...'
+            : '🔄 Generating Classical Astrologer Analysis...';
         }
-        if (attachedFileBase64 && attachedFileMime) {
-          parts.push({ inline_data: { mime_type: attachedFileMime, data: attachedFileBase64 } });
-        }
-        const result = await fetchGeminiWithFallback({ contents: [{ parts }] });
-        if (result.text) {
-          document.getElementById('inlineReadingOutput').value = result.text;
-          document.getElementById('outputParagraphs').value = result.text;
-          if (banner) banner.textContent = `✅ Specific Reading Complete (${result.modelUsed})`;
-        } else {
-          if (banner) banner.textContent = `⚠️ Gemini API Error: ${result.error || 'No response returned'}`;
+        const styleOverride = mode === 'simple'
+          ? '[FINAL STYLE OVERRIDE: Write ONLY in Simple Everyday English with ZERO Sanskrit terms or astrology jargon. Explain everything in plain life terms and calendar dates.]'
+          : '[FINAL STYLE OVERRIDE: Write in Classical Vedic Astrologer Mode citing exact houses, D-1/D-9, Shadvarga dignities, Yogas, Dasa-Bhuktis, and Samudrika Rekhas.]';
+
+        const promptText = `Analyze this chart and palm data:\n` +
+          `Native: ${document.getElementById('nativeName').value || 'Native'} (${document.getElementById('nativeGender').value})\n` +
+          `DOB: ${st.dobStr}, TOB: ${st.tobStr}, Place: ${document.getElementById('birthPlaceName').value}\n` +
+          `Udaya Lagna: ${RASIS[st.lagnaVargas.rasiIdx].name} ${dmsString(st.lagnaVargas.deg)}, D-9 Navamsa Lagna: ${st.lagnaVargas.d9Name}\n` +
+          `Special Ascendants: AL=${RASIS[st.alRasi].name}, UL=${RASIS[st.ulRasi].name}, HL=${RASIS[st.hlRasi].name}, GL=${RASIS[st.glRasi].name}, SL=${RASIS[st.slRasi].name}, Atmakaraka=${st.atmakaraka}\n` +
+          `Planets: ${JSON.stringify(Object.values(st.planets).map(p => ({ g: p.name, rasi: p.vargas.d1, deg: dmsString(p.degInSign), nak: p.nak.name, pada: p.pada, d9: p.vargas.d9Name, ck: p.karaka, avastha: p.avastha })))}\n` +
+          `Palm Focus: ${checks} | Mount Notes: ${document.getElementById('palmMountsNotes').value} | User Question: ${customQ} | Focus Mode: ${focus}\n\n${styleOverride}`;
+
+        const extraParts = palmImageBase64 ? [{ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } }] : [];
+        const reply = await callGeminiAPI(promptText, extraParts, getModeSystemInstruction(mode));
+        if (reply) {
+          lastSynthesisCache[mode] = reply;
+          document.getElementById('inlineReadingOutput').value = reply;
+          document.getElementById('outputParagraphs').value = reply;
+          if (banner) {
+            banner.textContent = mode === 'simple'
+              ? '✅ Simple English Reading Complete'
+              : '✅ Classical Astrologer Synthesis Complete';
+          }
         }
       } catch (err) {
-        if (banner) banner.textContent = '⚠️ Error calling Gemini API: ' + (err.message || err);
+        if (banner) banner.textContent = '⚠️ Error calling Gemini API';
       } finally {
         btn.disabled = false;
       }
     }
     // END: ISOLATED JYOTISH GEMINI HELPERS
 
-    async function askGeminiDoubt() {
+    async function askGeminiDoubt(isModeSwitchRerun = false) {
       const out = document.getElementById('geminiModalOutput');
-      const userQ = (document.getElementById('geminiUserPrompt')?.value || '').trim();
+      const typedQ = (document.getElementById('geminiUserPrompt')?.value || '').trim();
+      const userQ = isModeSwitchRerun ? (typedQ || lastDoubtCache.question) : typedQ;
+      const mode = currentOutputMode;
+
       if (!getActiveJyotishGeminiKey()) {
         out.value = '⚠️ Please sign in and unlock your Jyotish Cloud API Vault first.';
         return;
       }
       if (!userQ && !attachedFileBase64) {
-        out.value = '⚠️ Please type a question or attach a PDF/image first.';
+        out.value = '⚠️ Please type a Jyotish/Samudrika question or attach a PDF/image first.';
         return;
       }
-      out.value = '💬 Preparing a clear, specific answer from your chart...';
-      const dataBlock = buildStructuredChartDataBlock();
+
+      const st = currentHoroscopeState;
+      const doubtKey = `${userQ}|${st?.dobStr || ''}|${st?.tobStr || ''}|${document.getElementById('attachedFileName')?.textContent || ''}|${palmImageBase64 ? 1 : 0}`;
+      if (lastDoubtCache.key !== doubtKey) {
+        lastDoubtCache = { key: doubtKey, question: userQ, simple: '', astrologer: '' };
+      }
+
+      out.value = mode === 'simple'
+        ? '🗣️ Preparing your answer in Simple English...'
+        : '🪐 Consulting classical Jyotish & Samudrika Shastra references...';
+
+      const chartContext = st
+        ? `Chart Data: Native=${document.getElementById('nativeName')?.value || 'Native'}, DOB=${st.dobStr}, TOB=${st.tobStr}, Lagna=${RASIS[st.lagnaVargas.rasiIdx].name}, D-9 Navamsa=${st.lagnaVargas.d9Name}, Moon=${st.planets.Moon.vargas.d1} (${st.planets.Moon.nak.name}), Atmakaraka=${st.atmakaraka}, AL=${RASIS[st.alRasi].name}, UL=${RASIS[st.ulRasi].name}.`
+        : '';
+      const styleOverride = mode === 'simple'
+        ? '[FINAL STYLE OVERRIDE: Answer ONLY in plain, everyday Simple English. Do NOT use any Sanskrit words or technical astrology jargon.]'
+        : '[FINAL STYLE OVERRIDE: Answer in Classical Astrologer Mode citing exact houses, D-1/D-9, Yogas, Dasa timings, and classical Jyotish rules.]';
+
       const extraParts = palmImageBase64 ? [{ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } }] : [];
       const reply = await callGeminiAPI(
-        `${getModeFormattingInstructions(getAstroReadingMode())}\n\n${dataBlock}\n\nUser Question: ${userQ}`,
-        extraParts
+        `${chartContext}\n\nUser Question: ${userQ}\n\n${styleOverride}`,
+        extraParts,
+        getModeSystemInstruction(mode)
       );
-      out.value = reply || 'Unable to fetch response from Gemini.';
-    }
 
+      if (reply) {
+        lastDoubtCache[mode] = reply;
+        out.value = reply;
+      } else {
+        out.value = 'Unable to fetch response from Gemini.';
+      }
+    }
     async function geminiControlPage() {
       const out = document.getElementById('geminiModalOutput');
       const cmd = (document.getElementById('geminiUserPrompt')?.value || '').trim();
