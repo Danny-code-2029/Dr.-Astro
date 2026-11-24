@@ -123,7 +123,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
 
-  <!-- 1.4 Tailwind CSS CDN & Custom Font/Theme Configuration -->
+<!-- 1.4 Preconnect Hints, Deferred NASA-Grade Ephemeris & Styles -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+  <script defer src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
+  <!-- Swap the next script tag for <link rel="stylesheet" href="./styles.css" /> after compiling Tailwind in Part 6 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -524,13 +528,14 @@
       color: #f8fafc !important;
       border-color: #334155 !important;
     }
- /* Exclude #headerCaseSearch & #astroChatInput so both stay transparent inside their pill bars */
-    html.dark input:not(#headerCaseSearch), html.dark select, html.dark textarea:not(#astroChatInput) {
+/* Exclude pill-bar inputs so they stay transparent in Dark Mode */
+    html.dark input:not(#headerCaseSearch):not(#astroChatSearchInput), html.dark select, html.dark textarea:not(#astroChatInput) {
       background-color: #0f172a !important;
       border-color: #475569 !important;
       color: #f8fafc !important;
     }
     #headerCaseSearch,
+    #astroChatSearchInput,
     #astroChatInput {
       background-color: transparent !important;
       border: none !important;
@@ -762,12 +767,65 @@
       color: #f1f5f9;
       border-color: #334155;
     }
-    .chat-chip-btn {
+.chat-chip-btn {
       transition: transform 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
     }
     .chat-chip-btn:hover {
       transform: translateY(-1px);
       border-color: #3b82f6;
+    }
+
+    /* Gemini-Style Collapsible Left Chat History Sidebar */
+    #astroChatSidebar {
+      width: 268px;
+      transition: width 0.22s cubic-bezier(0.22, 1, 0.36, 1), transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.18s ease;
+    }
+    @media (min-width: 1024px) {
+      #astroChatWorkspace.chat-sidebar-collapsed #astroChatSidebar {
+        width: 0;
+        min-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        border-right-width: 0;
+        pointer-events: none;
+      }
+    }
+    @media (max-width: 1023px) {
+      #astroChatSidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 30;
+        transform: translateX(-100%);
+        box-shadow: 12px 0 32px rgba(2, 6, 23, 0.45);
+      }
+      #astroChatWorkspace.chat-sidebar-mobile-open #astroChatSidebar {
+        transform: translateX(0);
+      }
+      #astroChatWorkspace.chat-sidebar-mobile-open #astroChatSidebarOverlay {
+        display: block;
+      }
+    }
+    .chat-sidebar-item {
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+    }
+    .chat-sidebar-item.chat-item-active {
+      background-color: rgba(37, 99, 235, 0.12);
+      border-color: rgba(59, 130, 246, 0.45);
+    }
+    html.dark .chat-sidebar-item.chat-item-active {
+      background-color: rgba(37, 99, 235, 0.24);
+      border-color: rgba(96, 165, 250, 0.5);
+    }
+    #astroChatSidebarList::-webkit-scrollbar,
+    #astroChatMessages::-webkit-scrollbar {
+      width: 5px;
+    }
+    #astroChatSidebarList::-webkit-scrollbar-thumb,
+    #astroChatMessages::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
     }
   </style>
 </head>
@@ -819,7 +877,7 @@
         <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
           Compute high-precision Nirayana Graha Sphutas, Shadvargas (D-1 to D-30), 3-Ring Sudarshan Chakra, Jaimini Arudha Padas, 3-Pairs Ayurdaya Longevity, and 120-Year Vimshottari Dasa—cross-verified with AI Palm Rekha &amp; Graha Parvata Vision.
         </p>
-        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+       <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
           <button type="button" onclick="openSignupFlowStep1()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-sm px-6 py-3 shadow-lg font-bold">
             🚀 Get Started — ₹11 / Year Access
           </button>
@@ -827,6 +885,9 @@
             Already Registered? Log in ➔
           </button>
         </div>
+        <p class="text-[11px] text-slate-500 font-medium pt-1">
+          🔑 Requires a <strong>free Google AI Studio API key</strong> (30-second guided setup inside after activation — zero extra AI cost).
+        </p>
       </div>
 
       <!-- 2. Core Shastra Capabilities Grid -->
@@ -1077,6 +1138,10 @@
           </label>
         </div>
 
+   <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-[11px] text-indigo-950 leading-relaxed">
+          🔑 <strong>Quick Note Before Paying ₹11:</strong> Right after activation, you will link your own <strong>free Google AI Studio key</strong> (takes ~30 seconds with a 1-click button inside) so your readings stay private and free of monthly AI charges.
+        </div>
+
         <button type="button" onclick="proceedFromPermissionsToPayment()" class="w-full chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-5 shadow-lg text-sm">
           <span>✓ Grant Permissions &amp; Continue to ₹11 Payment ➔</span>
         </button>
@@ -1249,8 +1314,8 @@
         </div>
       </div>
 
-      <!-- 3.2 Center: Chrome Omnibox-Style Horoscope Case History Search Bar -->
-      <div class="relative flex-1 max-w-md">
+<!-- 3.2 Center: Owner Master Volunteer/Horoscope Search Bar (Auto-Hidden for Regular Users) -->
+      <div id="headerSearchWrapper" class="relative flex-1 max-w-md">
         <div class="flex items-center bg-slate-800/90 hover:bg-slate-800 focus-within:bg-slate-800 focus-within:ring-2 focus-within:ring-blue-500 rounded-full px-3.5 py-1.5 border border-slate-700 transition-all">
           <svg class="w-4 h-4 text-slate-400 mr-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
@@ -1260,7 +1325,8 @@
             type="text"
             oninput="handleCaseSearch(this.value)"
             onfocus="handleCaseSearch(this.value)"
-            placeholder="Search saved horoscopes by name..."
+            onkeydown="if(event.key==='Enter'){ event.preventDefault(); selectFirstMatchedCaseFromSearch(); }"
+            placeholder="Search volunteer / saved horoscope by name..."
             class="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none"
           />
           <button id="clearSearchBtn" onclick="clearCaseSearch()" class="hidden text-slate-400 hover:text-white text-xs ml-1">&times;</button>
@@ -1270,9 +1336,12 @@
         <div id="searchResultsDropdown" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
       </div>
 
-      <!-- 3.3 Extreme Right: Save Action + Sign-In Button OR Profile Avatar -->
+<!-- 3.3 Extreme Right: Owner +New Volunteer + Save Action + Profile Avatar -->
       <div class="flex items-center gap-2 shrink-0 relative">
-        <button onclick="saveCurrentCaseToStorage(true)" class="chrome-pill-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 border border-slate-700 hidden md:inline-flex" title="Save Horoscope to Storage">
+        <button id="headerNewVolunteerBtn" onclick="startNewVolunteerEntry()" class="chrome-pill-btn text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 shadow hidden" title="Start a Clean New Volunteer Chart & Chat">
+          <span>＋</span> <span class="hidden sm:inline">New Volunteer</span>
+        </button>
+        <button id="headerSaveChartBtn" onclick="saveCurrentCaseToStorage(true)" class="chrome-pill-btn text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 border border-slate-700 hidden md:inline-flex" title="Save Horoscope to Storage">
           <span>💾</span> <span>Save Chart</span>
         </button>
 
@@ -1409,92 +1478,138 @@
       <span id="autoSaveBadge"></span>
     </div>
 
-    <!-- ========================================================================
-         [SECTION 05B] GEMINI-STYLE ASTROLOGY & SAMUDRIKA CHAT WORKSPACE (STEPS 15-17)
+<!-- ========================================================================
+         [SECTION 05B] GEMINI-STYLE ASTROLOGY CHAT WORKSPACE WITH CHAT SIDEBAR
          ======================================================================== -->
-    <section id="astroChatWorkspace" class="astro-chat-shell max-w-4xl mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col overflow-hidden">
+    <section id="astroChatWorkspace" class="astro-chat-shell max-w-6xl mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex overflow-hidden relative">
 
-      <!-- Chat Top Context Bar -->
-      <div class="px-4 sm:px-5 py-3 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-2.5 overflow-hidden">
-          <div class="w-9 h-9 rounded-full gemini-chrome-fab text-white flex items-center justify-center shrink-0 shadow">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z"/></svg>
+      <!-- Mobile Drawer Backdrop for Chat Sidebar -->
+      <div id="astroChatSidebarOverlay" onclick="toggleAstroChatSidebar(false)" class="hidden lg:hidden absolute inset-0 bg-slate-950/55 z-20"></div>
+
+      <!-- LEFT GEMINI-STYLE CHAT HISTORY SIDEBAR -->
+      <aside id="astroChatSidebar" class="shrink-0 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full">
+        <div class="p-3 border-b border-slate-200 dark:border-slate-800 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <button type="button" onclick="startNewAstroChatSession()" class="flex-1 chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-2 px-3 shadow-sm">
+              <span>＋</span> <span>New chat</span>
+            </button>
+            <button type="button" onclick="toggleAstroChatSidebar()" class="p-2 rounded-full text-slate-500 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Hide Chat Sidebar" aria-label="Hide Chat Sidebar">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
           </div>
-          <div class="overflow-hidden">
-            <div class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Dr. Astro AI Chat</div>
-            <div id="chatChartContextBadge" class="text-[11px] text-blue-600 dark:text-blue-400 font-clinical-mono truncate">
-              Chart Ready • Computing Lagna &amp; Dasa...
+
+          <div class="flex items-center bg-white dark:bg-slate-900 rounded-full px-3 py-1.5 border border-slate-200 dark:border-slate-700">
+            <svg class="w-3.5 h-3.5 text-slate-400 mr-1.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+            </svg>
+            <input id="astroChatSearchInput" type="text" oninput="renderAstroChatSidebar()" placeholder="Search chats..." class="w-full bg-transparent text-xs focus:outline-none text-slate-800 dark:text-slate-100 placeholder-slate-400" />
+          </div>
+        </div>
+
+<div id="astroChatVolunteerScopeBanner" class="hidden mx-2.5 mt-2 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 text-[11px] flex items-center justify-between gap-1.5">
+          <span id="astroChatVolunteerScopeText" class="font-bold text-blue-800 dark:text-blue-200 truncate">Volunteer: --</span>
+          <span class="text-[9px] uppercase font-clinical-mono text-blue-500 shrink-0">Scoped</span>
+        </div>
+
+        <div class="px-3 pt-2.5 pb-1 flex items-center justify-between text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+          <span>Recent Chats</span>
+          <span id="astroChatCountBadge" class="font-clinical-mono">0</span>
+        </div>
+
+        <div id="astroChatSidebarList" class="flex-1 overflow-y-auto px-2 pb-3 space-y-1"></div>
+      </aside>
+
+      <!-- RIGHT MAIN CHAT THREAD AREA -->
+      <div class="flex-1 flex flex-col min-w-0 h-full">
+
+        <!-- Chat Top Context Bar -->
+        <div class="px-3 sm:px-5 py-3 bg-slate-50 dark:bg-slate-950/70 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <button type="button" onclick="toggleAstroChatSidebar()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors shrink-0" title="Toggle Chats Sidebar" aria-label="Toggle Chats Sidebar">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <line x1="9" y1="4" x2="9" y2="20" />
+              </svg>
+            </button>
+            <div class="w-9 h-9 rounded-full gemini-chrome-fab text-white flex items-center justify-center shrink-0 shadow">
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12.5 7.5 16.5 11.5 22 12C16.5 12.5 12.5 16.5 12 22C11.5 16.5 7.5 12.5 2 12C7.5 11.5 11.5 7.5 12 2Z"/></svg>
+            </div>
+            <div class="overflow-hidden">
+              <div class="text-sm font-extrabold text-slate-900 dark:text-white truncate">Dr. Astro AI Chat</div>
+              <div id="chatChartContextBadge" class="text-[11px] text-blue-600 dark:text-blue-400 font-clinical-mono truncate">
+                Chart Ready • Computing Lagna &amp; Dasa...
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <!-- 1-Click Simple English / Astrologer Mode Toggle Pill -->
+            <div class="inline-flex items-center bg-slate-200/90 dark:bg-slate-800 p-0.5 rounded-full border border-slate-300 dark:border-slate-700 text-[11px] font-bold" role="group" aria-label="Reading Language Mode">
+              <button type="button" id="btnModeSimple" onclick="setAstroReadingMode('simple')" class="px-2.5 py-1 rounded-full bg-blue-600 text-white shadow-xs transition-all">
+                Simple English
+              </button>
+              <button type="button" id="btnModeAstrologer" onclick="setAstroReadingMode('astrologer')" class="px-2.5 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
+                Astrologer Mode
+              </button>
+            </div>
+            <button type="button" onclick="openChartsFromChat()" class="chrome-pill-btn text-xs bg-blue-50 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-700 px-3 py-1.5">
+              <span>📊</span> <span>View My Charts</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Gemini-Style Message Thread -->
+        <div id="astroChatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          <!-- Initial Gemini-Style Greeting & Plain-English Quick Question Chips -->
+          <div id="astroChatEmptyState" class="max-w-2xl mx-auto py-6 sm:py-10 text-center space-y-5">
+            <div class="space-y-1.5">
+              <h2 id="chatGreetingHeadline" class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                Hello! Your Personal Reading is Ready
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                Your birth chart, timing cycles &amp; palm details are calculated. Ask any specific question about your career, relationships, money, or upcoming months in plain English.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left text-xs">
+              <button type="button" onclick="askQuickAstroPrompt('What are my biggest natural strengths, hidden blind spots, and the kind of life path that fits me best?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+                ✨ My core strengths, blind spots &amp; best life path
+              </button>
+              <button type="button" onclick="askQuickAstroPrompt('Which exact career fields suit me best, and what are my strongest upcoming windows for career growth and money?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+                💼 Best career paths, income &amp; growth windows
+              </button>
+              <button type="button" onclick="askQuickAstroPrompt('What does my chart say about my love life, ideal partner traits, marriage timing, and relationship challenges to watch for?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+                💍 Marriage timing, ideal partner &amp; relationship patterns
+              </button>
+              <button type="button" onclick="askQuickAstroPrompt('What should I focus on—and avoid—over the next 12 months based on my current phase and palm?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
+                📅 Next 12 months forecast, health &amp; palm insights
+              </button>
             </div>
           </div>
         </div>
-          <div class="flex flex-wrap items-center gap-2 shrink-0">
-          <!-- 1-Click Simple English / Astrologer Mode Toggle Pill -->
-          <div class="inline-flex items-center bg-slate-200/90 dark:bg-slate-800 p-0.5 rounded-full border border-slate-300 dark:border-slate-700 text-[11px] font-bold" role="group" aria-label="Reading Language Mode">
-            <button type="button" id="btnModeSimple" onclick="setAstroReadingMode('simple')" class="px-2.5 py-1 rounded-full bg-blue-600 text-white shadow-xs transition-all">
-              Simple English
-            </button>
-            <button type="button" id="btnModeAstrologer" onclick="setAstroReadingMode('astrologer')" class="px-2.5 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
-              Astrologer Mode
-            </button>
-          </div>
-          <button type="button" onclick="openChartsFromChat()" class="chrome-pill-btn text-xs bg-blue-50 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-700 px-3 py-1.5">
-            <span>📊</span> <span>View My Charts</span>
-          </button>
-          <button type="button" onclick="clearAstroChatHistory()" class="chrome-pill-btn text-xs bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5" title="Start New Chat">
-            <span>✨ New Chat</span>
-          </button>
-        </div>
-      </div>
 
-      <!-- Scrollable Gemini-Style Message Thread -->
-      <div id="astroChatMessages" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-<!-- Initial Gemini-Style Greeting & Plain-English Quick Question Chips -->
-        <div id="astroChatEmptyState" class="max-w-2xl mx-auto py-6 sm:py-10 text-center space-y-5">
-          <div class="space-y-1.5">
-            <h2 id="chatGreetingHeadline" class="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-              Hello! Your Personal Reading is Ready
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              Your birth chart, timing cycles &amp; palm details are calculated. Ask any specific question about your career, relationships, money, or upcoming months in plain English.
-            </p>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left text-xs">
-            <button type="button" onclick="askQuickAstroPrompt('What are my biggest natural strengths, hidden blind spots, and the kind of life path that fits me best?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
-              ✨ My core strengths, blind spots &amp; best life path
+        <!-- Bottom Gemini-Style Pill Input Bar -->
+        <div class="p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+          <div class="max-w-3xl mx-auto flex items-end gap-2 bg-slate-100 dark:bg-slate-800 rounded-3xl px-3.5 py-2 border border-slate-200 dark:border-slate-700 focus-within:ring-2 focus-within:ring-blue-500">
+            <button type="button" onclick="startDictation('astroChatInput')" class="p-2 rounded-full text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors shrink-0" title="Voice Input">
+              🎤
             </button>
-            <button type="button" onclick="askQuickAstroPrompt('Which exact career fields suit me best, and what are my strongest upcoming windows for career growth and money?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
-              💼 Best career paths, income &amp; growth windows
-            </button>
-            <button type="button" onclick="askQuickAstroPrompt('What does my chart say about my love life, ideal partner traits, marriage timing, and relationship challenges to watch for?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
-              💍 Marriage timing, ideal partner &amp; relationship patterns
-            </button>
-            <button type="button" onclick="askQuickAstroPrompt('What should I focus on—and avoid—over the next 12 months based on my current phase and palm?')" class="chat-chip-btn p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium">
-              📅 Next 12 months forecast, health &amp; palm insights
+            <textarea
+              id="astroChatInput"
+              rows="1"
+              oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight, 128)+'px';"
+              placeholder="Ask anything about your career, relationships, money, or upcoming months..."
+              onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendAstroChatMessage(); }"
+              class="flex-1 bg-transparent border-0 focus:outline-none text-sm py-1.5 resize-none max-h-32 text-slate-900 dark:text-white"
+            ></textarea>
+            <button type="button" id="astroChatSendBtn" onclick="sendAstroChatMessage()" class="chrome-pill-btn gemini-chrome-fab text-white px-4 py-2 text-xs font-bold shadow shrink-0">
+              <span>Ask</span> <span>➔</span>
             </button>
           </div>
-        </div>
         </div>
 
-      <!-- Bottom Gemini-Style Pill Input Bar -->
-      <div class="p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-        <div class="max-w-3xl mx-auto flex items-end gap-2 bg-slate-100 dark:bg-slate-800 rounded-3xl px-3.5 py-2 border border-slate-200 dark:border-slate-700 focus-within:ring-2 focus-within:ring-blue-500">
-          <button type="button" onclick="startDictation('astroChatInput')" class="p-2 rounded-full text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors shrink-0" title="Voice Input">
-            🎤
-          </button>
-          <textarea
-            id="astroChatInput"
-            rows="1"
-          placeholder="Ask anything about your career, relationships, money, or upcoming months..."
-               onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendAstroChatMessage(); }"
-            class="flex-1 bg-transparent border-0 focus:outline-none text-sm py-1.5 resize-none max-h-32 text-slate-900 dark:text-white"
-          ></textarea>
-          <button type="button" id="astroChatSendBtn" onclick="sendAstroChatMessage()" class="chrome-pill-btn gemini-chrome-fab text-white px-4 py-2 text-xs font-bold shadow shrink-0">
-            <span>Ask</span> <span>➔</span>
-          </button>
-        </div>
       </div>
     </section>
-
     <!-- Back-to-Chat Banner (Shown When Viewing Charts After One-Time Save) -->
     <div id="returnToChatBanner" class="hidden max-w-7xl mx-auto mb-3 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white flex flex-wrap items-center justify-between gap-2 shadow-md no-print">
       <div class="text-xs font-semibold">
@@ -1587,11 +1702,24 @@
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-semibold mb-1">Akshamsa (Lat °N) &amp; Rekhamsa (Lon °E)</label>
-            <div class="grid grid-cols-2 gap-1.5">
+         <div>
+            <label class="block text-xs font-semibold mb-1">Lat (°N), Lon (°E) &amp; Timezone (UTC)</label>
+            <div class="grid grid-cols-3 gap-1">
               <input id="birthLat" type="number" step="0.01" value="20.30" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Latitude (+N)" />
               <input id="birthLon" type="number" step="0.01" value="85.82" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Longitude (+E)" />
+              <select id="birthTzOffset" onchange="computeFullHoroscope()" class="border rounded p-1.5 text-[11px] font-clinical-mono" title="Standard Timezone Offset">
+                <option value="5.5" selected>IST +5:30</option>
+                <option value="5.75">NPT +5:45</option>
+                <option value="6">BST +6:00</option>
+                <option value="4">GST +4:00</option>
+                <option value="8">SGT +8:00</option>
+                <option value="0">UTC 0:00</option>
+                <option value="1">CET +1:00</option>
+                <option value="-5">EST -5:00</option>
+                <option value="-6">CST -6:00</option>
+                <option value="-8">PST -8:00</option>
+                <option value="10">AEST +10</option>
+              </select>
             </div>
           </div>
 
@@ -1622,40 +1750,54 @@
       </div>
     </details>
 
-    <!-- 5.3 Section 2: Palm Vision & Samudrika Shastra -->
+<!-- 5.3 Section 2: Palm Vision & Samudrika Shastra -->
     <details class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <summary class="bg-slate-50 px-4 py-3 font-bold text-slate-800 cursor-pointer flex justify-between items-center border-b">
         <span>2. Palm Vision &amp; Samudrika</span>
         <span class="text-xs text-blue-600 font-normal">Multimodal Palm Scanner &amp; Rekha Checklist</span>
       </summary>
       <div class="p-4 space-y-4">
+
+        <!-- Uniform Both-Palms Photo Guide & 1-Year Lock Warning (Plain English) -->
+        <div id="palmLockWarningBox" class="bg-amber-50 border border-amber-300 text-amber-950 p-3.5 rounded-2xl text-xs space-y-1.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="font-extrabold text-amber-900">⚠️ Required Photo Format &amp; 1-Year Lock (Upload From Gallery Only)</span>
+            <span id="palmLockStatusBadge" class="text-[10px] bg-blue-600/15 text-blue-800 border border-blue-400/40 px-2.5 py-0.5 rounded-full font-clinical-mono font-bold shrink-0">
+              🔓 Editable Until Saved
+            </span>
+          </div>
+          <p class="text-[11px] leading-relaxed">
+            Take <strong>one single clear photo</strong> with <strong>both of your hands placed side-by-side and both palms facing upward</strong> (flat and open toward the camera, fingers relaxed and slightly spread, in bright light) using your phone's camera first, then <strong>upload that saved photo from your Gallery / Files</strong> below. Just like your birth details, your palm photo is <strong>locked for 1 full year once saved</strong> (1 Plan = 1 Payment = 1 Data Input — no free replacements).
+          </p>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-          <!-- Left 5 Cols: Palm Photo Upload & Interactive Canvas Preview -->
+          <!-- Left 5 Cols: Gallery-Only Palm Photo Upload & Preview -->
           <div class="lg:col-span-5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-3 text-center">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-bold text-amber-700 dark:text-amber-400">🖐️ Upload Clear Palm Photo</span>
-              <select id="palmHandType" class="border rounded-lg px-2 py-1 text-[11px] bg-white">
-                <option value="Right Palm (Active Karmic Hand)">Right Palm (Active Hand)</option>
-                <option value="Left Palm (Inherited Prarabdha Hand)">Left Palm (Passive Hand)</option>
+            <div class="flex items-center justify-between gap-2 text-xs">
+              <span class="font-bold text-amber-700 dark:text-amber-400">🙌 Both Palms Photo</span>
+              <select id="palmHandType" class="border rounded-lg px-2 py-1 text-[11px] bg-white max-w-[195px]">
+                <option value="Both Palms Side-by-Side Facing Up (Left & Right Together)">Both Palms Together (Standard)</option>
+                <option value="Right Palm (Active Karmic Hand)">Right Palm Only</option>
+                <option value="Left Palm (Inherited Prarabdha Hand)">Left Palm Only</option>
               </select>
             </div>
             <div id="palmPreviewBox" class="relative w-full h-64 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-white flex flex-col items-center justify-center overflow-hidden">
-              <img id="palmPreviewImg" src="" alt="Palm Preview" class="hidden w-full h-full object-contain" />
+              <img id="palmPreviewImg" src="" alt="Both Palms Preview" class="hidden w-full h-full object-contain" />
               <div id="palmPlaceholderText" class="p-4 text-xs text-slate-500 space-y-1">
-                <div class="text-3xl">📷</div>
-                <div class="font-semibold text-slate-700 dark:text-slate-200">Tap below to capture or upload your palm</div>
-                <div class="text-[11px] text-slate-400">Gemini Vision AI will inspect mounts (Graha Parvata), major lines (Rekhas) &amp; auspicious marks</div>
+                <div class="text-3xl">🙌</div>
+                <div class="font-semibold text-slate-700 dark:text-slate-200">Upload 1 gallery photo of both palms facing up</div>
+                <div class="text-[11px] text-slate-400">Hold left &amp; right palms side-by-side in bright light so all lines and mounts are sharp and easy to read</div>
               </div>
             </div>
             <div class="flex flex-wrap justify-center gap-2">
-              <label class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 shadow">
-                <span>📤 Select / Capture Palm Photo</span>
-                <input id="palmFileInput" type="file" accept="image/*" onchange="handlePalmImageUpload(this)" class="hidden" />
+              <label id="palmUploadLabel" class="chrome-pill-btn cursor-pointer bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 shadow">
+                <span>🖼️ Upload From Gallery / Files</span>
+                <input id="palmFileInput" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onchange="handlePalmImageUpload(this)" class="hidden" />
               </label>
-              <button type="button" onclick="clearPalmImage()" class="chrome-pill-btn bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs px-3 py-2 border border-slate-300 dark:border-slate-700">Clear</button>
+              <button type="button" id="palmClearBtn" onclick="clearPalmImage()" class="chrome-pill-btn bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs px-3 py-2 border border-slate-300 dark:border-slate-700">Clear</button>
             </div>
           </div>
-
           <!-- Right 7 Cols: Samudrika Shastra Mounts, Lines & Chihna Overrides -->
           <div class="lg:col-span-7 space-y-3 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -2561,6 +2703,122 @@
     const db = firebase.firestore();
     const functions = firebase.app().functions("asia-south1");
 
+       // ========================================================================
+    // AUTOMATED ZERO-PII CRASH REPORTER (GEMINI-READY DIAGNOSTIC BUNDLE)
+    // ========================================================================
+    const APP_BUILD_VERSION = "DrAstro-v6.0-2026-11";
+    let lastCrashFingerprint = "";
+    let lastCrashTimeMs = 0;
+
+    function sanitizeCrashText(str) {
+      return String(str || "")
+        .replace(/AIza[0-9A-Za-z\-_]{20,}/g, "[REDACTED_API_KEY]")
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[REDACTED_EMAIL]")
+        .slice(0, 1800);
+    }
+
+    async function reportAstroCrash(source, message, stack = "", line = 0, col = 0) {
+      const cleanMsg = sanitizeCrashText(message);
+      const cleanStack = sanitizeCrashText(stack);
+      const fingerprint = `${source}|${cleanMsg}|${line}`;
+      const now = Date.now();
+      // Rate-limit duplicate error loops (max 1 identical crash per 30s)
+      if (fingerprint === lastCrashFingerprint && (now - lastCrashTimeMs) < 30000) return;
+      lastCrashFingerprint = fingerprint;
+      lastCrashTimeMs = now;
+
+      const activeView = document.body?.classList.contains("public-landing-active")
+        ? "public_landing"
+        : (document.body?.classList.contains("astro-chat-mode") ? "astro_chat" : `section_${typeof currentOrbitSectionIndex === "number" ? currentOrbitSectionIndex + 1 : 0}`);
+
+      const report = {
+        version: APP_BUILD_VERSION,
+        source: String(source || "runtime"),
+        message: cleanMsg || "Unknown error",
+        stack: cleanStack,
+        line: Number(line || 0),
+        col: Number(col || 0),
+        activeView,
+        activeModel: localStorage.getItem("jyotish_preferred_model_v1") || "gemini-4-hydrogen",
+        ephemerisEngine: typeof window.Astronomy !== "undefined" ? "astronomy-engine" : "fallback",
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        userAgent: (navigator.userAgent || "").slice(0, 180),
+        occurredAtISO: new Date(now).toISOString(),
+        occurredAtMs: now
+      };
+
+      // Always keep last 10 local crashes for instant debugging
+      try {
+        const localCrashes = JSON.parse(localStorage.getItem("jyotish_local_crashes_v1") || "[]");
+        localCrashes.unshift(report);
+        localStorage.setItem("jyotish_local_crashes_v1", JSON.stringify(localCrashes.slice(0, 10)));
+      } catch (e) {}
+
+      // Auto-upload to Firestore crash_reports if user is authenticated
+      try {
+        if (auth?.currentUser) {
+          await db.collection("crash_reports").add(report);
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener("error", (event) => {
+      reportAstroCrash("window.error", event.message, event.error?.stack || "", event.lineno, event.colno);
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      const r = event.reason;
+      const msg = r?.message || String(r || "Unhandled promise rejection");
+      reportAstroCrash("unhandledrejection", msg, r?.stack || "", 0, 0);
+    });
+
+    async function openOwnerCrashReportsAndCopy() {
+      if (!isCurrentUserAdmin()) return;
+      showStatusToast("🔄 Fetching latest crash reports...");
+      const reports = [];
+      try {
+        const snap = await db.collection("crash_reports").orderBy("occurredAtMs", "desc").limit(15).get();
+        snap.forEach(doc => reports.push({ id: doc.id, ...doc.data() }));
+      } catch (e) {}
+
+      if (reports.length === 0) {
+        try {
+          const local = JSON.parse(localStorage.getItem("jyotish_local_crashes_v1") || "[]");
+          reports.push(...local);
+        } catch (e) {}
+      }
+
+      if (reports.length === 0) {
+        alert("✅ Zero crash reports logged! Your site is running cleanly.");
+        return;
+      }
+
+      const geminiPromptBundle =
+        `Analyze these Dr. Astro (${APP_BUILD_VERSION}) crash reports and give exact start/end code fixes:\n\n` +
+        reports.map((r, i) =>
+          `### Crash #${i + 1} (${r.occurredAtISO})\n` +
+          `- **Source:** ${r.source} | **Line:Col:** ${r.line}:${r.col} | **View:** ${r.activeView}\n` +
+          `- **Model / Ephemeris:** ${r.activeModel} / ${r.ephemerisEngine} | **Viewport:** ${r.viewport}\n` +
+          `- **Message:** ${r.message}\n` +
+          `- **Stack:**\n\`\`\`\n${r.stack || "(no stack trace)"}\n\`\`\`\n`
+        ).join("\n");
+
+      copyTextToClipboard(geminiPromptBundle);
+      alert(`📋 Copied ${reports.length} crash report(s) formatted for Gemini!\n\nPaste directly into Gemini to get exact line-by-line fixes.`);
+    }
+
+    async function clearOwnerCrashReports() {
+      if (!isCurrentUserAdmin() || !confirm("Delete all stored crash reports from Firestore & local cache?")) return;
+      localStorage.removeItem("jyotish_local_crashes_v1");
+      try {
+        const snap = await db.collection("crash_reports").limit(50).get();
+        const batch = db.batch();
+        snap.forEach(doc => batch.delete(doc.ref));
+        if (!snap.empty) await batch.commit();
+      } catch (e) {}
+      showStatusToast("🗑️ Crash reports cleared.");
+    }
+
     window.ADMIN_OWNER_EMAIL = "satya.srinivash1234@gmail.com";
     window.BANNED_RESIDUE_EMAIL = "satya.srinivash123@gmail.com";
     window.STORE_REVIEWER_PASSCODE = "JYOTISH-REVIEW-2026";
@@ -2592,11 +2850,51 @@
       awaitingRenewalChoice: false
     };
 
-    const LOCKED_BIRTH_FIELD_IDS = [
+const LOCKED_BIRTH_FIELD_IDS = [
       "nativeName", "nativeGender", "birthDate", "birthTime",
       "cityPresetSelect", "birthPlaceName", "birthLat", "birthLon", "timeAccuracyMode"
     ];
 
+    const LOCKED_PALM_FIELD_IDS = [
+      "palmHandType", "palmElementShape", "palmMountsNotes", "palmCustomQuestion"
+    ];
+
+function syncHeaderControlsForRole() {
+      const isAdmin = isCurrentUserAdmin();
+      const searchWrap = document.getElementById("headerSearchWrapper");
+      const saveBtn = document.getElementById("headerSaveChartBtn");
+      const newVolBtn = document.getElementById("headerNewVolunteerBtn");
+      if (searchWrap) searchWrap.classList.toggle("hidden", !isAdmin);
+      if (newVolBtn) newVolBtn.classList.toggle("hidden", !isAdmin);
+      if (saveBtn) {
+        if (isAdmin) {
+          saveBtn.classList.remove("hidden");
+          saveBtn.classList.add("hidden", "md:inline-flex");
+        } else {
+          saveBtn.classList.remove("md:inline-flex");
+          saveBtn.classList.add("hidden");
+        }
+      }
+    }
+
+    function startNewVolunteerEntry() {
+      if (!isCurrentUserAdmin()) return;
+      stopAstroAudioReadout();
+      localStorage.removeItem('jyotish_working_draft_v1');
+      ['nativeName', 'palmMountsNotes', 'palmCustomQuestion', 'inlineReadingOutput', 'outputParagraphs'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      clearPalmImage(true);
+      clearCaseSearch();
+      computeFullHoroscope();
+      startNewAstroChatSession(false);
+      refreshAstroChatHeaderContext();
+      enterQuestionnaireWorkspace(true);
+      setTimeout(() => document.getElementById('nativeName')?.focus(), 100);
+      showStatusToast('✨ Blank chart & palm ready for new volunteer.');
+    }
+       
     function isPlayStoreCompanionApp() {
       const params = new URLSearchParams(window.location.search);
       const isFlagged = params.get("app") === "companion" || params.get("source") === "play_twa";
@@ -2749,7 +3047,7 @@ function applyAnnualProfileLockUI() {
         ? new Date(currentUserSubscriptionState.expiresAtISO).toLocaleDateString("en-IN")
         : "next year";
 
-      LOCKED_BIRTH_FIELD_IDS.forEach(id => {
+[...LOCKED_BIRTH_FIELD_IDS, ...LOCKED_PALM_FIELD_IDS].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           el.disabled = locked;
@@ -2757,6 +3055,29 @@ function applyAnnualProfileLockUI() {
           el.classList.toggle("cursor-not-allowed", locked);
         }
       });
+
+      document.querySelectorAll(".palm-focus-check").forEach(cb => {
+        cb.disabled = locked;
+      });
+
+      const palmInput = document.getElementById("palmFileInput");
+      const palmLabel = document.getElementById("palmUploadLabel");
+      const palmClear = document.getElementById("palmClearBtn");
+      const palmBadge = document.getElementById("palmLockStatusBadge");
+      if (palmInput) palmInput.disabled = locked;
+      if (palmLabel) {
+        palmLabel.classList.toggle("opacity-50", locked);
+        palmLabel.classList.toggle("pointer-events-none", locked);
+      }
+      if (palmClear) {
+        palmClear.disabled = locked;
+        palmClear.classList.toggle("hidden", locked);
+      }
+      if (palmBadge) {
+        palmBadge.textContent = isAdmin
+          ? "👑 Owner Mode (Unlimited)"
+          : (locked ? "🔒 Palm Photo Locked for Year" : "🔓 Editable Until Saved");
+      }
 
       const badge = document.getElementById("annualLockStatusBadge");
       const hint = document.getElementById("annualLockHintText");
@@ -2820,7 +3141,8 @@ function applyAnnualProfileLockUI() {
         `CONFIRM FINAL SAVE (1 Plan = 1 Data Input Chance):\n\n` +
         `Name: ${profile.nativeName}\n` +
         `DOB: ${profile.birthDate} at ${profile.birthTime}\n` +
-        `Place: ${profile.birthPlaceName}\n\n` +
+        `Place: ${profile.birthPlaceName}\n` +
+        `Both-Palms Photo: ${profile.palmDataUrl ? 'Uploaded ✓' : '⚠️ NOT UPLOADED (Cannot be added after locking!)'}\n\n` +
         `There are NO free resets after saving. To change these details later, a new ₹11 payment is required. Save & open Astro AI Chat now?`;
 
       if (!confirm(msg)) return;
@@ -2925,7 +3247,7 @@ async function chooseRenewalAddNewData() {
       if (document.getElementById("nativeName")) document.getElementById("nativeName").value = "";
       if (document.getElementById("palmMountsNotes")) document.getElementById("palmMountsNotes").value = "";
       if (document.getElementById("palmCustomQuestion")) document.getElementById("palmCustomQuestion").value = "";
-      clearPalmImage();
+      clearPalmImage(true);
       clearAstroChatHistory();
       applyAnnualProfileLockUI();
       rebuildSectionBottomNavBars();
@@ -2937,17 +3259,349 @@ async function chooseRenewalAddNewData() {
       }
     }
 
+// ========================================================================
+    // STEPS 15-17: GEMINI-STYLE MULTI-CHAT ENGINE + PERSISTENT CHAT SIDEBAR
     // ========================================================================
-    // STEPS 15-17: GEMINI-STYLE ASTROLOGY CHAT ENGINE (USES COMPUTED CHARTS)
-    // ========================================================================
+    let astroChatSessions = [];
+    let astroChatsLoadedForUid = null;
+    let activeAstroChatId = null;
     let astroChatHistory = [];
     let isAstroChatBusy = false;
+    let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: null };
 
     function isAstroChatActive() {
       return document.body.classList.contains("astro-chat-mode");
     }
 
-let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: null };
+function getUserChatsStorageKey() {
+      const email = normalizeEmail(currentGoogleUser?.email || "guest");
+      return `jyotish_astro_chats_v2_${email}`;
+    }
+
+    function normalizeVolunteerKey(nameStr) {
+      const slug = (nameStr || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+      return slug ? `vol_${slug}` : "vol_general";
+    }
+
+    function getActiveVolunteerScope() {
+      const rawName = (document.getElementById("nativeName")?.value || "").trim();
+      if (!isCurrentUserAdmin()) {
+        return { key: "personal", label: rawName || "My Reading" };
+      }
+      return {
+        key: normalizeVolunteerKey(rawName),
+        label: rawName || "Unnamed Volunteer"
+      };
+    }
+
+    function getScopedAstroChatSessions() {
+      if (!isCurrentUserAdmin()) return astroChatSessions;
+      const scope = getActiveVolunteerScope();
+      return astroChatSessions.filter(s => (s.volunteerKey || "vol_general") === scope.key);
+    }
+
+    function switchChatSidebarToCurrentVolunteer() {
+      renderAstroChatSidebar();
+      const scoped = getScopedAstroChatSessions();
+      if (scoped.length > 0) {
+        selectAstroChatSession(scoped[0].id, false);
+      } else {
+        startNewAstroChatSession(false);
+      }
+    }
+
+    function toggleAstroChatSidebar(forceMobileState = null) {
+      const ws = document.getElementById("astroChatWorkspace");
+      if (!ws) return;
+      if (window.innerWidth < 1024) {
+        if (typeof forceMobileState === "boolean") {
+          ws.classList.toggle("chat-sidebar-mobile-open", forceMobileState);
+        } else {
+          ws.classList.toggle("chat-sidebar-mobile-open");
+        }
+      } else {
+        ws.classList.toggle("chat-sidebar-collapsed");
+      }
+    }
+
+    function saveAstroChatSessionsLocal() {
+      try {
+        localStorage.setItem(getUserChatsStorageKey(), JSON.stringify(astroChatSessions.slice(0, 120)));
+      } catch (e) {}
+    }
+
+    async function syncSingleChatToFirestore(sessionObj) {
+      if (!currentGoogleUser || !sessionObj?.id) return;
+      try {
+        await db.collection("user_horoscopes")
+          .doc(currentGoogleUser.uid)
+          .collection("astro_chats")
+          .doc(sessionObj.id)
+          .set({
+            id: sessionObj.id,
+            title: sessionObj.title,
+            volunteerKey: sessionObj.volunteerKey || "vol_general",
+            volunteerName: sessionObj.volunteerName || "",
+            updatedAt: sessionObj.updatedAt,
+            messages: sessionObj.messages.slice(-40)
+          }, { merge: true });
+      } catch (e) {}
+    }
+
+    async function deleteSingleChatFromFirestore(chatId) {
+      if (!currentGoogleUser || !chatId) return;
+      try {
+        await db.collection("user_horoscopes")
+          .doc(currentGoogleUser.uid)
+          .collection("astro_chats")
+          .doc(chatId)
+          .delete();
+      } catch (e) {}
+    }
+
+    async function loadAstroChatSessionsForUser() {
+      let localList = [];
+      try {
+        localList = JSON.parse(localStorage.getItem(getUserChatsStorageKey()) || "[]");
+        if (!Array.isArray(localList)) localList = [];
+      } catch {
+        localList = [];
+      }
+      astroChatSessions = localList;
+
+      if (currentGoogleUser?.uid) {
+        try {
+          const snap = await db.collection("user_horoscopes")
+            .doc(currentGoogleUser.uid)
+            .collection("astro_chats")
+            .orderBy("updatedAt", "desc")
+            .limit(120)
+            .get();
+          if (!snap.empty) {
+            const mergedMap = new Map();
+            localList.forEach(s => { if (s?.id) mergedMap.set(s.id, s); });
+            snap.forEach(doc => {
+              const d = doc.data();
+              if (d?.id) {
+                const prev = mergedMap.get(d.id);
+                if (!prev || (d.updatedAt || 0) >= (prev.updatedAt || 0)) {
+                  mergedMap.set(d.id, d);
+                }
+              }
+            });
+            astroChatSessions = Array.from(mergedMap.values())
+              .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+            saveAstroChatSessionsLocal();
+          }
+        } catch (e) {}
+      }
+         astroChatsLoadedForUid = currentGoogleUser?.uid || "guest";
+
+      renderAstroChatSidebar();
+      const scoped = getScopedAstroChatSessions();
+      if (activeAstroChatId && scoped.some(s => s.id === activeAstroChatId)) {
+        selectAstroChatSession(activeAstroChatId, false);
+      } else if (scoped.length > 0) {
+        selectAstroChatSession(scoped[0].id, false);
+      } else {
+        startNewAstroChatSession(false);
+      }
+    }
+
+    function renderAstroChatSidebar() {
+      const listEl = document.getElementById("astroChatSidebarList");
+      const countEl = document.getElementById("astroChatCountBadge");
+      const scopeBanner = document.getElementById("astroChatVolunteerScopeBanner");
+      const scopeText = document.getElementById("astroChatVolunteerScopeText");
+      const query = (document.getElementById("astroChatSearchInput")?.value || "").trim().toLowerCase();
+
+      const scope = getActiveVolunteerScope();
+      if (scopeBanner && scopeText) {
+        if (isCurrentUserAdmin()) {
+          scopeBanner.classList.remove("hidden");
+          scopeText.textContent = `👤 ${scope.label}`;
+        } else {
+          scopeBanner.classList.add("hidden");
+        }
+      }
+
+      const scopedSessions = getScopedAstroChatSessions();
+      if (countEl) countEl.textContent = String(scopedSessions.length);
+      if (!listEl) return;
+
+      const filtered = scopedSessions.filter(s => {
+        if (!query) return true;
+        if ((s.title || "").toLowerCase().includes(query)) return true;
+        return (s.messages || []).some(m => (m.text || "").toLowerCase().includes(query));
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="text-center text-[11px] text-slate-400 py-8 px-3">${
+          query
+            ? "No matching chats."
+            : (isCurrentUserAdmin() ? `No chats saved for ${escapeHtml(scope.label)} yet.` : "No saved chats yet. Ask a question to start.")
+        }</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(s => {
+        const isActive = s.id === activeAstroChatId;
+        const safeId = escapeHtml(s.id);
+        const safeTitle = escapeHtml(s.title || "New Chat");
+        const dateStr = s.updatedAt ? new Date(s.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+        return `
+          <div onclick="selectAstroChatSession('${safeId}')" class="chat-sidebar-item ${isActive ? "chat-item-active" : ""} group cursor-pointer flex items-center justify-between gap-1.5 px-3 py-2 rounded-xl border border-transparent hover:bg-slate-200/70 dark:hover:bg-slate-800/80 text-xs">
+            <div class="min-w-0 flex-1">
+              <div class="font-semibold text-slate-800 dark:text-slate-100 truncate">${safeTitle}</div>
+              <div class="text-[10px] text-slate-400 font-clinical-mono">${dateStr} • ${Math.floor((s.messages?.length || 0) / 2)} Qs</div>
+            </div>
+            <div class="flex items-center gap-0.5 opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
+              <button type="button" onclick="renameAstroChatSession('${safeId}', event)" class="p-1 rounded-lg hover:bg-slate-300/70 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-300" title="Rename">✎</button>
+              <button type="button" onclick="deleteAstroChatSession('${safeId}', event)" class="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-950 text-rose-500" title="Delete">✕</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+      function startNewAstroChatSession(closeMobileDrawer = true) {
+      stopAstroAudioReadout();
+      activeAstroChatId = null;
+      astroChatHistory = [];
+      lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: null };
+      const container = document.getElementById("astroChatMessages");
+      if (container) container.querySelectorAll(".astro-chat-bubble-row").forEach(el => el.remove());
+      document.getElementById("astroChatEmptyState")?.classList.remove("hidden");
+      renderAstroChatSidebar();
+      if (closeMobileDrawer) toggleAstroChatSidebar(false);
+      setTimeout(() => document.getElementById("astroChatInput")?.focus(), 80);
+    }
+
+      function selectAstroChatSession(chatId, closeMobileDrawer = true) {
+      const session = astroChatSessions.find(s => s.id === chatId);
+      if (!session) return;
+      stopAstroAudioReadout();
+      activeAstroChatId = session.id;
+      astroChatHistory = (session.messages || []).map(m => ({ role: m.role, text: m.text }));
+      lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: null };
+
+      const container = document.getElementById("astroChatMessages");
+      if (container) {
+        container.querySelectorAll(".astro-chat-bubble-row").forEach(el => el.remove());
+      }
+
+      if (astroChatHistory.length === 0) {
+        document.getElementById("astroChatEmptyState")?.classList.remove("hidden");
+      } else {
+        let lastBubble = null;
+        let lastUserQ = "";
+        astroChatHistory.forEach(turn => {
+          const uiRole = turn.role === "user" ? "user" : "ai";
+          if (uiRole === "user") lastUserQ = turn.text;
+          lastBubble = appendAstroChatBubble(uiRole, turn.text, false);
+        });
+        const lastTurn = session.messages[session.messages.length - 1];
+        if (lastBubble && lastUserQ && lastTurn?.role === "model") {
+          const modeUsed = lastTurn.mode || getAstroReadingMode();
+          lastChatExchange = {
+            question: lastUserQ,
+            simple: modeUsed === "simple" ? lastTurn.text : (lastTurn.altSimple || ""),
+            astrologer: modeUsed === "astrologer" ? lastTurn.text : (lastTurn.altAstrologer || ""),
+            bubbleEl: lastBubble
+          };
+        }
+      }
+
+      renderAstroChatSidebar();
+      if (closeMobileDrawer) toggleAstroChatSidebar(false);
+    }
+
+    function renameAstroChatSession(chatId, event) {
+      if (event) event.stopPropagation();
+      const session = astroChatSessions.find(s => s.id === chatId);
+      if (!session) return;
+      const nextTitle = prompt("Rename this chat:", session.title || "New Chat");
+      if (!nextTitle || !nextTitle.trim()) return;
+      session.title = nextTitle.trim().slice(0, 60);
+      saveAstroChatSessionsLocal();
+      syncSingleChatToFirestore(session);
+      renderAstroChatSidebar();
+    }
+
+function deleteAstroChatSession(chatId, event) {
+      if (event) event.stopPropagation();
+      if (!confirm("Delete this chat from your history?")) return;
+      astroChatSessions = astroChatSessions.filter(s => s.id !== chatId);
+      saveAstroChatSessionsLocal();
+      deleteSingleChatFromFirestore(chatId);
+      const scoped = getScopedAstroChatSessions();
+      if (activeAstroChatId === chatId) {
+        if (scoped.length > 0) selectAstroChatSession(scoped[0].id, false);
+        else startNewAstroChatSession(false);
+      } else {
+        renderAstroChatSidebar();
+      }
+    }
+
+    function persistTurnToActiveSession(question, reply, activeMode) {
+      const scope = getActiveVolunteerScope();
+      let session = astroChatSessions.find(
+        s => s.id === activeAstroChatId && (!isCurrentUserAdmin() || (s.volunteerKey || "vol_general") === scope.key)
+      );
+      if (!session) {
+        const autoTitle = question.replace(/\s+/g, " ").trim().slice(0, 44) + (question.length > 44 ? "…" : "");
+        session = {
+          id: "chat_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+          title: autoTitle || "New Reading",
+          volunteerKey: scope.key,
+          volunteerName: scope.label,
+          updatedAt: Date.now(),
+          messages: []
+        };
+        astroChatSessions.unshift(session);
+        activeAstroChatId = session.id;
+      }
+      session.messages.push({ role: "user", text: question });
+      session.messages.push({ role: "model", text: reply, mode: activeMode });
+      session.updatedAt = Date.now();
+      astroChatSessions.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      saveAstroChatSessionsLocal();
+      syncSingleChatToFirestore(session);
+      renderAstroChatSidebar();
+    }
+
+    function updateLastSavedModelTurn(newText, modeKey) {
+      const session = astroChatSessions.find(s => s.id === activeAstroChatId);
+      if (!session || !session.messages?.length) return;
+      const lastMsg = session.messages[session.messages.length - 1];
+      if (lastMsg && lastMsg.role === "model") {
+        if (lastMsg.mode === "simple") lastMsg.altSimple = lastMsg.text;
+        if (lastMsg.mode === "astrologer") lastMsg.altAstrologer = lastMsg.text;
+        lastMsg.text = newText;
+        lastMsg.mode = modeKey;
+        if (modeKey === "simple") lastMsg.altSimple = newText;
+        else lastMsg.altAstrologer = newText;
+        session.updatedAt = Date.now();
+        saveAstroChatSessionsLocal();
+        syncSingleChatToFirestore(session);
+      }
+    }
+
+    function resetAstroChatUIOnly() {
+      astroChatSessions = [];
+      astroChatsLoadedForUid = null;
+      activeAstroChatId = null;
+      astroChatHistory = [];
+      lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: null };
+      const container = document.getElementById("astroChatMessages");
+      if (container) container.querySelectorAll(".astro-chat-bubble-row").forEach(el => el.remove());
+      document.getElementById("astroChatEmptyState")?.classList.remove("hidden");
+      renderAstroChatSidebar();
+    }
+
+    function clearAstroChatHistory() {
+      startNewAstroChatSession(true);
+    }
 
     function getAstroReadingMode() {
       const saved = localStorage.getItem("jyotish_output_mode_v1") || localStorage.getItem("jyotish_reading_mode") || "simple";
@@ -2982,13 +3636,13 @@ let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: nul
           : "📜 Astrologer Mode: Classical Jyotish & Sanskrit terms"
       );
 
-      // Immediately swap or re-generate the last displayed chat answer in the newly selected mode
-      if (lastChatExchange.bubbleEl && lastChatExchange.question && !isAstroChatBusy) {
+if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastChatExchange.question && !isAstroChatBusy) {
         if (lastChatExchange[cleanMode]) {
-          lastChatExchange.bubbleEl.innerHTML = formatAstroReplyHtml(lastChatExchange[cleanMode]);
+          renderAstroAiBubbleContent(lastChatExchange.bubbleEl, lastChatExchange[cleanMode]);
           if (astroChatHistory.length >= 2) {
             astroChatHistory[astroChatHistory.length - 1].text = lastChatExchange[cleanMode];
           }
+          updateLastSavedModelTurn(lastChatExchange[cleanMode], cleanMode);
           return;
         }
         isAstroChatBusy = true;
@@ -3008,11 +3662,14 @@ let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: nul
             contents: [{ role: "user", parts }]
           });
           const fresh = res.text || `⚠️ ${res.error || "Could not switch mode."}`;
-          lastChatExchange[cleanMode] = fresh;
-          lastChatExchange.bubbleEl.innerHTML = formatAstroReplyHtml(fresh);
-          if (astroChatHistory.length >= 2) {
-            astroChatHistory[astroChatHistory.length - 1].text = fresh;
+          if (res.text) {
+            lastChatExchange[cleanMode] = fresh;
+            if (astroChatHistory.length >= 2) {
+              astroChatHistory[astroChatHistory.length - 1].text = fresh;
+            }
+            updateLastSavedModelTurn(fresh, cleanMode);
           }
+          renderAstroAiBubbleContent(lastChatExchange.bubbleEl, fresh, !res.text);
         } finally {
           isAstroChatBusy = false;
         }
@@ -3074,6 +3731,15 @@ let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: nul
       document.getElementById("returnToChatBanner")?.classList.add("hidden");
       syncAstroModeToggleUI();
       refreshAstroChatHeaderContext();
+    if (astroChatsLoadedForUid !== (currentGoogleUser?.uid || "guest")) {
+        loadAstroChatSessionsForUser();
+      } else {
+        renderAstroChatSidebar();
+        const scoped = getScopedAstroChatSessions();
+        if (!activeAstroChatId || !scoped.some(s => s.id === activeAstroChatId)) {
+          switchChatSidebarToCurrentVolunteer();
+        }
+      }
       window.scrollTo({ top: 0, behavior: "smooth" });
       setTimeout(() => document.getElementById("astroChatInput")?.focus(), 120);
     }
@@ -3108,15 +3774,7 @@ let lastChatExchange = { question: "", simple: "", astrologer: "", bubbleEl: nul
       }
     }
 
-    function clearAstroChatHistory() {
-      astroChatHistory = [];
-      const container = document.getElementById("astroChatMessages");
-      if (!container) return;
-      container.querySelectorAll(".astro-chat-bubble-row").forEach(el => el.remove());
-      document.getElementById("astroChatEmptyState")?.classList.remove("hidden");
-    }
-
-function formatAstroReplyHtml(rawText) {
+    function formatAstroReplyHtml(rawText) {
       const escaped = (rawText || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -3141,6 +3799,169 @@ function formatAstroReplyHtml(rawText) {
       }).join("");
     }
 
+// Calm Female-Preferred Web Speech TTS Engine for AI Results
+    let activeTtsBtn = null;
+
+    function getAstroTtsSpeed() {
+      const saved = parseFloat(localStorage.getItem("jyotish_tts_speed_v1"));
+      return Number.isFinite(saved) ? saved : 0.75;
+    }
+
+    function pickPreferredSoftVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      if (!voices.length) return null;
+      const preferredPatterns = [
+        /google uk english female/i,
+        /microsoft aria|microsoft jenny|microsoft zira|microsoft neerja/i,
+        /samantha|karen|moira|tessa|veena|heera/i,
+        /google us english/i,
+        /female/i
+      ];
+      for (const pat of preferredPatterns) {
+        const found = voices.find(v => pat.test(v.name) && !/david|mark|ravi/i.test(v.name));
+        if (found) return found;
+      }
+      return voices.find(v => /^en/i.test(v.lang) && !/david/i.test(v.name)) || voices[0];
+    }
+
+    function stopAstroAudioReadout() {
+      if ("speechSynthesis" in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+      if (activeTtsBtn) {
+        activeTtsBtn.textContent = "🔊 Listen";
+        activeTtsBtn.classList.remove("bg-blue-600", "text-white");
+        activeTtsBtn = null;
+      }
+    }
+
+    function toggleAstroAudioReadout(rawText, btnEl) {
+      if (!("speechSynthesis" in window)) {
+        showStatusToast("⚠️ Audio playback is not supported in this browser.");
+        return;
+      }
+      if (activeTtsBtn === btnEl && window.speechSynthesis.speaking) {
+        stopAstroAudioReadout();
+        return;
+      }
+      stopAstroAudioReadout();
+
+      const cleanText = String(rawText || "")
+        .replace(/[#*_`~]/g, "")
+        .replace(/[•▪▸✨🪐💼💍📅📊🖐️⚠️✅🔄]/g, "")
+        .replace(/\n+/g, ". ")
+        .trim();
+      if (!cleanText) return;
+
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      const voice = pickPreferredSoftVoice();
+      if (voice) utter.voice = voice;
+      utter.lang = voice?.lang || "en-IN";
+      utter.rate = getAstroTtsSpeed();
+      utter.pitch = 1.0;
+
+      activeTtsBtn = btnEl;
+      btnEl.textContent = "⏹ Stop";
+      btnEl.classList.add("bg-blue-600", "text-white");
+
+      utter.onend = () => stopAstroAudioReadout();
+      utter.onerror = () => stopAstroAudioReadout();
+      window.speechSynthesis.speak(utter);
+    }
+
+    function renderAstroAiBubbleContent(bubbleEl, rawText, isErrorOrStatus = false, retryQuestion = "") {
+      if (!bubbleEl) return;
+      bubbleEl.innerHTML = "";
+
+      const isErrorMsg = isErrorOrStatus || !rawText || rawText.startsWith("⚠️");
+
+      // Top-Right Audio Readout Controls inside every valid AI Result Bubble
+      if (!isErrorMsg) {
+        const topBar = document.createElement("div");
+        topBar.className = "flex items-center justify-between gap-2 pb-1.5 mb-1.5 border-b border-slate-200/70 dark:border-slate-700/70 no-print";
+
+        const label = document.createElement("span");
+        label.className = "text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400";
+        label.textContent = "✨ Dr. Astro";
+
+        const audioControls = document.createElement("div");
+        audioControls.className = "flex items-center gap-1.5 shrink-0";
+
+        const speedBtn = document.createElement("button");
+        speedBtn.type = "button";
+        speedBtn.className = "text-[10px] font-clinical-mono font-bold text-slate-500 hover:text-blue-600 dark:text-slate-400 px-1.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700";
+        speedBtn.title = "Change audio pace";
+        speedBtn.textContent = `${getAstroTtsSpeed()}x`;
+        speedBtn.onclick = () => {
+          const steps = [0.65, 0.75, 0.9, 1.0];
+          const cur = getAstroTtsSpeed();
+          const next = steps[(steps.indexOf(cur) + 1) % steps.length];
+          localStorage.setItem("jyotish_tts_speed_v1", String(next));
+          speedBtn.textContent = `${next}x`;
+          showStatusToast(`🔊 Audio speed set to ${next}x`);
+        };
+
+        const listenBtn = document.createElement("button");
+        listenBtn.type = "button";
+        listenBtn.className = "text-[11px] font-semibold text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-slate-600 transition-colors";
+        listenBtn.textContent = "🔊 Listen";
+        listenBtn.onclick = () => toggleAstroAudioReadout(rawText, listenBtn);
+
+        audioControls.appendChild(speedBtn);
+        audioControls.appendChild(listenBtn);
+        topBar.appendChild(label);
+        topBar.appendChild(audioControls);
+        bubbleEl.appendChild(topBar);
+      }
+
+      const bodyDiv = document.createElement("div");
+      bodyDiv.innerHTML = formatAstroReplyHtml(rawText);
+      bubbleEl.appendChild(bodyDiv);
+
+      if (isErrorMsg && retryQuestion) {
+        const retryWrap = document.createElement("div");
+        retryWrap.className = "mt-2.5 pt-2 border-t border-rose-200/70 dark:border-rose-800/60 flex items-center justify-end no-print";
+        const retryBtn = document.createElement("button");
+        retryBtn.type = "button";
+        retryBtn.className = "chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white text-xs px-3.5 py-1 shadow-xs";
+        retryBtn.textContent = "🔄 Retry Question";
+        retryBtn.onclick = () => {
+          const row = bubbleEl.closest(".astro-chat-bubble-row");
+          const prevUserRow = row?.previousElementSibling;
+          if (row) row.remove();
+          if (prevUserRow && prevUserRow.querySelector(".chat-msg-user")) prevUserRow.remove();
+          askQuickAstroPrompt(retryQuestion);
+        };
+        retryWrap.appendChild(retryBtn);
+        bubbleEl.appendChild(retryWrap);
+        return;
+      }
+
+      if (!isErrorMsg) {
+        const footer = document.createElement("div");
+        footer.className = "mt-2.5 pt-2 border-t border-slate-200/80 dark:border-slate-700/80 flex items-center justify-end gap-2 no-print";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.className = "text-[11px] font-semibold text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-300 px-2 py-0.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors";
+        copyBtn.textContent = "📋 Copy";
+        copyBtn.onclick = () => copyTextToClipboard(rawText);
+
+        const waBtn = document.createElement("button");
+        waBtn.type = "button";
+        waBtn.className = "text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 px-2 py-0.5 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/60 transition-colors";
+        waBtn.textContent = "📲 Share";
+        waBtn.onclick = () => {
+          const sharedMsg = `${rawText}\n\n— Generated by Dr. Astro (https://danny-code-2029.github.io/Dr.-Astro/)`;
+          window.open("https://wa.me/?text=" + encodeURIComponent(sharedMsg), "_blank");
+        };
+
+        footer.appendChild(copyBtn);
+        footer.appendChild(waBtn);
+        bubbleEl.appendChild(footer);
+      }
+    }
     function appendAstroChatBubble(role, text, isThinking = false) {
       document.getElementById("astroChatEmptyState")?.classList.add("hidden");
       const container = document.getElementById("astroChatMessages");
@@ -3155,9 +3976,11 @@ function formatAstroReplyHtml(rawText) {
         bubble.textContent = text;
       } else {
         bubble.className = "chat-msg-ai max-w-[92%] sm:max-w-[85%] px-4 py-3 text-sm shadow-xs leading-relaxed font-sans";
-        bubble.innerHTML = isThinking
-          ? `<span class="font-sans text-xs text-blue-600 dark:text-blue-400 animate-pulse font-semibold">${text}</span>`
-          : formatAstroReplyHtml(text);
+        if (isThinking) {
+          bubble.innerHTML = `<span class="font-sans text-xs text-blue-600 dark:text-blue-400 animate-pulse font-semibold">${text}</span>`;
+        } else {
+          renderAstroAiBubbleContent(bubble, text);
+        }
       }
 
       row.appendChild(bubble);
@@ -3225,7 +4048,7 @@ function formatAstroReplyHtml(rawText) {
         `Yogas: ${yogasText}\n` +
         `Sahams: ${sahamsText}\n` +
         `Longevity Indicator: ${ayurVerdict}\n` +
-        `Palm Details: Hand=${document.getElementById("palmHandType")?.value || "Not set"} | Shape=${document.getElementById("palmElementShape")?.value || "Auto"} | Mounts/Notes=${document.getElementById("palmMountsNotes")?.value || "None"} | Palm Photo Attached=${palmImageBase64 ? "YES — inspect visible lines & mounts directly" : "No"}\n` +
+        `Palm Details: Hand=${document.getElementById("palmHandType")?.value || "Both Palms Side-by-Side Facing Up"} | Shape=${document.getElementById("palmElementShape")?.value || "Auto"} | Mounts/Notes=${document.getElementById("palmMountsNotes")?.value || "None"} | Palm Photo Attached=${palmImageBase64 ? "YES — uniform single photo showing both palms facing upward side-by-side (compare left palm innate traits & right palm active path directly)" : "No"}\n` +
         `====================================================`;
     }
 
@@ -3250,7 +4073,7 @@ function formatAstroReplyHtml(rawText) {
         `${modeRules}\n\n` +
         `${dataBlock}`;
     }
-       
+
     function askQuickAstroPrompt(questionText) {
       const input = document.getElementById("astroChatInput");
       if (input) input.value = questionText;
@@ -3271,12 +4094,13 @@ function formatAstroReplyHtml(rawText) {
       }
 
       inputEl.value = "";
+      inputEl.style.height = "auto";
       appendAstroChatBubble("user", question);
-     const thinkingText = getAstroReadingMode() === "astrologer"
+      const thinkingText = getAstroReadingMode() === "astrologer"
         ? "🪐 Analyzing Rasi, Navamsa, Bhukti & Samudrika placements..."
         : "✨ Preparing your specific points...";
       const thinkingBubble = appendAstroChatBubble("ai", thinkingText, true);
-         
+
       isAstroChatBusy = true;
       if (sendBtn) sendBtn.disabled = true;
 
@@ -3284,13 +4108,12 @@ function formatAstroReplyHtml(rawText) {
         const systemContext = buildCompleteAstrologySystemContext();
         const contents = [];
 
-        // Keep last 8 conversation turns for smooth multi-turn memory
         const recentHistory = astroChatHistory.slice(-8);
         recentHistory.forEach(turn => {
           contents.push({ role: turn.role, parts: [{ text: turn.text }] });
         });
 
-const activeMode = getAstroReadingMode();
+        const activeMode = getAstroReadingMode();
         const turnStyleOverride = activeMode === "simple"
           ? "[STYLE OVERRIDE: Reply ONLY in short bullet points using plain everyday English. ZERO Sanskrit words or planet/house jargon.]"
           : "[STYLE OVERRIDE: Reply in Classical Astrologer Mode as bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Vimshottari Dasa/Bhuktis.]";
@@ -3308,8 +4131,8 @@ const activeMode = getAstroReadingMode();
         const reply = result.text
           || (result.error ? `⚠️ Gemini API Error: ${result.error}` : "⚠️ No response returned. Please try again.");
 
-        if (thinkingBubble) {
-          thinkingBubble.innerHTML = formatAstroReplyHtml(reply);
+if (thinkingBubble) {
+          renderAstroAiBubbleContent(thinkingBubble, reply, !result.text, !result.text ? question : "");
         }
         if (result.text) {
           lastChatExchange = {
@@ -3320,13 +4143,14 @@ const activeMode = getAstroReadingMode();
           };
           astroChatHistory.push({ role: "user", text: question });
           astroChatHistory.push({ role: "model", text: reply });
+          persistTurnToActiveSession(question, reply, activeMode);
         }
 
         const container = document.getElementById("astroChatMessages");
         if (container) container.scrollTop = container.scrollHeight;
       } catch (err) {
         if (thinkingBubble) {
-          thinkingBubble.innerHTML = formatAstroReplyHtml("⚠️ Network error calling Gemini API: " + (err.message || err));
+          renderAstroAiBubbleContent(thinkingBubble, "⚠️ Network error calling Gemini API: " + (err.message || err), true, question);
         }
       } finally {
         isAstroChatBusy = false;
@@ -3444,7 +4268,17 @@ let statusToastTimer = null;
           const emailKey = normalizeEmail(currentGoogleUser.email);
           try { await db.collection('jyotish_vault').doc(uid).delete(); } catch (e) {}
           try { await db.collection('active_sessions').doc(emailKey).delete(); } catch (e) {}
+          try {
+            const chatSnap = await db.collection('user_horoscopes').doc(uid).collection('astro_chats').get();
+            const batch = db.batch();
+            chatSnap.forEach(doc => batch.delete(doc.ref));
+            if (!chatSnap.empty) await batch.commit();
+          } catch (e) {}
           localStorage.removeItem('jyotish_uid_vault_' + uid);
+          localStorage.removeItem('jyotish_saved_palm_' + emailKey);
+          localStorage.removeItem('jyotish_local_sub_' + emailKey);
+          localStorage.removeItem(getCasesStorageKey());
+          localStorage.removeItem(getUserChatsStorageKey());
           try {
             await currentGoogleUser.delete();
           } catch (reauthErr) {
@@ -3996,6 +4830,8 @@ function enterQuestionnaireWorkspace(forceDataCollection = false) {
       document.getElementById('privateAccessOverlay')?.classList.add('hidden');
       initOrbitWorkspaceLayout();
       initTheme();
+      syncHeaderControlsForRole();
+      loadAstroChatSessionsForUser();
       computeFullHoroscope();
       renderRightSectionRail();
 
@@ -4151,10 +4987,12 @@ async function continueSignupWithSelectedAccount() {
         try { prevSubData = JSON.parse(localStorage.getItem('jyotish_local_sub_' + emailKey) || 'null'); } catch {}
       }
 
-      // Mid-year reset MUST require a fresh UTR even though the subscription is still active
-      const serverAlreadyActive = currentPaymentPurpose !== 'reset' && Boolean(
-        prevSubData && prevSubData.status === 'active' && prevSubData.expiresAtMs && prevSubData.expiresAtMs > nowMs
+const serverResetUnlocked = currentPaymentPurpose === 'reset' && Boolean(
+        prevSubData && prevSubData.status === 'active' && prevSubData.profileLocked === false
       );
+      const serverAlreadyActive = serverResetUnlocked || (currentPaymentPurpose !== 'reset' && Boolean(
+        prevSubData && prevSubData.status === 'active' && prevSubData.expiresAtMs && prevSubData.expiresAtMs > nowMs
+      ));
 
       if (!serverAlreadyActive) {
         if (!/^[a-zA-Z0-9]{8,22}$/.test(utrVal)) {
@@ -4196,17 +5034,16 @@ try {
          await enforcePrivateAccessGate(currentGoogleUser);
       await syncAnnualProfileLockFromServer(currentGoogleUser);
 
-      if (currentPaymentPurpose === 'reset') {
+        if (currentPaymentPurpose === 'reset') {
         localStorage.removeItem('jyotish_working_draft_v1');
         localStorage.removeItem('jyotish_saved_palm_' + emailKey);
         if (document.getElementById('nativeName')) document.getElementById('nativeName').value = '';
-        clearPalmImage();
+        clearPalmImage(true);
         clearAstroChatHistory();
         enterQuestionnaireWorkspace(true);
         showStatusToast('✅ Reset unlocked! Enter your corrected birth & palm details.');
         return;
       }
-
       if (currentPaymentPurpose === 'renewal' && currentUserSubscriptionState.lockedProfile) {
         openRenewalDataChoiceView();
         return;
@@ -4317,13 +5154,14 @@ try {
       await signInWithGoogle('');
     }
 
-    auth.onAuthStateChanged(async (user) => {
+auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
       if (user && user.email) {
         rememberDeviceAccount(user.email, user.displayName, user.photoURL);
       }
       renderForensicWatermark();
       injectPrivacySettingsUI();
+      syncHeaderControlsForRole();
       await enforcePrivateAccessGate(user);
       await renderDeviceAccountMatchers();
 
@@ -4437,11 +5275,14 @@ const inp = document.getElementById(inputElementId);
     }
 
 async function handleMedicoLogout() {
+      stopAstroAudioReadout();
       activeSessionKey = '';
       sessionStorage.removeItem('jyotish_active_session_key');
       localStorage.removeItem('jyotish_working_draft_v1');
-      currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 0, lockedProfile: null, expiresAtISO: "", awaitingRenewalChoice: false };
-      clearAstroChatHistory();
+  currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 0, lockedProfile: null, expiresAtISO: "", awaitingRenewalChoice: false };
+      lastSynthesisCache = { key: '', simple: '', astrologer: '' };
+      lastDoubtCache = { key: '', question: '', simple: '', astrologer: '' };
+      resetAstroChatUIOnly();
       restoreSavedPalmImage('');
       if (document.getElementById('nativeName')) document.getElementById('nativeName').value = '';
       if (document.getElementById('palmMountsNotes')) document.getElementById('palmMountsNotes').value = '';
@@ -4585,7 +5426,7 @@ async function handleMedicoLogout() {
            <option value="gemini-4-hydrogen" ${(cfg.defaultGeminiModel || "gemini-4-hydrogen") === "gemini-4-hydrogen" ? "selected" : ""}>gemini-4-hydrogen (Free + Paid Default)</option>
            <option value="gemini-4-carbon" ${cfg.defaultGeminiModel === "gemini-4-carbon" ? "selected" : ""}>gemini-4-carbon (Flagship Pro — Paid Keys)</option>
            <option value="gemini-4-neon" ${cfg.defaultGeminiModel === "gemini-4-neon" ? "selected" : ""}>gemini-4-neon (Fast Pro — Paid Keys)</option>
-           <option value="gemini-3.1-pro-preview" ${cfg.defaultGeminiModel === "gemini-3.1-pro-preview" ? "selected" : ""}>gemini-3.1-pro-preview (3.x Pro)</option>
+       <option value="gemini-3.5-flash-lite" ${cfg.defaultGeminiModel === "gemini-3.5-flash-lite" ? "selected" : ""}>gemini-3.5-flash-lite (Ultra-Fast Fallback)</option>
            <option value="gemini-3.8-flash" ${cfg.defaultGeminiModel === "gemini-3.8-flash" ? "selected" : ""}>gemini-3.8-flash (Fallback)</option>
          </select>
        </div>
@@ -4599,6 +5440,14 @@ async function handleMedicoLogout() {
        </label>
        <button type="button" onclick="saveOwnerMonetizationConfig()" class="w-full chrome-pill-btn save-3d-blue-btn justify-center py-2 text-xs">
          💾 Save Owner Billing Config
+         <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+         <button type="button" onclick="openOwnerCrashReportsAndCopy()" class="chrome-pill-btn justify-center bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 py-1.5 text-[11px]">
+           🛠️ Copy Crash Reports
+         </button>
+         <button type="button" onclick="clearOwnerCrashReports()" class="chrome-pill-btn justify-center bg-slate-200 dark:bg-slate-800 hover:bg-rose-600 hover:text-white text-slate-600 dark:text-slate-300 py-1.5 text-[11px]">
+           🗑️ Clear Crashes
+         </button>
+       </div>
        </button>
      </div>
    `;
@@ -4780,11 +5629,30 @@ const userEmail = getUserEmailFromFirebase(user);
       overlay.classList.remove('hidden');
     }
 
-    // 5. Storage, Working Drafts & 2-Column Google Sheet Sync
-    function getStoredCases() {
-      try { return JSON.parse(localStorage.getItem('jyotish_saved_cases_db_v1') || '[]'); } catch { return []; }
+// 5. Storage, Working Drafts & 2-Column Google Sheet Sync (Scoped Per User)
+    function getCasesStorageKey() {
+      if (!currentGoogleUser || isCurrentUserAdmin(currentGoogleUser)) return 'jyotish_saved_cases_db_v1';
+      return 'jyotish_saved_cases_' + normalizeEmail(currentGoogleUser.email);
     }
-    function setStoredCases(cases) { localStorage.setItem('jyotish_saved_cases_db_v1', JSON.stringify(cases)); updateSidebarCaseCount(); }
+    function getStoredCases() {
+      try { return JSON.parse(localStorage.getItem(getCasesStorageKey()) || '[]'); } catch { return []; }
+    }
+  function setStoredCases(cases) {
+      const key = getCasesStorageKey();
+      try {
+        localStorage.setItem(key, JSON.stringify(cases));
+      } catch (err) {
+        // Storage full: keep the newest 5 palm photos and strip older image blobs so charts never fail to save
+        const trimmed = cases.map((c, idx) => idx >= 5 ? { ...c, palmDataUrl: '' } : c);
+        try {
+          localStorage.setItem(key, JSON.stringify(trimmed));
+          showStatusToast('⚠️ Local storage near limit — kept all charts & newest 5 palm photos.');
+        } catch (err2) {
+          showStatusToast('⚠️ Browser storage full. Export CSV & clear old charts in Storage.');
+        }
+      }
+      updateSidebarCaseCount();
+    }
     function updateSidebarCaseCount() {
       const countEl = document.getElementById('sidebarCaseCount');
       if (countEl) countEl.textContent = getStoredCases().length;
@@ -4807,7 +5675,7 @@ function applyFormSnapshot(data) {
       if (!data) return;
       Object.keys(data).forEach(id => {
         if (id.startsWith('_')) return;
-        if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && LOCKED_BIRTH_FIELD_IDS.includes(id)) return;
+        if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && (LOCKED_BIRTH_FIELD_IDS.includes(id) || LOCKED_PALM_FIELD_IDS.includes(id))) return;
         const el = document.getElementById(id);
         if (el && el.type !== 'file') {
           if (el.type === 'checkbox') el.checked = Boolean(data[id]);
@@ -4862,16 +5730,19 @@ function buildCaseShareUrl(caseObj) {
         : 'Vedic Horoscope';
       const cases = getStoredCases();
       const existingIdx = cases.findIndex(c => c.name.toLowerCase() === nativeName.toLowerCase());
+const palmDataUrl = (palmImageBase64 && palmImageMime)
+        ? `data:${palmImageMime};base64,${palmImageBase64}`
+        : (existingIdx >= 0 ? (cases[existingIdx].palmDataUrl || '') : '');
       const caseRecord = {
         id: existingIdx >= 0 ? cases[existingIdx].id : 'case_' + Date.now(),
         name: nativeName,
         birthDetails: detailsSummary,
         chiefComplaints: detailsSummary,
         updatedAt: new Date().toLocaleDateString('en-IN'),
+        palmDataUrl,
         formData: snap
       };
       caseRecord.shareUrl = buildCaseShareUrl(caseRecord);
-
       if (existingIdx >= 0) cases[existingIdx] = caseRecord;
       else cases.unshift(caseRecord);
       setStoredCases(cases);
@@ -4904,12 +5775,29 @@ function buildCaseShareUrl(caseObj) {
       } catch (err) { if (badge) badge.textContent = '⚠️ Saved Locally'; }
     }
 
-    function loadCaseById(caseId) {
+function loadCaseById(caseId) {
       const found = getStoredCases().find(c => c.id === caseId);
       if (!found) return;
       applyFormSnapshot(found.formData);
+      restoreSavedPalmImage(found.palmDataUrl || '');
       closeStorageModal();
-      document.getElementById('searchResultsDropdown').classList.add('hidden');
+      clearCaseSearch();
+      refreshAstroChatHeaderContext();
+      if (isCurrentUserAdmin()) {
+        switchChatSidebarToCurrentVolunteer();
+        const volChats = getScopedAstroChatSessions().length;
+        showStatusToast(`👤 Loaded ${found.name} (${volChats} saved chat${volChats === 1 ? '' : 's'})`);
+      }
+    }
+
+    function selectFirstMatchedCaseFromSearch() {
+      const q = (document.getElementById('headerCaseSearch')?.value || '').trim().toLowerCase();
+      if (!q || q === 'codes') return;
+      const match = getStoredCases().find(c => {
+        const details = (c.birthDetails || c.chiefComplaints || '').toLowerCase();
+        return c.name.toLowerCase().includes(q) || details.includes(q);
+      });
+      if (match) loadCaseById(match.id);
     }
 
     function deleteCaseById(caseId) { setStoredCases(getStoredCases().filter(c => c.id !== caseId)); renderStorageTable(); }
@@ -4917,7 +5805,7 @@ function buildCaseShareUrl(caseObj) {
     function startBlankPatientCase() { startBlankHoroscope(); }
     function clearAllDrafts() {
       if (confirm('Clear all saved horoscopes from local storage?')) {
-        localStorage.removeItem('jyotish_saved_cases_db_v1');
+        localStorage.removeItem(getCasesStorageKey());
         window.location.reload();
       }
     }
@@ -5107,10 +5995,17 @@ function handleCaseSearch(query) {
         const details = (c.birthDetails || c.chiefComplaints || '').toLowerCase();
         return c.name.toLowerCase().includes(q) || details.includes(q);
       });
-        dropdown.innerHTML = matches.map(c => {
-        const details = escapeHtml(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope');
-        return `<div onclick="loadCaseById('${escapeHtml(c.id)}')" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer font-bold text-xs">${escapeHtml(c.name)} — ${details}</div>`;
-      }).join('');
+dropdown.innerHTML = matches.length === 0
+        ? `<div class="px-4 py-3 text-xs text-slate-400">No saved volunteer matching "${escapeHtml(query)}"</div>`
+        : matches.map(c => {
+            const details = escapeHtml(c.birthDetails || c.chiefComplaints || 'Vedic Horoscope');
+            const vKey = normalizeVolunteerKey(c.name);
+            const vChatCount = astroChatSessions.filter(s => (s.volunteerKey || 'vol_general') === vKey).length;
+            return `<div onclick="loadCaseById('${escapeHtml(c.id)}')" class="px-4 py-2.5 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer flex items-center justify-between gap-2 text-xs">
+              <span class="font-bold truncate">${escapeHtml(c.name)} <span class="font-normal text-slate-500 dark:text-slate-400">— ${details}</span></span>
+              <span class="text-[10px] bg-blue-600/15 text-blue-600 dark:text-blue-300 px-2 py-0.5 rounded-full font-clinical-mono shrink-0">💬 ${vChatCount}</span>
+            </div>`;
+          }).join('');
       dropdown.classList.toggle('hidden', !q);
     }
     function clearCaseSearch() { document.getElementById('headerCaseSearch').value = ''; document.getElementById('searchResultsDropdown').classList.add('hidden'); document.getElementById('clearSearchBtn')?.classList.add('hidden'); }
@@ -5164,27 +6059,32 @@ function handleCaseSearch(query) {
       return pada;
     }
 
-    function applyCityCoordinates(val) {
+function applyCityCoordinates(val) {
       if (!val) return;
-      const [name, lat, lon] = val.split('|');
+      const [name, lat, lon, tz] = val.split('|');
       document.getElementById('birthPlaceName').value = name;
       document.getElementById('birthLat').value = parseFloat(lat).toFixed(2);
       document.getElementById('birthLon').value = parseFloat(lon).toFixed(2);
+      if (tz && document.getElementById('birthTzOffset')) {
+        document.getElementById('birthTzOffset').value = String(parseFloat(tz));
+      }
       computeFullHoroscope();
     }
 
-function computeFullHoroscope() {
+    function computeFullHoroscope() {
       const ayanMode = document.getElementById('ayanamsaMode')?.value || 'LAHIRI';
       const timeMode = document.getElementById('timeAccuracyMode')?.value || 'EXACT';
+      const parsedTz = parseFloat(document.getElementById('birthTzOffset')?.value);
+      const tzOffsetHrs = Number.isFinite(parsedTz) ? parsedTz : 5.5;
+
       let dobStr = (document.getElementById('birthDate')?.value || '').trim();
       let tobStr = (document.getElementById('birthTime')?.value || '').trim();
 
       if (timeMode === 'PRASNA') {
-        // Compute exact IST (UTC+5:30) date & time regardless of user's local browser timezone
-        const istMs = Date.now() + 330 * 60000;
-        const ist = new Date(istMs);
-        dobStr = `${ist.getUTCFullYear()}-${String(ist.getUTCMonth() + 1).padStart(2, '0')}-${String(ist.getUTCDate()).padStart(2, '0')}`;
-        tobStr = `${String(ist.getUTCHours()).padStart(2, '0')}:${String(ist.getUTCMinutes()).padStart(2, '0')}:${String(ist.getUTCSeconds()).padStart(2, '0')}`;
+        const localMs = Date.now() + tzOffsetHrs * 3600000;
+        const dt = new Date(localMs);
+        dobStr = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+        tobStr = `${String(dt.getUTCHours()).padStart(2, '0')}:${String(dt.getUTCMinutes()).padStart(2, '0')}:${String(dt.getUTCSeconds()).padStart(2, '0')}`;
       }
 
       if (!/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) dobStr = '2003-07-07';
@@ -5198,78 +6098,117 @@ function computeFullHoroscope() {
       const [yr, mo, dy] = dobStr.split('-').map(Number);
       const [hr, mn, sc] = (tobStr.length === 5 ? tobStr + ':00' : tobStr).split(':').map(Number);
       if (!Number.isFinite(yr) || !Number.isFinite(mo) || !Number.isFinite(dy)) return;
+
       const stdHours = hr + (mn / 60) + ((sc || 0) / 3600);
-      const lmtOffsetHrs = (lon - 82.5) / 15;
-      const lmtHours = ((stdHours + lmtOffsetHrs) % 24 + 24) % 24;
-      const utcHours = stdHours - 5.5;
-
-      let Y = yr, M = mo;
-      if (M <= 2) { Y -= 1; M += 12; }
-      const A = Math.floor(Y / 100), B = 2 - A + Math.floor(A / 4);
-      const jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + dy + (utcHours / 24) + B - 1524.5;
+      const utcMs = Date.UTC(yr, mo - 1, dy, hr, mn, sc || 0) - tzOffsetHrs * 3600000;
+      const utcDate = new Date(utcMs);
+      const jd = (utcMs / 86400000) + 2440587.5;
       const d = jd - 2451545.0;
+      const T = d / 36525.0;
 
-      const fracYear = yr + ((mo - 1) / 12) + (dy / 365.25);
+      // Exact Lahiri (Chitrapaksha) & B.V. Raman Ayanamsa (J2000 polynomial)
       const ayanamsa = ayanMode === 'RAMAN'
-        ? ((fracYear - 397) * (50.3333 / 3600))
-        : (23.853 + (fracYear - 2000) * (50.29 / 3600));
+        ? (22.460148 + 1.396042 * T + 0.000308 * T * T)
+        : (23.853056 + 1.396971278 * T + 0.0003086 * T * T);
+
+      const lmtOffsetHrs = (lon / 15) - tzOffsetHrs;
+      const lmtHours = ((stdHours + lmtOffsetHrs) % 24 + 24) % 24;
+
+      // Exact Mean Rahu (Jean Meeus) & Ketu (always Vakri / Retrograde)
+      const rahuSayana = norm360(125.04452 - 1934.136261 * T + 0.0020708 * T * T + (T * T * T) / 450000);
+      const ketuSayana = norm360(rahuSayana + 180);
 
       const rad = Math.PI / 180;
-      const ms = norm360(357.5291 + 0.98560028 * d);
-      const ls = norm360(280.4665 + 0.98564736 * d + 1.9148 * Math.sin(ms * rad) + 0.02 * Math.sin(2 * ms * rad));
-      const mm = norm360(134.963 + 13.064993 * d);
-      const lm = norm360(218.316 + 13.176396 * d + 6.289 * Math.sin(mm * rad));
-      const rahuSayana = norm360(125.0445 - 0.05295376 * d);
+      const sayanaMap = { Rahu: rahuSayana, Ketu: ketuSayana };
+      const retroMap = { Sun: false, Moon: false, Rahu: true, Ketu: true };
 
-      const sayanaMap = {
-        Sun: ls,
-        Moon: lm,
-        Mars: norm360(355.433 + 0.524033 * d + 10.691 * Math.sin((19.373 + 0.524021 * d) * rad)),
-        Mercury: norm360(ls + 22.4 * Math.sin((252.25 + 4.09233 * d - ls) * rad)),
-        Jupiter: norm360(34.351 + 0.083091 * d + 5.555 * Math.sin((20.02 + 0.083085 * d) * rad)),
-        Venus: norm360(ls + 46.2 * Math.sin((181.98 + 1.60213 * d - ls) * rad)),
-        Saturn: norm360(50.077 + 0.033459 * d + 6.358 * Math.sin((317.02 + 0.033444 * d) * rad)),
-        Rahu: rahuSayana,
-        Ketu: norm360(rahuSayana + 180)
-      };
+      const hasAstroEngine = typeof window.Astronomy !== 'undefined' && typeof Astronomy.GeoVector === 'function';
+      let sunriseLmt = 6.0;
+      let ascSayana = 0;
 
-      const decl = 23.44 * Math.sin(ls * rad);
-      const cosH = -Math.tan(lat * rad) * Math.tan(decl * rad);
-      const halfDayHrs = (Math.acos(Math.max(-0.98, Math.min(0.98, cosH))) / rad) / 15;
-      const sunriseLmt = 12 - halfDayHrs;
+      if (hasAstroEngine) {
+        const laterDate = new Date(utcMs + 3600000); // +1 hour to test exact apparent motion (Vakri)
+        ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'].forEach(bodyName => {
+          const bodyEnum = Astronomy.Body ? Astronomy.Body[bodyName] : bodyName;
+          const lonNow = norm360(Astronomy.Ecliptic(Astronomy.GeoVector(bodyEnum, utcDate, true)).elon);
+          sayanaMap[bodyName] = lonNow;
+          if (bodyName !== 'Sun' && bodyName !== 'Moon') {
+            const lonLater = norm360(Astronomy.Ecliptic(Astronomy.GeoVector(bodyEnum, laterDate, true)).elon);
+            const delta = ((lonLater - lonNow + 540) % 360) - 180;
+            retroMap[bodyName] = delta < 0;
+          }
+        });
+
+        // Exact Topocentric Sunrise using Astronomy.SearchRiseSet
+        try {
+          const observer = new Astronomy.Observer(lat, lon, 0);
+          const localMidnightUtc = new Date(Date.UTC(yr, mo - 1, dy, 0, 0, 0) - tzOffsetHrs * 3600000);
+          const riseTime = Astronomy.SearchRiseSet('Sun', observer, +1, localMidnightUtc, 1);
+          if (riseTime && riseTime.date) {
+            const riseLocalMs = riseTime.date.getTime() + (lon / 15) * 3600000;
+            const rd = new Date(riseLocalMs);
+            sunriseLmt = rd.getUTCHours() + rd.getUTCMinutes() / 60 + rd.getUTCSeconds() / 3600;
+          }
+        } catch (e) {}
+
+        // Exact Sidereal Time (GAST) -> True Lagna (Ascendant)
+        const gastHrs = Astronomy.SiderealTime(utcDate);
+        const ramc = norm360(gastHrs * 15 + lon) * rad;
+        const obl = (23.439291 - 0.0130042 * T) * rad;
+        ascSayana = norm360(Math.atan2(Math.cos(ramc), -Math.sin(ramc) * Math.cos(obl) - Math.tan(lat * rad) * Math.sin(obl)) / rad);
+      } else {
+        // Offline Fallback if CDN script is unreachable
+        const ms = norm360(357.5291 + 0.98560028 * d);
+        const ls = norm360(280.4665 + 0.98564736 * d + 1.9148 * Math.sin(ms * rad) + 0.02 * Math.sin(2 * ms * rad));
+        const mm = norm360(134.963 + 13.064993 * d);
+        const lm = norm360(218.316 + 13.176396 * d + 6.289 * Math.sin(mm * rad));
+        sayanaMap.Sun = ls;
+        sayanaMap.Moon = lm;
+        sayanaMap.Mars = norm360(355.433 + 0.524033 * d + 10.691 * Math.sin((19.373 + 0.524021 * d) * rad));
+        sayanaMap.Mercury = norm360(ls + 22.4 * Math.sin((252.25 + 4.09233 * d - ls) * rad));
+        sayanaMap.Jupiter = norm360(34.351 + 0.083091 * d + 5.555 * Math.sin((20.02 + 0.083085 * d) * rad));
+        sayanaMap.Venus = norm360(ls + 46.2 * Math.sin((181.98 + 1.60213 * d - ls) * rad));
+        sayanaMap.Saturn = norm360(50.077 + 0.033459 * d + 6.358 * Math.sin((317.02 + 0.033444 * d) * rad));
+        const decl = 23.44 * Math.sin(ls * rad);
+        const cosH = -Math.tan(lat * rad) * Math.tan(decl * rad);
+        sunriseLmt = 12 - ((Math.acos(Math.max(-0.98, Math.min(0.98, cosH))) / rad) / 15);
+        const gmst = norm360(280.46061837 + 360.98564736629 * d + lon);
+        const obl = 23.4393 * rad;
+        const ramc = gmst * rad;
+        ascSayana = norm360(Math.atan2(Math.cos(ramc), -Math.sin(ramc) * Math.cos(obl) - Math.tan(lat * rad) * Math.sin(obl)) / rad);
+      }
+
       const hrsSinceSunrise = ((lmtHours - sunriseLmt) + 24) % 24;
       const ishtakalaGhatis = hrsSinceSunrise * 2.5;
       const totalVighatis = Math.round(ishtakalaGhatis * 60);
 
-      const gmst = norm360(280.46061837 + 360.98564736629 * d + lon);
-      const obl = 23.4393 * rad;
-      const ramc = gmst * rad;
-      const ascSayana = norm360(Math.atan2(Math.cos(ramc), -Math.sin(ramc) * Math.cos(obl) - Math.tan(lat * rad) * Math.sin(obl)) / rad);
       let lagnaNirayana = norm360(ascSayana - ayanamsa);
       if (timeMode === 'SURYA') lagnaNirayana = norm360(sayanaMap.Sun - ayanamsa);
 
       const planets = {};
       const planetRasiMap = {};
-      Object.keys(sayanaMap).forEach(p => {
+      ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu', 'Ketu'].forEach(p => {
         const nir = norm360(sayanaMap[p] - ayanamsa);
         const vargas = computeShadvargas(nir);
         const nakIdx = Math.floor(nir / (360 / 27)) % 27;
         const pada = Math.floor((nir % (360 / 27)) / (360 / 108)) + 1;
         const meta = GRAHA_META[p];
-        let avastha = "Samana (Neutral)";
-        if (vargas.rasiIdx === meta.exalt) avastha = "Deeptha (Exalted)";
-        else if (vargas.rasiIdx === meta.debil) avastha = "Khala (Debilitated)";
-        else if (meta.own.includes(vargas.rasiIdx)) avastha = "Swastha (Own Sign)";
-        else if (meta.friends.includes(vargas.d1Lord)) avastha = "Muditha (Friendly)";
-        else if (meta.enemies.includes(vargas.d1Lord)) avastha = "Deena (Inimical)";
-        if (vargas.rasiIdx === vargas.d9Rasi) avastha += " • Vargottama";
+        const isRetro = Boolean(retroMap[p]);
+        let avastha = 'Samana (Neutral)';
+        if (vargas.rasiIdx === meta.exalt) avastha = 'Deeptha (Exalted)';
+        else if (vargas.rasiIdx === meta.debil) avastha = 'Khala (Debilitated)';
+        else if (meta.own.includes(vargas.rasiIdx)) avastha = 'Swastha (Own Sign)';
+        else if (meta.friends.includes(vargas.d1Lord)) avastha = 'Muditha (Friendly)';
+        else if (meta.enemies.includes(vargas.d1Lord)) avastha = 'Deena (Inimical)';
+        if (vargas.rasiIdx === vargas.d9Rasi) avastha += ' • Vargottama';
+        if (isRetro && p !== 'Rahu' && p !== 'Ketu') avastha += ' • Vakri (R)';
 
-        planets[p] = { name: p, sym: meta.sym, lon: nir, degInSign: vargas.deg, nak: NAKSHATRAS[nakIdx], pada, vargas, avastha, karaka: "-" };
+        planets[p] = { name: p, sym: meta.sym, lon: nir, degInSign: vargas.deg, nak: NAKSHATRAS[nakIdx], pada, vargas, avastha, isRetro, karaka: '-' };
         planetRasiMap[p] = vargas.rasiIdx;
       });
 
-      const ckList = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn", "Rahu"].map(p => ({
-        name: p, deg: p === "Rahu" ? (30 - planets[p].degInSign) : planets[p].degInSign
+      const ckList = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn', 'Rahu'].map(p => ({
+        name: p, deg: p === 'Rahu' ? (30 - planets[p].degInSign) : planets[p].degInSign
       })).sort((a, b) => b.deg - a.deg);
       ckList.forEach((item, idx) => { planets[item.name].karaka = CHARA_KARAKA_LABELS[idx]; });
 
@@ -5287,8 +6226,8 @@ function computeFullHoroscope() {
       const a5Rasi = calcArudhaPada((L + 4) % 12, planetRasiMap);
 
       currentHoroscopeState = {
-        dobStr, tobStr, lat, lon, ayanamsa, lmtHours, sunriseLmt, ishtakalaGhatis, totalVighatis,
-        lagnaLon: lagnaNirayana, lagnaVargas, planets, planetRasiMap,
+        dobStr, tobStr, lat, lon, tzOffsetHrs, ayanamsa, lmtHours, sunriseLmt, ishtakalaGhatis, totalVighatis,
+        lagnaLon: lagnaNirayana, lagnaVargas, planets, planetRasiMap, engine: hasAstroEngine ? 'astronomy-engine' : 'fallback',
         hlRasi: Math.floor(hlLon / 30) % 12, glRasi: Math.floor(glLon / 30) % 12, slRasi: Math.floor(slLon / 30) % 12,
         alRasi, ulRasi, a7Rasi, a5Rasi, atmakaraka: ckList[0].name
       };
@@ -5564,7 +6503,12 @@ function computeFullHoroscope() {
       if (placeholder) placeholder.classList.add('hidden');
     }
 
-    function handlePalmImageUpload(input) {
+   function handlePalmImageUpload(input) {
+      if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked) {
+        if (input) input.value = '';
+        showStatusToast('🔒 Your palm photo is locked for this annual plan.');
+        return;
+      }
       const file = input.files?.[0];
       if (!file) return;
       const reader = new FileReader();
@@ -5595,7 +6539,11 @@ function computeFullHoroscope() {
       reader.readAsDataURL(file);
     }
 
-    function clearPalmImage() {
+function clearPalmImage(force = false) {
+      if (!force && !isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked) {
+        showStatusToast('🔒 Your palm photo is locked for this annual plan.');
+        return;
+      }
       palmImageBase64 = null; palmImageMime = null;
       const fi = document.getElementById('palmFileInput');
       if (fi) fi.value = '';
@@ -5695,9 +6643,11 @@ function buildOfflineClassicalSynthesis() {
     async function setOutputMode(newMode) {
       if (newMode !== 'simple' && newMode !== 'astrologer') return;
       const modeChanged = newMode !== currentOutputMode;
-      currentOutputMode = newMode;
+currentOutputMode = newMode;
       localStorage.setItem('jyotish_output_mode_v1', newMode);
+      localStorage.setItem('jyotish_reading_mode', newMode);
       syncOutputModeToggleButtons();
+      if (typeof syncAstroModeToggleUI === 'function') syncAstroModeToggleUI();
       if (!modeChanged) return;
 
       showStatusToast(newMode === 'simple' ? '🗣️ Switched to Simple English' : '🪐 Switched to Astrologer Mode');
@@ -5776,28 +6726,44 @@ function buildOfflineClassicalSynthesis() {
       }
     });
 
-    // Returns { text, model, raw, error } consistently for both Chat & Synthesis
-    async function fetchGeminiWithFallback(payload, explicitApiKey = '') {
+// Returns { text, model, raw, error } with Gemini 4/3 thinkingLevel tuning & safe part filtering
+    async function fetchGeminiWithFallback(payload, explicitApiKey = '', options = {}) {
       const apiKey = (explicitApiKey || getActiveJyotishGeminiKey()).trim();
       if (!apiKey) {
         return { text: '', error: 'Gemini API key is missing. Unlock your Cloud API Vault first.' };
       }
 
+      const activeMode = typeof getAstroReadingMode === 'function' ? getAstroReadingMode() : 'simple';
+      const targetThinkingLevel = options.thinkingLevel || (activeMode === 'simple' ? 'low' : 'medium');
       const models = getPreferredGeminiModelsList();
       let lastErrorMsg = 'All Gemini models failed.';
 
       for (const model of models) {
         try {
+          const reqBody = { ...payload };
+          if (/^gemini-(4|3)/i.test(model)) {
+            reqBody.generationConfig = {
+              ...(payload.generationConfig || {}),
+              thinkingConfig: { thinkingLevel: targetThinkingLevel }
+            };
+          }
+
           const res = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
+              body: JSON.stringify(reqBody)
             }
           );
           const data = await res.json();
-          const replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          const parts = data?.candidates?.[0]?.content?.parts || [];
+          const replyText = parts
+            .filter(p => typeof p.text === 'string' && !p.thought)
+            .map(p => p.text)
+            .join('')
+            .trim();
+
           if (res.ok && replyText) {
             return { text: replyText, model, raw: data, error: null };
           }
@@ -5962,7 +6928,7 @@ function buildOfflineClassicalSynthesis() {
         }
         const parsed = JSON.parse(jsonMatch[0]);
        Object.keys(parsed).forEach(id => {
-     if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && LOCKED_BIRTH_FIELD_IDS.includes(id)) return;
+     if (!isCurrentUserAdmin() && currentUserSubscriptionState.profileLocked && (LOCKED_BIRTH_FIELD_IDS.includes(id) || LOCKED_PALM_FIELD_IDS.includes(id))) return;
      const el = document.getElementById(id);
      if (el && parsed[id] !== undefined && parsed[id] !== null && parsed[id] !== '') {
        el.value = parsed[id];
@@ -6296,7 +7262,7 @@ function formatCrispSectionTitle(rawText) {
         }
 
         // 6. TAB KEY: Jump Immediately to Top Horoscope Search Bar
-        if (e.key === 'Tab' && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
+        if (e.key === 'Tab' && isCurrentUserAdmin() && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
           const openModal = document.querySelector('#summaryPopupModal:not(.hidden), #profileModal:not(.hidden), #storageModal:not(.hidden), #aboutModal:not(.hidden), #loginModal:not(.hidden), #settingsModal:not(.hidden), #geminiModal:not(.hidden), #shortcutsModal:not(.hidden)');
           if (!openModal) {
             const searchInput = document.getElementById('headerCaseSearch');
