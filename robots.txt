@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://danny-code-2029.github.io/Dr.-Astro/sitemap.xml
