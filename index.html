@@ -128,21 +128,7 @@
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
   <script defer src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
   <!-- Swap the next script tag for <link rel="stylesheet" href="./styles.css" /> after compiling Tailwind in Part 6 -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-            serif: ['"Source Serif 4"', 'Georgia', 'serif'],
-            mono: ['"JetBrains Mono"', 'monospace']
-          }
-        }
-      }
-    };
-  </script>
+  <link rel="stylesheet" href="./styles.css" />
 
 <!-- ==========================================================================
      [SECTION 02] CUSTOM CSS STYLESHEET
@@ -4374,7 +4360,9 @@ let statusToastTimer = null;
       initOrbitWorkspaceLayout();
       loadActiveWorkingDraft();
       checkUrlForSharedCase();
-      computeFullHoroscope();
+      if (!isPublicLandingActive()) {
+        computeFullHoroscope();
+      }
       updateSidebarCaseCount();
 
       const savedSheetUrl = localStorage.getItem('jyotish_google_sheet_url') || '';
