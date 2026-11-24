@@ -77,7 +77,8 @@
           "Jaimini 8 Chara Karakas, Arudha Lagna (AL), Upapada (UL) & Argala Inspector",
           "Jaimini 3-Pairs Ayurdaya Longevity & 120-Year Vimshottari Dasa-Bhukti Explorer",
           "Multimodal Samudrika Shastra Palm Vision AI Analysis"
-      "author": {
+        ],
+        "author": {
           "@type": "Person",
           "name": "Dr. Danny",
           "url": "https://danny-code-2029.github.io/Dr.-Astro/"
@@ -1648,7 +1649,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
           <div>
             <label class="block text-xs font-semibold mb-1">Native's Full Name</label>
-      <input id="nativeName" type="text" placeholder="e.g., Aarav Sharma" oninput="computeFullHoroscope()" class="w-full border rounded p-2 text-sm" />
+          <input id="nativeName" type="text" placeholder="e.g., Aarav Sharma" oninput="refreshAstroChatHeaderContext()" class="w-full border rounded p-2 text-sm" />
           </div>
           <div>
             <label class="block text-xs font-semibold mb-1">Gender</label>
@@ -1666,48 +1667,77 @@
             <input id="birthTime" type="time" step="1" value="09:00:00" onchange="computeFullHoroscope()" class="w-full border rounded p-2 text-sm font-clinical-mono" />
           </div>
 
-          <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold mb-1">Place of Birth (Select City or Type Custom)</label>
+   <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold mb-1">Place of Birth (Select Preset or Type Any City &amp; State — Auto-Sets Timezone)</label>
             <div class="flex gap-2">
               <select id="cityPresetSelect" onchange="applyCityCoordinates(this.value)" class="w-1/2 border rounded p-2 text-xs">
-                <option value="Bhubaneswar, Odisha|20.2961|85.8245|5.5">Bhubaneswar, Odisha (20°18'N, 85°49'E)</option>
-                <option value="Puri, Odisha|19.8135|85.8312|5.5">Puri, Odisha (19°49'N, 85°50'E)</option>
-                <option value="Cuttack, Odisha|20.4625|85.8830|5.5">Cuttack, Odisha (20°28'N, 85°53'E)</option>
-                <option value="Bhilai / Durg, Chhattisgarh|21.1938|81.3509|5.5">Bhilai / Durg, CG (21°12'N, 81°21'E)</option>
-                <option value="Raipur, Chhattisgarh|21.2514|81.6296|5.5">Raipur, CG (21°15'N, 81°38'E)</option>
-                <option value="New Delhi, India|28.6139|77.2090|5.5">New Delhi (28°37'N, 77°13'E)</option>
-                <option value="Bangalore, Karnataka|12.9716|77.5946|5.5">Bangalore (12°58'N, 77°35'E)</option>
-                <option value="Mumbai, Maharashtra|18.9388|72.8354|5.5">Mumbai (18°56'N, 72°50'E)</option>
-                <option value="Kolkata, West Bengal|22.5726|88.3639|5.5">Kolkata (22°34'N, 88°22'E)</option>
-                <option value="Chennai, Tamil Nadu|13.0827|80.2707|5.5">Chennai (13°05'N, 80°16'E)</option>
-                <option value="Varanasi, UP|25.3176|82.9739|5.5">Varanasi (25°19'N, 82°58'E)</option>
-                <option value="Ujjain (Prime Meridian)|23.1765|75.7885|5.5">Ujjain (23°11'N, 75°47'E)</option>
+                <option value="New Delhi, Delhi, India|28.6139|77.2090|5.5|Asia/Kolkata">New Delhi, India (IST +5:30)</option>
+                <option value="Mumbai, Maharashtra, India|18.9388|72.8354|5.5|Asia/Kolkata">Mumbai, Maharashtra (IST +5:30)</option>
+                <option value="Bengaluru, Karnataka, India|12.9716|77.5946|5.5|Asia/Kolkata">Bengaluru, Karnataka (IST +5:30)</option>
+                <option value="Kolkata, West Bengal, India|22.5726|88.3639|5.5|Asia/Kolkata">Kolkata, West Bengal (IST +5:30)</option>
+                <option value="Chennai, Tamil Nadu, India|13.0827|80.2707|5.5|Asia/Kolkata">Chennai, Tamil Nadu (IST +5:30)</option>
+                <option value="Varanasi, Uttar Pradesh, India|25.3176|82.9739|5.5|Asia/Kolkata">Varanasi, UP (IST +5:30)</option>
+                <option value="Ujjain, Madhya Pradesh, India|23.1765|75.7885|5.5|Asia/Kolkata">Ujjain, MP (IST +5:30)</option>
+                <option value="Bhubaneswar, Odisha, India|20.2961|85.8245|5.5|Asia/Kolkata">Bhubaneswar, Odisha (IST +5:30)</option>
+                <option value="Puri, Odisha, India|19.8135|85.8312|5.5|Asia/Kolkata">Puri, Odisha (IST +5:30)</option>
+                <option value="Cuttack, Odisha, India|20.4625|85.8830|5.5|Asia/Kolkata">Cuttack, Odisha (IST +5:30)</option>
+                <option value="Bhilai / Durg, Chhattisgarh, India|21.1938|81.3509|5.5|Asia/Kolkata">Bhilai / Durg, CG (IST +5:30)</option>
+                <option value="Raipur, Chhattisgarh, India|21.2514|81.6296|5.5|Asia/Kolkata">Raipur, CG (IST +5:30)</option>
+                <option value="Kathmandu, Bagmati, Nepal|27.7172|85.3240|5.75|Asia/Kathmandu">Kathmandu, Nepal (NPT +5:45)</option>
+                <option value="Dubai, UAE|25.2048|55.2708|4|Asia/Dubai">Dubai, UAE (GST +4:00)</option>
+                <option value="Singapore|1.3521|103.8198|8|Asia/Singapore">Singapore (SGT +8:00)</option>
+                <option value="London, England, UK|51.5072|-0.1276|0|Europe/London">London, UK (GMT/BST)</option>
+                <option value="New York, New York, USA|40.7128|-74.0060|-5|America/New_York">New York, USA (EST/EDT)</option>
+                <option value="San Francisco, California, USA|37.7749|-122.4194|-8|America/Los_Angeles">San Francisco, USA (PST/PDT)</option>
+                <option value="Toronto, Ontario, Canada|43.6532|-79.3832|-5|America/Toronto">Toronto, Canada (EST/EDT)</option>
+                <option value="Sydney, NSW, Australia|-33.8688|151.2093|10|Australia/Sydney">Sydney, Australia (AEST/AEDT)</option>
               </select>
-              <input id="birthPlaceName" type="text" value="Bhubaneswar, Odisha" placeholder="City, State" class="w-1/2 border rounded p-2 text-xs" />
+              <div class="relative w-1/2">
+                <input
+                  id="birthPlaceName"
+                  type="text"
+                  value="New Delhi, India"
+                  autocomplete="off"
+                  oninput="handleBirthPlaceTyping(this.value)"
+                  placeholder="Type City, State (e.g. Jaipur, Rajasthan)"
+                  class="w-full border rounded p-2 text-xs"
+                />
+                <div id="birthPlaceSuggestions" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
+              </div>
             </div>
           </div>
-
-         <div>
-            <label class="block text-xs font-semibold mb-1">Lat (°N), Lon (°E) &amp; Timezone (UTC)</label>
+          <div>
+            <label class="block text-xs font-semibold mb-1">Lat (°N), Lon (°E) &amp; Timezone (Auto)</label>
             <div class="grid grid-cols-3 gap-1">
-              <input id="birthLat" type="number" step="0.01" value="20.30" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Latitude (+N)" />
-              <input id="birthLon" type="number" step="0.01" value="85.82" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Longitude (+E)" />
-              <select id="birthTzOffset" onchange="computeFullHoroscope()" class="border rounded p-1.5 text-[11px] font-clinical-mono" title="Standard Timezone Offset">
+              <input id="birthLat" type="number" step="0.01" value="28.61" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Latitude (+N)" />
+              <input id="birthLon" type="number" step="0.01" value="77.21" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Longitude (+E)" />
+              <select id="birthTzOffset" onchange="selectedBirthIanaTz=''; computeFullHoroscope();" class="border rounded p-1.5 text-[11px] font-clinical-mono" title="Standard Timezone Offset (Auto-selected from City &amp; State)">
+                <option value="-8">PST -8:00</option>
+                <option value="-7">MST/PDT -7:00</option>
+                <option value="-6">CST -6:00</option>
+                <option value="-5">EST -5:00</option>
+                <option value="-4">EDT/AST -4:00</option>
+                <option value="0">UTC/GMT 0:00</option>
+                <option value="1">CET/BST +1:00</option>
+                <option value="2">CEST/EET +2:00</option>
+                <option value="3">MSK/AST +3:00</option>
+                <option value="3.5">IRST +3:30</option>
+                <option value="4">GST +4:00</option>
+                <option value="5">PKT +5:00</option>
                 <option value="5.5" selected>IST +5:30</option>
                 <option value="5.75">NPT +5:45</option>
                 <option value="6">BST +6:00</option>
-                <option value="4">GST +4:00</option>
-                <option value="8">SGT +8:00</option>
-                <option value="0">UTC 0:00</option>
-                <option value="1">CET +1:00</option>
-                <option value="-5">EST -5:00</option>
-                <option value="-6">CST -6:00</option>
-                <option value="-8">PST -8:00</option>
-                <option value="10">AEST +10</option>
+                <option value="6.5">MMT +6:30</option>
+                <option value="7">ICT +7:00</option>
+                <option value="8">SGT/CST +8:00</option>
+                <option value="9">JST/KST +9:00</option>
+                <option value="9.5">ACST +9:30</option>
+                <option value="10">AEST +10:00</option>
+                <option value="11">AEDT +11:00</option>
+                <option value="12">NZST +12:00</option>
               </select>
             </div>
           </div>
-
           <div>
             <label class="block text-xs font-semibold mb-1">Ayanamsa &amp; Birth Time Mode</label>
             <div class="grid grid-cols-2 gap-1.5">
@@ -2873,6 +2903,10 @@ function syncHeaderControlsForRole() {
       });
       clearPalmImage(true);
       clearCaseSearch();
+      if (document.getElementById('birthDate')) document.getElementById('birthDate').value = '1995-05-15';
+      if (document.getElementById('birthTime')) document.getElementById('birthTime').value = '09:00:00';
+      if (document.getElementById('cityPresetSelect')) document.getElementById('cityPresetSelect').selectedIndex = 0;
+      applyCityCoordinates(document.getElementById('cityPresetSelect')?.value || 'New Delhi, Delhi, India|28.6139|77.2090|5.5|Asia/Kolkata');
       computeFullHoroscope();
       startNewAstroChatSession(false);
       refreshAstroChatHeaderContext();
@@ -3102,8 +3136,8 @@ function applyAnnualProfileLockUI() {
         birthDate: document.getElementById("birthDate")?.value || "",
         birthTime: document.getElementById("birthTime")?.value || "",
         birthPlaceName: (document.getElementById("birthPlaceName")?.value || "").trim(),
-        birthLat: parseFloat(document.getElementById("birthLat")?.value || "20.30"),
-        birthLon: parseFloat(document.getElementById("birthLon")?.value || "85.82"),
+        birthLat: parseFloat(document.getElementById("birthLat")?.value || "28.61"),
+        birthLon: parseFloat(document.getElementById("birthLon")?.value || "77.21"),
         timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT",
         palmHandType: document.getElementById("palmHandType")?.value || "",
         palmElementShape: document.getElementById("palmElementShape")?.value || "",
@@ -4926,7 +4960,16 @@ async function continueSignupWithSelectedAccount() {
 
       const utrInput = document.getElementById('upiUtrInput');
       if (utrInput) utrInput.value = '';
-
+         
+    const qrBox = document.getElementById('upiQrCodeImg')?.closest('.bg-slate-50');
+    if (!window.MERCHANT_UPI_ID) {
+      if (qrBox) qrBox.classList.add('hidden');
+      const vpaBadge = document.getElementById('upiVpaDisplayBadge');
+      if (vpaBadge) vpaBadge.textContent = 'Checkout via Razorpay Payment Page';
+      return;
+    } else if (qrBox) {
+      qrBox.classList.remove('hidden');
+    }
       const pa = encodeURIComponent(window.MERCHANT_UPI_ID);
       const pn = encodeURIComponent(window.MERCHANT_UPI_NAME);
       const am = encodeURIComponent(window.ANNUAL_PLAN_AMOUNT_INR);
@@ -5144,6 +5187,9 @@ try {
 
 auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
+     if (isCurrentUserAdmin(user) && user?.email) {
+     window.ADMIN_OWNER_EMAIL = normalizeEmail(user.email);
+   }
       if (user && user.email) {
         rememberDeviceAccount(user.email, user.displayName, user.photoURL);
       }
@@ -5428,7 +5474,8 @@ async function handleMedicoLogout() {
        </label>
        <button type="button" onclick="saveOwnerMonetizationConfig()" class="w-full chrome-pill-btn save-3d-blue-btn justify-center py-2 text-xs">
          💾 Save Owner Billing Config
-         <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+       </button>
+       <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-slate-700">
          <button type="button" onclick="openOwnerCrashReportsAndCopy()" class="chrome-pill-btn justify-center bg-slate-900 hover:bg-slate-800 text-amber-300 border border-slate-700 py-1.5 text-[11px]">
            🛠️ Copy Crash Reports
          </button>
@@ -5436,7 +5483,6 @@ async function handleMedicoLogout() {
            🗑️ Clear Crashes
          </button>
        </div>
-       </button>
      </div>
    `;
    settingsContainer.appendChild(box);
@@ -6047,19 +6093,173 @@ dropdown.innerHTML = matches.length === 0
       return pada;
     }
 
-function applyCityCoordinates(val) {
+let selectedBirthIanaTz = 'Asia/Kolkata';
+    let birthPlaceLookupTimer = null;
+    let birthPlaceLookupResults = [];
+
+    // Computes exact UTC offset (including historical DST) for any IANA timezone & birth date
+    function getUtcOffsetHoursForIanaTz(ianaTz, dobStr = '1995-05-15', tobStr = '09:00:00') {
+      if (!ianaTz) return null;
+      try {
+        const [yr, mo, dy] = (dobStr || '1995-05-15').split('-').map(Number);
+        const [hr, mn] = (tobStr || '09:00:00').split(':').map(Number);
+        const refUtc = new Date(Date.UTC(yr || 2000, (mo || 1) - 1, dy || 1, hr || 12, mn || 0, 0));
+        const dtf = new Intl.DateTimeFormat('en-US', {
+          timeZone: ianaTz,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false
+        });
+        const map = {};
+        dtf.formatToParts(refUtc).forEach(p => { if (p.type !== 'literal') map[p.type] = p.value; });
+        const h = Number(map.hour) === 24 ? 0 : Number(map.hour);
+        const asUtcMs = Date.UTC(Number(map.year), Number(map.month) - 1, Number(map.day), h, Number(map.minute), Number(map.second));
+        return Math.round(((asUtcMs - refUtc.getTime()) / 3600000) * 4) / 4;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setTimezoneOffsetSelect(offsetHrs, labelHint = '') {
+      const sel = document.getElementById('birthTzOffset');
+      if (!sel || !Number.isFinite(offsetHrs)) return;
+      let opt = Array.from(sel.options).find(o => Math.abs(parseFloat(o.value) - offsetHrs) < 0.01);
+      if (!opt) {
+        const sign = offsetHrs >= 0 ? '+' : '-';
+        const abs = Math.abs(offsetHrs);
+        const h = Math.floor(abs);
+        const m = Math.round((abs - h) * 60);
+        const fmt = `UTC${sign}${h}:${String(m).padStart(2, '0')}`;
+        opt = document.createElement('option');
+        opt.value = String(offsetHrs);
+        opt.textContent = labelHint ? `${labelHint} (${fmt})` : fmt;
+        sel.appendChild(opt);
+      }
+      sel.value = opt.value;
+    }
+
+    function syncTimezoneFromSelectedIana() {
+      if (!selectedBirthIanaTz) return;
+      const dob = document.getElementById('birthDate')?.value || '1995-05-15';
+      const tob = document.getElementById('birthTime')?.value || '09:00:00';
+      const exactOffset = getUtcOffsetHoursForIanaTz(selectedBirthIanaTz, dob, tob);
+      if (exactOffset !== null) {
+        setTimezoneOffsetSelect(exactOffset, selectedBirthIanaTz.split('/').pop().replace(/_/g, ' '));
+      }
+    }
+
+    function applyCityCoordinates(val) {
       if (!val) return;
-      const [name, lat, lon, tz] = val.split('|');
+      const [name, lat, lon, tz, ianaTz] = val.split('|');
       document.getElementById('birthPlaceName').value = name;
       document.getElementById('birthLat').value = parseFloat(lat).toFixed(2);
       document.getElementById('birthLon').value = parseFloat(lon).toFixed(2);
-      if (tz && document.getElementById('birthTzOffset')) {
-        document.getElementById('birthTzOffset').value = String(parseFloat(tz));
+      selectedBirthIanaTz = ianaTz || '';
+      if (selectedBirthIanaTz) {
+        syncTimezoneFromSelectedIana();
+      } else if (tz) {
+        setTimezoneOffsetSelect(parseFloat(tz));
       }
+      document.getElementById('birthPlaceSuggestions')?.classList.add('hidden');
       computeFullHoroscope();
     }
 
-    function computeFullHoroscope() {
+    // Offline fallback if user types a known Indian state or country without clicking dropdown
+    function inferOfflineTimezoneFromPlaceText(rawText) {
+      const t = (rawText || '').toLowerCase();
+      if (/(india|odisha|orissa|chhattisgarh|maharashtra|karnataka|tamil nadu|west bengal|delhi|uttar pradesh|madhya pradesh|rajasthan|gujarat|kerala|punjab|haryana|bihar|jharkhand|assam|telangana|andhra|goa|uttarakhand|himachal|kashmir|bhilai|durg|raipur|bhubaneswar|puri|cuttack|mumbai|pune|hyderabad|chennai|kolkata|bengaluru|bangalore|jaipur|lucknow|varanasi|ahmedabad|surat|indore|bhopal|patna|nagpur|kochi)/i.test(t)) {
+        return { iana: 'Asia/Kolkata', offset: 5.5 };
+      }
+      if (/(nepal|kathmandu|pokhara)/i.test(t)) return { iana: 'Asia/Kathmandu', offset: 5.75 };
+      if (/(dubai|abu dhabi|sharjah|uae)/i.test(t)) return { iana: 'Asia/Dubai', offset: 4 };
+      if (/(singapore)/i.test(t)) return { iana: 'Asia/Singapore', offset: 8 };
+      if (/(london|manchester|birmingham|england|scotland|uk|united kingdom)/i.test(t)) return { iana: 'Europe/London', offset: 0 };
+      if (/(new york|boston|miami|atlanta|washington|florida|virginia|new jersey|toronto|ontario)/i.test(t)) return { iana: 'America/New_York', offset: -5 };
+      if (/(chicago|texas|dallas|houston|austin|illinois)/i.test(t)) return { iana: 'America/Chicago', offset: -6 };
+      if (/(los angeles|san francisco|seattle|california|oregon|washington state|vancouver)/i.test(t)) return { iana: 'America/Los_Angeles', offset: -8 };
+      if (/(sydney|melbourne|brisbane|australia)/i.test(t)) return { iana: 'Australia/Sydney', offset: 10 };
+      if (/(bangladesh|dhaka)/i.test(t)) return { iana: 'Asia/Dhaka', offset: 6 };
+      if (/(sri lanka|colombo)/i.test(t)) return { iana: 'Asia/Colombo', offset: 5.5 };
+      if (/(pakistan|karachi|lahore|islamabad)/i.test(t)) return { iana: 'Asia/Karachi', offset: 5 };
+      return null;
+    }
+
+    function handleBirthPlaceTyping(rawQuery) {
+      const box = document.getElementById('birthPlaceSuggestions');
+      const q = (rawQuery || '').trim();
+      clearTimeout(birthPlaceLookupTimer);
+
+      const offlineGuess = inferOfflineTimezoneFromPlaceText(q);
+      if (offlineGuess) {
+        selectedBirthIanaTz = offlineGuess.iana;
+        syncTimezoneFromSelectedIana();
+      }
+
+      if (q.length < 3) {
+        if (box) box.classList.add('hidden');
+        return;
+      }
+
+      birthPlaceLookupTimer = setTimeout(async () => {
+        try {
+          const searchCity = q.split(',')[0].trim();
+          const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchCity)}&count=6&language=en&format=json`);
+          const data = await res.json();
+          const list = Array.isArray(data?.results) ? data.results : [];
+          // Prefer results whose state/country matches anything typed after a comma
+          const stateFilter = (q.split(',').slice(1).join(' ') || '').trim().toLowerCase();
+          birthPlaceLookupResults = stateFilter
+            ? [...list].sort((a, b) => {
+                const aMatch = `${a.admin1 || ''} ${a.country || ''}`.toLowerCase().includes(stateFilter) ? 1 : 0;
+                const bMatch = `${b.admin1 || ''} ${b.country || ''}`.toLowerCase().includes(stateFilter) ? 1 : 0;
+                return bMatch - aMatch;
+              })
+            : list;
+
+          if (!box) return;
+          if (birthPlaceLookupResults.length === 0) {
+            box.classList.add('hidden');
+            return;
+          }
+          box.innerHTML = birthPlaceLookupResults.map((item, idx) => {
+            const label = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
+            const tzLabel = item.timezone || 'UTC';
+            return `<div onclick="selectGeocodedBirthPlace(${idx})" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer flex items-center justify-between gap-2 text-xs">
+              <span class="font-bold truncate">${escapeHtml(label)}</span>
+              <span class="text-[10px] font-clinical-mono text-blue-600 dark:text-blue-400 shrink-0">${escapeHtml(tzLabel)}</span>
+            </div>`;
+          }).join('');
+          box.classList.remove('hidden');
+        } catch (e) {
+          if (box) box.classList.add('hidden');
+        }
+      }, 320);
+    }
+
+    function selectGeocodedBirthPlace(index) {
+      const item = birthPlaceLookupResults[index];
+      if (!item) return;
+      const fullLabel = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
+      document.getElementById('birthPlaceName').value = fullLabel;
+      document.getElementById('birthLat').value = Number(item.latitude).toFixed(2);
+      document.getElementById('birthLon').value = Number(item.longitude).toFixed(2);
+      selectedBirthIanaTz = item.timezone || '';
+
+      if (selectedBirthIanaTz) {
+        syncTimezoneFromSelectedIana();
+      } else {
+        const approxOffset = Math.round((Number(item.longitude) / 15) * 2) / 2;
+        setTimezoneOffsetSelect(approxOffset);
+      }
+
+      document.getElementById('birthPlaceSuggestions')?.classList.add('hidden');
+      computeFullHoroscope();
+      const tzText = document.getElementById('birthTzOffset')?.selectedOptions?.[0]?.textContent || '';
+      showStatusToast(`📍 ${item.name} • Auto-Timezone: ${tzText}`);
+    }
+
+      function computeFullHoroscope() {
+      if (selectedBirthIanaTz) syncTimezoneFromSelectedIana();
       const ayanMode = document.getElementById('ayanamsaMode')?.value || 'LAHIRI';
       const timeMode = document.getElementById('timeAccuracyMode')?.value || 'EXACT';
       const parsedTz = parseFloat(document.getElementById('birthTzOffset')?.value);
@@ -6075,13 +6275,13 @@ function applyCityCoordinates(val) {
         tobStr = `${String(dt.getUTCHours()).padStart(2, '0')}:${String(dt.getUTCMinutes()).padStart(2, '0')}:${String(dt.getUTCSeconds()).padStart(2, '0')}`;
       }
 
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) dobStr = '2003-07-07';
-      if (!/^\d{2}:\d{2}(:\d{2})?$/.test(tobStr)) tobStr = '10:30:00';
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dobStr)) dobStr = '1995-05-15';
+      if (!/^\d{2}:\d{2}(:\d{2})?$/.test(tobStr)) tobStr = '09:00:00';
 
       const parsedLat = parseFloat(document.getElementById('birthLat')?.value);
       const parsedLon = parseFloat(document.getElementById('birthLon')?.value);
-      const lat = Number.isFinite(parsedLat) ? Math.max(-66, Math.min(66, parsedLat)) : 20.30;
-      const lon = Number.isFinite(parsedLon) ? Math.max(-180, Math.min(180, parsedLon)) : 85.82;
+      const lat = Number.isFinite(parsedLat) ? Math.max(-66, Math.min(66, parsedLat)) : 28.61;
+      const lon = Number.isFinite(parsedLon) ? Math.max(-180, Math.min(180, parsedLon)) : 77.21;
 
       const [yr, mo, dy] = dobStr.split('-').map(Number);
       const [hr, mn, sc] = (tobStr.length === 5 ? tobStr + ':00' : tobStr).split(':').map(Number);
@@ -6320,7 +6520,7 @@ function applyCityCoordinates(val) {
       d9Map[st.lagnaVargas.d9Rasi].push('Asc');
 
       Object.values(st.planets).forEach(p => {
-        const short = p.name.slice(0, 2);
+        const short = p.name.slice(0, 2) + (p.isRetro && p.name !== 'Rahu' && p.name !== 'Ketu' ? '(R)' : '');
         d1Map[p.vargas.rasiIdx].push(short);
         d9Map[p.vargas.d9Rasi].push(short);
       });
@@ -6330,7 +6530,11 @@ function applyCityCoordinates(val) {
       document.getElementById('rasiKundaliSvgBox').innerHTML = buildSingleKundaliSvg(d1Map, st.lagnaVargas.rasiIdx, "RASI CHAKRA (D-1)");
       document.getElementById('navamsaKundaliSvgBox').innerHTML = buildSingleKundaliSvg(d9Map, st.lagnaVargas.d9Rasi, "NAVAMSA (D-9)");
 
-      const ageYrs = Math.max(1, new Date().getFullYear() - parseInt(st.dobStr.split('-')[0], 10));
+      const [bY, bM, bD] = st.dobStr.split('-').map(Number);
+    const today = new Date();
+    let completedYrs = today.getFullYear() - bY;
+    if (today.getMonth() + 1 < bM || (today.getMonth() + 1 === bM && today.getDate() < bD)) completedYrs--;
+    const ageYrs = Math.max(1, completedYrs + 1); // Sudarshan running year of life
       const progHouse = ((ageYrs - 1) % 12) + 1;
       document.getElementById('sudarshanYearBadge').textContent = `Age ${ageYrs} • House ${progHouse}`;
       let sudSvg = `<circle cx="150" cy="150" r="142" fill="#0f172a" stroke="#475569" stroke-width="2"/><circle cx="150" cy="150" r="102" fill="none" stroke="#334155" stroke-width="1.4"/><circle cx="150" cy="150" r="64" fill="none" stroke="#334155" stroke-width="1.4"/><circle cx="150" cy="150" r="24" fill="#1e293b" stroke="#60a5fa" stroke-width="1.5"/><text x="150" y="153" text-anchor="middle" fill="#93c5fd" font-size="8.5" font-weight="bold">SUDARSHAN</text>`;
@@ -6503,7 +6707,7 @@ function applyCityCoordinates(val) {
       reader.onload = (e) => {
         const tempImg = new Image();
         tempImg.onload = () => {
-          const maxDim = 900;
+          const maxDim = 720;
           let w = tempImg.width, h = tempImg.height;
           if (w > maxDim || h > maxDim) {
             const scale = maxDim / Math.max(w, h);
@@ -6514,7 +6718,7 @@ function applyCityCoordinates(val) {
           canvas.width = w;
           canvas.height = h;
           canvas.getContext('2d').drawImage(tempImg, 0, 0, w, h);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
           restoreSavedPalmImage(compressedDataUrl);
           const emailKey = normalizeEmail(currentGoogleUser?.email || '');
           if (emailKey) {
