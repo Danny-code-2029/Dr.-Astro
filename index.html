@@ -871,8 +871,8 @@
             Already Registered? Log in ➔
           </button>
         </div>
-        <p class="text-[11px] text-slate-500 font-medium pt-1">
-          🔑 Requires a <strong>free Google AI Studio API key</strong> (30-second guided setup inside after activation — zero extra AI cost).
+      <p class="text-[11px] text-slate-500 font-medium pt-1">
+          🔑 Free birth &amp; palm entry with your own <strong>free Google AI Studio key</strong> — pay ₹11/year only when you are ready to unlock the AI Chat.
         </p>
       </div>
 
@@ -1137,9 +1137,9 @@
     <!-- VIEW 4: SIGN-UP STEP 3 — ₹11 ANNUAL UPI QR CODE & APP DEEP LINKS -->
     <div id="signupStep3PaymentView" class="hidden max-w-lg w-full mx-auto px-4 py-8 flex-1 flex items-center">
       <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-4 text-xs">
-<div class="flex items-center justify-between text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
-          <span id="payStepHeaderTitle">Step 3 of 3 • ₹11 / Year UPI Activation</span>
-          <button type="button" onclick="showPublicSubView('signupStep1EmailView')" class="text-slate-400 hover:text-slate-700">⬅ Change Account</button>
+      <div class="flex items-center justify-between text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
+          <span id="payStepHeaderTitle">Final Step • ₹11 / Year Chat Unlock</span>
+          <button type="button" onclick="enterQuestionnaireWorkspace(true)" class="text-slate-400 hover:text-slate-700">⬅ Edit My Details</button>
         </div>
         <div id="renewalNoticeBanner" class="hidden bg-amber-50 border border-amber-300 text-amber-900 p-3 rounded-2xl text-[11px] font-medium">
           ⏳ Your 1-Year subscription has expired. All your saved Firestore horoscopes and Cloud Vault settings are preserved — complete your ₹11 renewal below to continue right where you left off!
@@ -1161,8 +1161,8 @@
           <span id="upiVpaDisplayBadge" class="text-[11px] font-clinical-mono text-slate-500">Amount: ₹11.00 / Year</span>
         </div>
 
-        <!-- Direct App Deep-Link Buttons for Mobile Phone Users -->
-        <div class="space-y-2">
+    <!-- Direct App Deep-Link Buttons for Mobile Phone Users -->
+        <div id="upiMobileAppsSection" class="space-y-2">
           <span class="block text-center text-[11px] font-bold text-slate-700">📱 On Mobile Phone? Tap Your Preferred UPI App</span>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <a id="btnUpiGpay" href="#" class="chrome-pill-btn justify-center bg-blue-600 hover:bg-blue-500 text-white py-2.5 px-3 text-xs shadow-xs">
@@ -1535,10 +1535,14 @@
               <button type="button" id="btnModeSimple" onclick="setAstroReadingMode('simple')" class="px-2.5 py-1 rounded-full bg-blue-600 text-white shadow-xs transition-all">
                 Simple English
               </button>
-              <button type="button" id="btnModeAstrologer" onclick="setAstroReadingMode('astrologer')" class="px-2.5 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
+           <button type="button" id="btnModeAstrologer" onclick="setAstroReadingMode('astrologer')" class="px-2.5 py-1 rounded-full text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
                 Astrologer Mode
               </button>
             </div>
+            <!-- Quick Voice Model Selector -->
+            <select id="chatVoiceQuickSelect" onchange="saveUserPreferredVoice(this.value)" title="Select Audio Voice Model" aria-label="Select Audio Voice Model" style="max-width: 155px;" class="border rounded-full px-2.5 py-1 text-[11px] font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700">
+              <option value="AUTO_SMART">🎙️ Auto Voice</option>
+            </select>
             <button type="button" onclick="openChartsFromChat()" class="chrome-pill-btn text-xs bg-blue-50 hover:bg-blue-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-slate-700 px-3 py-1.5">
               <span>📊</span> <span>View My Charts</span>
             </button>
@@ -1584,7 +1588,7 @@
               id="astroChatInput"
               rows="1"
               oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight, 128)+'px';"
-              placeholder="Ask anything about your career, relationships, money, or upcoming months..."
+              placeholder="Ask in English, Hinglish, or your language in English letters..."
               onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendAstroChatMessage(); }"
               class="flex-1 bg-transparent border-0 focus:outline-none text-sm py-1.5 resize-none max-h-32 text-slate-900 dark:text-white"
             ></textarea>
@@ -2373,8 +2377,8 @@
           <p>Horoscope drafts are stored locally on your device (`localStorage`). Google Sign-In is used solely for 1-device session verification and encrypted personal API key storage. Users can permanently delete their account and all cloud records anytime in <strong>Settings → Delete Account &amp; Data</strong>.</p>
         </div>
         <div class="pt-2 text-[11px] text-slate-500 flex justify-between items-center border-t border-slate-200 dark:border-slate-800">
-       <span>Created by <strong>Dr. Danny</strong></span>
-          <span>v5.5 • Store-Ready Edition</span>
+<span>Created by <strong>Dr. Danny</strong></span>
+          <span>v6.0 • Store-Ready Edition</span>
         </div>
       </div>
     </div>
@@ -2503,20 +2507,111 @@
             </button>
           </div>
         </div>
-<div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-1.5">
-          <label class="block font-bold text-sm">🧠 Gemini AI Model Engine</label>
- <select id="userGeminiModelSelect" onchange="saveUserPreferredModel(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
-            <option value="gemini-4-hydrogen">✨ Gemini 4 Hydrogen (Recommended — Free &amp; Paid Keys)</option>
-            <option value="gemini-3.8-flash">💨 Gemini 3.8 Flash (Fast Stable — Free &amp; Paid Keys)</option>
-            <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite (Ultra-Fast Fallback)</option>
-            <option value="gemini-4-neon">🔮 Gemini 4 Neon (Fast Pro Reasoning — Paid Key)</option>
-            <option value="gemini-4-carbon">🚀 Gemini 4 Carbon (Flagship Pro Reasoning — Paid Key)</option>
-          </select>
-          <p class="text-[10px] text-slate-400 leading-relaxed">
-            Free AI Studio keys work best on <strong>Gemini 4 Hydrogen</strong>. If you select a Pro/Carbon model on a free key, Dr. Astro automatically falls back to Gemini 4 Hydrogen.
-          </p>
-        </div>
+     <div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2.5">
+          <label class="block font-bold text-sm">🌐 Chat Language &amp; Voice Selection</label>
 
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">1. Chat Reply Language</label>
+              <select id="userChatLanguageSelect" onchange="saveUserPreferredChatLanguage(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                <option value="AUTO_MATCH">✨ Auto-Match My Language (English, Hinglish &amp; Regional)</option>
+                <option value="English">🇬🇧 English</option>
+                <option value="Hinglish (Hindi written in English letters)">🇮🇳 Hinglish (Hindi in English letters)</option>
+                <option value="Hindi (Devanagari script)">🇮🇳 Hindi (हिंदी)</option>
+                <option value="Odia written in English letters">🇮🇳 Odia (in English letters)</option>
+                <option value="Odia (Odia script)">🇮🇳 Odia (ଓଡ଼ିଆ)</option>
+                <option value="Bengali written in English letters">🇮🇳 Bengali (in English letters)</option>
+                <option value="Marathi written in English letters">🇮🇳 Marathi (in English letters)</option>
+                <option value="Tamil written in English letters">🇮🇳 Tamil (in English letters)</option>
+                <option value="Telugu written in English letters">🇮🇳 Telugu (in English letters)</option>
+                <option value="Gujarati written in English letters">🇮🇳 Gujarati (in English letters)</option>
+                <option value="Punjabi written in English letters">🇮🇳 Punjabi (in English letters)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">2. Audio Voice Model</label>
+              <div class="flex gap-2 items-center">
+                <select id="userTtsVoiceSelect" onchange="saveUserPreferredVoice(this.value)" class="flex-1 border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                  <option value="AUTO_SMART">✨ Auto Smart (Matches English &amp; Hinglish)</option>
+                </select>
+                <button type="button" onclick="previewSelectedTtsVoice()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 text-xs shrink-0">
+                  🔊 Test
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">3. Audio Speaking Speed</label>
+              <select id="userTtsSpeedSelect" onchange="saveUserTtsSpeed(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                <option value="0.65">🐢 0.65x — Slow &amp; Very Clear</option>
+                <option value="0.75" selected>✨ 0.75x — Calm (Recommended)</option>
+                <option value="0.9">🚶 0.90x — Natural Pace</option>
+                <option value="1">⚡ 1.00x — Normal Speed</option>
+              </select>
+            </div>
+
+            <p class="text-[10px] text-slate-400 leading-relaxed">
+              Choose <strong>Auto-Match</strong> to reply in whatever language you type (including Hinglish), or lock your favorite language above.
+            </p>
+          </div>
+        </div>
+<div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2.5">
+          <label class="block font-bold text-sm">🌐 Language &amp; Audio Voice</label>
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
+            <div>
+              <label for="userChatLanguageSelect" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">Chat &amp; Reading Language</label>
+              <select id="userChatLanguageSelect" onchange="saveUserPreferredLanguage(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                <option value="AUTO_MIRROR">✨ Auto-Match (English, Hinglish &amp; Regional in English Letters)</option>
+                <option value="ENGLISH">🇬🇧 English</option>
+                <option value="HINGLISH">🇮🇳 Hinglish (Hindi in English Letters)</option>
+                <option value="HINDI">🇮🇳 Hindi (हिन्दी)</option>
+                <option value="ODILISH">🇮🇳 Odia (in English Letters)</option>
+                <option value="ODIA">🇮🇳 Odia (ଓଡ଼ିଆ)</option>
+                <option value="BANGLISH">🇮🇳 Bengali (in English Letters)</option>
+                <option value="MARATHI_ROMAN">🇮🇳 Marathi (in English Letters)</option>
+                <option value="TAMIL_ROMAN">🇮🇳 Tamil (in English Letters)</option>
+                <option value="TELUGU_ROMAN">🇮🇳 Telugu (in English Letters)</option>
+                <option value="GUJARATI_ROMAN">🇮🇳 Gujarati (in English Letters)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label for="userReadingModeSelect" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">Explanation Style</label>
+                <select id="userReadingModeSelect" onchange="setAstroReadingMode(this.value)" class="w-full border rounded-xl px-2.5 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                  <option value="simple">🗣️ Simple Language</option>
+                  <option value="astrologer">🪐 Astrologer Mode</option>
+                </select>
+              </div>
+              <div>
+                <label for="userTtsSpeedSelect" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">Audio Speed</label>
+                <select id="userTtsSpeedSelect" onchange="saveUserTtsSpeed(this.value)" class="w-full border rounded-xl px-2.5 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                  <option value="0.65">0.65x (Calm Slow)</option>
+                  <option value="0.75" selected>0.75x (Balanced)</option>
+                  <option value="0.9">0.90x (Natural)</option>
+                  <option value="1">1.00x (Standard)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="userTtsVoiceSelect" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">Audio Voice Model (TTS)</label>
+              <div class="flex gap-2 items-center">
+                <select id="userTtsVoiceSelect" onchange="saveUserPreferredVoice(this.value)" class="flex-1 border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+                  <option value="AUTO_SMART">✨ Auto Smart (Matches English &amp; Hinglish)</option>
+                </select>
+                <button type="button" onclick="previewSelectedTtsVoice()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 text-xs shrink-0">
+                  🔊 Test
+                </button>
+              </div>
+            </div>
+
+            <p class="text-[10px] text-slate-400 leading-relaxed">
+              <strong>Auto-Match</strong> mirrors whatever language or Romanized script you type. Pick a fixed language above if you always want replies in that language.
+            </p>
+          </div>
+        </div>
         <div class="border-t border-slate-200 dark:border-slate-700 pt-3 flex justify-between items-center">
           <span class="text-slate-600 dark:text-slate-300">Manage Cloud API Key Vault</span>
           <button onclick="toggleSettingsModal(); toggleLoginModal();" class="chrome-pill-btn bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-1.5">🔑 Open Vault</button>
@@ -2855,6 +2950,7 @@ let currentUserSubscriptionState = {
         birthLat: parseFloat(document.getElementById("birthLat")?.value || "28.61"),
         birthLon: parseFloat(document.getElementById("birthLon")?.value || "77.21"),
         birthTzOffset: document.getElementById("birthTzOffset")?.value || "5.5",
+        birthIanaTz: selectedBirthIanaTz || ""
         timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT",
         palmHandType: document.getElementById("palmHandType")?.value || "",
         palmElementShape: document.getElementById("palmElementShape")?.value || "",
@@ -3074,8 +3170,10 @@ await paymentResponse.complete("success");
 
 async function syncAnnualProfileLockFromServer(user) {
       if (!user || !user.email) return;
-      if (isCurrentUserAdmin(user)) {
+ if (isCurrentUserAdmin(user)) {
         currentUserSubscriptionState = {
+          hasActivePlan: true,
+          isExpired: false,
           profileLocked: false,
           resetsRemaining: 999,
           lockedProfile: null,
@@ -3085,7 +3183,7 @@ async function syncAnnualProfileLockFromServer(user) {
         applyAnnualProfileLockUI();
         return;
       }
-      const emailKey = normalizeEmail(user.email);
+     const emailKey = normalizeEmail(user.email);
       let data = null;
       try {
         const snap = await db.collection("subscriptions").doc(emailKey).get();
@@ -3208,26 +3306,7 @@ function applyAnnualProfileLockUI() {
     // Step 14 -> Step 15: 1 Plan = 1 Payment = 1 Data Input Chance -> Save & Open Chat
     async function confirmAndLockBirthProfile() {
       if (!currentGoogleUser) { alert("Please sign in first."); return; }
-
-      const profile = {
-        nativeName: (document.getElementById("nativeName")?.value || "").trim(),
-        nativeGender: document.getElementById("nativeGender")?.value || "Male (Purusha Jataka)",
-        birthDate: document.getElementById("birthDate")?.value || "",
-        birthTime: document.getElementById("birthTime")?.value || "",
-        birthPlaceName: (document.getElementById("birthPlaceName")?.value || "").trim(),
-        birthLat: parseFloat(document.getElementById("birthLat")?.value || "28.61"),
-        birthLon: parseFloat(document.getElementById("birthLon")?.value || "77.21"),
-        timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT",
-        palmHandType: document.getElementById("palmHandType")?.value || "",
-        palmElementShape: document.getElementById("palmElementShape")?.value || "",
-        palmMountsNotes: (document.getElementById("palmMountsNotes")?.value || "").trim(),
-        palmDataUrl: (palmImageBase64 && palmImageMime) ? `data:${palmImageMime};base64,${palmImageBase64}` : ""
-      };
-
-      if (!profile.nativeName || !profile.birthDate || !profile.birthTime) {
-        alert("Please enter your Full Name, Date of Birth, and Time of Birth truthfully before saving.");
-        return;
-      }
+      const profile = buildCurrentInputProfilePayload();
 
       if (isCurrentUserAdmin()) {
         computeFullHoroscope();
@@ -3749,9 +3828,11 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
           cleanMode === "astrologer" ? "🪐 Switching reply to Classical Astrologer Mode..." : "✨ Translating reply into Simple English..."
         }</span>`;
         try {
+    const langDirective = getChatLanguageDirective();
           const overrideTag = cleanMode === "simple"
-            ? "[STYLE OVERRIDE: Rewrite strictly as short bullet points in everyday Simple English with ZERO Sanskrit or astrology terms.]"
-            : "[STYLE OVERRIDE: Answer in Classical Astrologer Mode as structured bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Dasa-Bhuktis.]";
+            ? `[STYLE OVERRIDE: ${langDirective} Rewrite strictly as short bullet points in everyday words with ZERO Sanskrit or astrology terms.]`
+            : `[STYLE OVERRIDE: ${langDirective} Answer in Classical Astrologer Mode as structured bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Dasa-Bhuktis.]`;
+             
           const parts = [{ text: `${lastChatExchange.question}\n\n${overrideTag}` }];
           if (palmImageBase64 && palmImageMime) {
             parts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
@@ -3850,11 +3931,21 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
+function getFirstName(rawName) {
+      const cleaned = String(rawName || "")
+        .trim()
+        .replace(/^(dr|mr|mrs|ms|miss|shri|smt|prof|pt|pandit)\.?\s+/i, "")
+        .trim();
+      if (!cleaned) return "Friend";
+      return cleaned.split(/\s+/)[0];
+    }
+
     function refreshAstroChatHeaderContext() {
       const st = currentHoroscopeState;
       if (!st) return;
       const mode = getAstroReadingMode();
-      const name = (document.getElementById("nativeName")?.value || "").trim() || "Friend";
+      const fullName = (document.getElementById("nativeName")?.value || "").trim() || "Friend";
+      const firstName = getFirstName(fullName);
       const timing = getCurrentAndUpcomingTimingSummary(st);
 
       const badge = document.getElementById("chatChartContextBadge");
@@ -3862,14 +3953,14 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
         if (mode === "astrologer") {
           const lagnaSan = RASIS[st.lagnaVargas.rasiIdx].name;
           const moonSan = st.planets.Moon.vargas.d1;
-          badge.textContent = `${name} • ${lagnaSan} Lagna • ${moonSan} Rasi • ${timing.astroBadge}${palmImageBase64 ? " • 🖐️ Palm" : ""}`;
+          badge.textContent = `${fullName} • ${lagnaSan} Lagna • ${moonSan} Rasi • ${timing.astroBadge}${palmImageBase64 ? " • 🖐️ Palm" : ""}`;
         } else {
-          badge.textContent = `${name} • Personal Reading Ready • ${timing.simpleBadge}${palmImageBase64 ? " • 🖐️ Palm Loaded" : ""}`;
+          badge.textContent = `${firstName} • Personal Reading Ready • ${timing.simpleBadge}${palmImageBase64 ? " • 🖐️ Palm Loaded" : ""}`;
         }
       }
       const headline = document.getElementById("chatGreetingHeadline");
       if (headline) {
-        headline.textContent = `Hello, ${name} ✨`;
+        headline.textContent = `Hello, ${firstName} ✨`;
       }
     }
 
@@ -3897,31 +3988,258 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
         return `<div class="my-1">${formatted}</div>`;
       }).join("");
     }
-
-// Calm Female-Preferred Web Speech TTS Engine for AI Results
+// Multi-Voice, Language Preference & Hinglish/Regional-Aware TTS Engine
     let activeTtsBtn = null;
+    let activeTtsToken = 0;
 
-    function getAstroTtsSpeed() {
+    const LANGUAGE_DIRECTIVE_MAP = {
+      AUTO_MIRROR:
+        "Understand questions written in English, Hinglish (Hindi in English letters), or ANY other language written in English/Latin letters (such as Odia, Bengali, Marathi, Gujarati, Punjabi, Tamil, Telugu, Kannada, Malayalam, or Urdu in Roman script). ALWAYS reply in the EXACT same language and script the user wrote in.",
+      ENGLISH: "ALWAYS reply in clear, natural English regardless of the input language.",
+      HINGLISH: "ALWAYS reply in natural Hinglish (conversational Hindi written strictly in English/Latin letters, e.g., 'Aapka best career window...').",
+      HINDI: "ALWAYS reply in natural Hindi written in Devanagari script (हिन्दी).",
+      ODILISH: "ALWAYS reply in natural Odia written strictly in English/Latin letters (Romanized Odia, e.g., 'Tuma pain ei samaya bhala rahiba...').",
+      ODIA: "ALWAYS reply in natural Odia written in Odia script (ଓଡ଼ିଆ).",
+      BANGLISH: "ALWAYS reply in natural Bengali written strictly in English/Latin letters (Romanized Bengali).",
+      MARATHI_ROMAN: "ALWAYS reply in natural Marathi written strictly in English/Latin letters (Romanized Marathi).",
+      TAMIL_ROMAN: "ALWAYS reply in natural Tamil written strictly in English/Latin letters (Romanized Tamil).",
+      TELUGU_ROMAN: "ALWAYS reply in natural Telugu written strictly in English/Latin letters (Romanized Telugu).",
+      GUJARATI_ROMAN: "ALWAYS reply in natural Gujarati written strictly in English/Latin letters (Romanized Gujarati)."
+    };
+
+    function getPreferredChatLanguage() {
+      const saved = localStorage.getItem("jyotish_chat_lang_v1") || "AUTO_MIRROR";
+      return LANGUAGE_DIRECTIVE_MAP[saved] ? saved : "AUTO_MIRROR";
+    }
+
+    function getLanguageDirectiveText() {
+      return LANGUAGE_DIRECTIVE_MAP[getPreferredChatLanguage()] || LANGUAGE_DIRECTIVE_MAP.AUTO_MIRROR;
+    }
+
+    function saveUserPreferredLanguage(langCode) {
+      const clean = LANGUAGE_DIRECTIVE_MAP[langCode] ? langCode : "AUTO_MIRROR";
+      localStorage.setItem("jyotish_chat_lang_v1", clean);
+      syncLanguageAndVoiceSettingsUI();
+      const label = document.getElementById("userChatLanguageSelect")?.selectedOptions?.[0]?.textContent || clean;
+      showStatusToast(`🌐 Language set to ${label}`);
+    }
+
+function getAstroTtsSpeed() {
       const saved = parseFloat(localStorage.getItem("jyotish_tts_speed_v1"));
       return Number.isFinite(saved) ? saved : 0.75;
     }
 
-    function pickPreferredSoftVoice() {
+    function saveUserTtsSpeed(speedVal) {
+      const num = parseFloat(speedVal);
+      if (!Number.isFinite(num)) return;
+      localStorage.setItem("jyotish_tts_speed_v1", String(num));
+      const sel = document.getElementById("userTtsSpeedSelect");
+      if (sel) sel.value = String(num);
+      stopAstroAudioReadout();
+      showStatusToast(`🔊 Audio speed set to ${num}x`);
+    }
+
+    function getPreferredChatLanguage() {
+      return localStorage.getItem("jyotish_chat_lang_v1") || "AUTO_MATCH";
+    }
+
+    function saveUserPreferredChatLanguage(langVal) {
+      const clean = (langVal || "AUTO_MATCH").trim();
+      localStorage.setItem("jyotish_chat_lang_v1", clean);
+      const sel = document.getElementById("userChatLanguageSelect");
+      if (sel) sel.value = clean;
+      const label = sel?.selectedOptions?.[0]?.textContent || clean;
+      showStatusToast(`🌐 Reply language: ${label}`);
+    }
+
+    function syncLanguageAndSpeedSelectors() {
+      const langSel = document.getElementById("userChatLanguageSelect");
+      const savedLang = getPreferredChatLanguage();
+      if (langSel && Array.from(langSel.options).some(o => o.value === savedLang)) {
+        langSel.value = savedLang;
+      }
+      const speedSel = document.getElementById("userTtsSpeedSelect");
+      const savedSpeed = String(getAstroTtsSpeed());
+      if (speedSel && Array.from(speedSel.options).some(o => o.value === savedSpeed)) {
+        speedSel.value = savedSpeed;
+      }
+    }
+
+    function getPreferredVoiceId() {
+      return localStorage.getItem("jyotish_tts_voice_v1") || "AUTO_SMART";
+    }    function saveUserPreferredVoice(voiceId) {
+      const cleanId = (voiceId || "AUTO_SMART").trim();
+      localStorage.setItem("jyotish_tts_voice_v1", cleanId);
+      ["userTtsVoiceSelect", "chatVoiceQuickSelect"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && Array.from(el.options).some(o => o.value === cleanId)) {
+          el.value = cleanId;
+        }
+      });
+      stopAstroAudioReadout();
+      const label = document.getElementById("chatVoiceQuickSelect")?.selectedOptions?.[0]?.textContent || cleanId;
+      showStatusToast(`🎙️ Voice set to ${label}`);
+    }
+
+    function detectTextSpeechProfile(text) {
+      const s = String(text || "");
+      // Native Indic scripts
+      if (/[\u0900-\u097F]/.test(s)) return { type: "native", lang: "hi-IN" };
+      if (/[\u0B00-\u0B7F]/.test(s)) return { type: "native", lang: "or-IN" };
+      if (/[\u0980-\u09FF]/.test(s)) return { type: "native", lang: "bn-IN" };
+      if (/[\u0B80-\u0BFF]/.test(s)) return { type: "native", lang: "ta-IN" };
+      if (/[\u0C00-\u0C7F]/.test(s)) return { type: "native", lang: "te-IN" };
+      if (/[\u0A80-\u0AFF]/.test(s)) return { type: "native", lang: "gu-IN" };
+      if (/[\u0C80-\u0CFF]/.test(s)) return { type: "native", lang: "kn-IN" };
+      if (/[\u0D00-\u0D7F]/.test(s)) return { type: "native", lang: "ml-IN" };
+
+      // Romanized Hinglish / Odia / Bengali / Marathi / Tamil / Telugu written in English letters
+      const romanizedMarkers = s.match(
+        /\b(aap|aapka|aapki|aapko|tumhara|mera|meri|mere|kya|kaise|kab|kyunki|lekin|bahut|accha|achha|bura|nahi|nahin|hoga|hogi|honge|rahega|rahegi|hai|hain|mein|karna|karo|samay|shaadi|shadi|paisa|paise|naukri|rishta|parivar|dhyan|zaroor|safalta|mahine|saal|abhi|agle|pehle|baad|kemiti|kahinki|bhala|tume|tumara|mo|amar|tomar|kemon|bhalo|eppadi|nalla|ela|bagundi|kasay|kasa|chhe|che)\b/gi
+      );
+      if (romanizedMarkers && romanizedMarkers.length >= 2) {
+        return { type: "romanized_indian", lang: "en-IN" };
+      }
+      return { type: "english", lang: "en-IN" };
+    }
+
+    function pickBestVoiceForText(text = "", forcedPref = "") {
       if (!("speechSynthesis" in window)) return null;
       const voices = window.speechSynthesis.getVoices() || [];
       if (!voices.length) return null;
-      const preferredPatterns = [
-        /google uk english female/i,
-        /microsoft aria|microsoft jenny|microsoft zira|microsoft neerja/i,
-        /samantha|karen|moira|tessa|veena|heera/i,
-        /google us english/i,
-        /female/i
-      ];
-      for (const pat of preferredPatterns) {
-        const found = voices.find(v => pat.test(v.name) && !/david|mark|ravi/i.test(v.name));
-        if (found) return found;
+
+      const pref = forcedPref || getPreferredVoiceId();
+      const profile = detectTextSpeechProfile(text);
+
+      // 1. User selected a specific OS/browser voice model
+      if (pref.startsWith("VOICE::")) {
+        const targetURI = pref.slice(7);
+        const exact = voices.find(v => (v.voiceURI || v.name) === targetURI);
+        if (exact) return exact;
       }
-      return voices.find(v => /^en/i.test(v.lang) && !/david/i.test(v.name)) || voices[0];
+
+      const findByPatterns = (patterns, langRegex = null) => {
+        for (const pat of patterns) {
+          const hit = voices.find(v => pat.test(v.name) && (!langRegex || langRegex.test(v.lang)));
+          if (hit) return hit;
+        }
+        return null;
+      };
+
+      // 2. Native Indic script -> pick matching regional voice first
+      if (profile.type === "native" && pref === "AUTO_SMART") {
+        const nativeVoice = voices.find(v => v.lang.toLowerCase().startsWith(profile.lang.toLowerCase()));
+        if (nativeVoice) return nativeVoice;
+      }
+
+      // 3. Hinglish / Romanized Indian languages or explicit Indian preset -> Indian English voice pronounces Latin-script Indian words best
+      if (pref === "AUTO_INDIAN" || (pref === "AUTO_SMART" && profile.type === "romanized_indian")) {
+        const indianVoice =
+          findByPatterns([/neerja|heera|veena|rishi|prabhat|google.*india/i], /^en-IN/i) ||
+          voices.find(v => /^en-IN/i.test(v.lang)) ||
+          voices.find(v => /^hi-IN/i.test(v.lang));
+        if (indianVoice) return indianVoice;
+      }
+
+      // 4. Calm Male English preset
+      if (pref === "AUTO_MALE") {
+        return (
+          findByPatterns([/google uk english male|microsoft guy|microsoft ryan|rishi|prabhat|daniel|alex|david|mark/i], /^en/i) ||
+          voices.find(v => /^en/i.test(v.lang)) ||
+          voices[0]
+        );
+      }
+
+      // 5. Default / Soft Female English preset
+      return (
+        findByPatterns([
+          /google uk english female/i,
+          /microsoft aria|microsoft jenny|microsoft neerja|microsoft zira/i,
+          /samantha|karen|moira|tessa|veena|heera/i,
+          /google us english/i,
+          /female/i
+        ], /^en/i) ||
+        voices.find(v => /^en-IN/i.test(v.lang)) ||
+        voices.find(v => /^en/i.test(v.lang)) ||
+        voices[0]
+      );
+    }
+
+    function populateTtsVoiceSelectors() {
+      if (!("speechSynthesis" in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const savedPref = getPreferredVoiceId();
+
+      const presets = [
+        { value: "AUTO_SMART", label: "✨ Auto Smart (English & Hinglish)" },
+        { value: "AUTO_INDIAN", label: "🇮🇳 Indian Voice (Best for Hinglish)" },
+        { value: "AUTO_FEMALE", label: "🎙️ Soft Female (English)" },
+        { value: "AUTO_MALE", label: "🎙️ Calm Male (English)" }
+      ];
+
+      // Sort installed voices: Indian languages first, then English, then others
+      const filteredVoices = voices
+        .filter(v => /^(en|hi|bn|ta|te|mr|gu|kn|ml|or|pa)/i.test(v.lang))
+        .sort((a, b) => {
+          const score = (v) => (/^(en-IN|hi-IN)/i.test(v.lang) ? 0 : (/-IN$/i.test(v.lang) ? 1 : (/^en/i.test(v.lang) ? 2 : 3)));
+          return score(a) - score(b) || a.name.localeCompare(b.name);
+        });
+
+      const buildOptionsHtml = () => {
+        const presetHtml = presets
+          .map(p => `<option value="${escapeHtml(p.value)}">${escapeHtml(p.label)}</option>`)
+          .join("");
+        if (!filteredVoices.length) return presetHtml;
+        const deviceHtml = filteredVoices
+          .map(v => {
+            const val = "VOICE::" + (v.voiceURI || v.name);
+            const cleanName = v.name.replace(/Microsoft |Google |Online \(Natural\) /gi, "").trim();
+            return `<option value="${escapeHtml(val)}">${escapeHtml(cleanName)} (${escapeHtml(v.lang)})</option>`;
+          })
+          .join("");
+        return `<optgroup label="Smart Presets">${presetHtml}</optgroup><optgroup label="Device Voices">${deviceHtml}</optgroup>`;
+      };
+
+      const html = buildOptionsHtml();
+      ["userTtsVoiceSelect", "chatVoiceQuickSelect"].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = html;
+        if (Array.from(sel.options).some(o => o.value === savedPref)) {
+          sel.value = savedPref;
+        } else {
+          sel.value = "AUTO_SMART";
+        }
+      });
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = populateTtsVoiceSelectors;
+    }
+window.addEventListener("DOMContentLoaded", () => {
+      populateTtsVoiceSelectors();
+      syncLanguageAndSpeedSelectors();
+      setTimeout(populateTtsVoiceSelectors, 600);
+    });
+
+    function previewSelectedTtsVoice() {
+      if (!("speechSynthesis" in window)) {
+        showStatusToast("⚠️ Audio playback is not supported in this browser.");
+        return;
+      }
+      stopAstroAudioReadout();
+      const pref = getPreferredVoiceId();
+      const langPref = getPreferredChatLanguage();
+      const useHindiSample = pref === "AUTO_INDIAN" || /hinglish|hindi/i.test(langPref);
+      const sampleText = useHindiSample
+        ? "Namaste! Aapka chart ready hai. Aap English ya Hinglish mein koi bhi sawaal pooch sakte hain."
+        : "Hello! Your personal Dr. Astro voice is ready. You can ask questions in English, Hinglish, or your regional language.";
+      const utter = new SpeechSynthesisUtterance(sampleText);
+      const voice = pickBestVoiceForText(sampleText, pref);
+      if (voice) utter.voice = voice;
+      utter.lang = voice?.lang || "en-IN";
+      utter.rate = getAstroTtsSpeed();
+      window.speechSynthesis.speak(utter);
     }
 
     function stopAstroAudioReadout() {
@@ -3935,6 +4253,19 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
       }
     }
 
+    function formatTextForNaturalSpeech(rawText) {
+      return String(rawText || "")
+        .replace(/[#*_`~]/g, "")
+        .replace(/[•▪▸✨🪐💼💍📅📊🖐️⚠️✅🔄📋📲]/g, "")
+        .replace(/₹\s*(\d+)/g, "Rupees $1")
+        .replace(/\s+[–—]\s+/g, " to ")
+        .replace(/\bD-1\b/g, "D 1")
+        .replace(/\bD-9\b/g, "D 9")
+        .replace(/\n+/g, ". ")
+        .replace(/\.\s*\./g, ".")
+        .trim();
+    }
+
     function toggleAstroAudioReadout(rawText, btnEl) {
       if (!("speechSynthesis" in window)) {
         showStatusToast("⚠️ Audio playback is not supported in this browser.");
@@ -3946,27 +4277,44 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
       }
       stopAstroAudioReadout();
 
-      const cleanText = String(rawText || "")
-        .replace(/[#*_`~]/g, "")
-        .replace(/[•▪▸✨🪐💼💍📅📊🖐️⚠️✅🔄]/g, "")
-        .replace(/\n+/g, ". ")
-        .trim();
+      const cleanText = formatTextForNaturalSpeech(rawText);
       if (!cleanText) return;
 
-      const utter = new SpeechSynthesisUtterance(cleanText);
-      const voice = pickPreferredSoftVoice();
-      if (voice) utter.voice = voice;
-      utter.lang = voice?.lang || "en-IN";
-      utter.rate = getAstroTtsSpeed();
-      utter.pitch = 1.0;
+      const profile = detectTextSpeechProfile(cleanText);
+      const voice = pickBestVoiceForText(cleanText);
+      const rate = getAstroTtsSpeed();
 
-      activeTtsBtn = btnEl;
-      btnEl.textContent = "⏹ Stop";
-      btnEl.classList.add("bg-blue-600", "text-white");
+      // Chunk by sentences so Chrome/Android never cuts off long answers mid-way
+      const sentences = cleanText.match(/[^.!?।]+[.!?।]*/g) || [cleanText];
+      const chunks = [];
+      let current = "";
+      sentences.forEach(s => {
+        if ((current + " " + s).length > 220 && current) {
+          chunks.push(current.trim());
+          current = s;
+        } else {
+          current = current ? `${current} ${s}` : s;
+        }
+      });
+      if (current.trim()) chunks.push(current.trim());
 
-      utter.onend = () => stopAstroAudioReadout();
-      utter.onerror = () => stopAstroAudioReadout();
-      window.speechSynthesis.speak(utter);
+const myToken = ++activeTtsToken;
+ activeTtsBtn = btnEl;
+ btnEl.textContent = "⏹ Stop";
+ btnEl.classList.add("bg-blue-600", "text-white");
+
+ chunks.forEach((chunk, idx) => {
+   const utter = new SpeechSynthesisUtterance(chunk);
+   if (voice) utter.voice = voice;
+   utter.lang = voice?.lang || profile.lang || "en-IN";
+   utter.rate = rate;
+   utter.pitch = 1.0;
+   if (idx === chunks.length - 1) {
+     utter.onend = () => { if (myToken === activeTtsToken) stopAstroAudioReadout(); };
+   }
+   utter.onerror = () => { if (myToken === activeTtsToken) stopAstroAudioReadout(); };
+   window.speechSynthesis.speak(utter);
+ });
     }
 
     function renderAstroAiBubbleContent(bubbleEl, rawText, isErrorOrStatus = false, retryQuestion = "") {
@@ -4151,20 +4499,32 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
         `====================================================`;
     }
 
-    function getModeFormattingInstructions(mode = getAstroReadingMode()) {
-      if (mode === "astrologer") {
-        return `MODE: ASTROLOGER MODE (CLASSICAL JYOTISH & SAMUDRIKA)\n` +
-          `1. BULLET POINTS ONLY: Never write long paragraphs. Present all findings as crisp, structured bullet points ("- ...") grouped under short headings.\n` +
-          `2. FULL CLASSICAL PRECISION: Cite the exact Lagna, Bhavas (Houses 1–12), Rasis, Nakshatra Padas, Navamsa (D-9), Arudha Padas (AL/UL), Chara Karakas, Yogas, exact Vimshottari Mahadasa/Bhukti Month–Year windows, and Samudrika Rekhas/Parvatas (if palm photo is attached).\n` +
-          `3. STRICTLY SPECIFIC RESULTS: State concrete outcomes and dates—no vague filler.`;
+function getChatLanguageDirective() {
+      const chosen = getPreferredChatLanguage();
+      if (chosen && chosen !== "AUTO_MATCH") {
+        return `REQUIRED REPLY LANGUAGE: Understand the user's question in any language (including English, Hinglish, or any regional language in English letters), and ALWAYS write your entire reply in ${chosen}. Address the user by their first name only if needed.`;
       }
-      return `MODE: SIMPLE ENGLISH (STRICT RESULTS, ZERO JARGON)\n` +
-        `1. BULLET POINTS ONLY — NO PARAGRAPHS: Every single line of your answer MUST be a short bullet point ("- ..."). Never write narrative paragraphs.\n` +
-        `2. STRICTLY RESULTS ONLY: No greetings, no introductory sentence, no closing fluff, no generic horoscope advice ("stay positive", "ups and downs", "hard work pays off"). Give direct, concrete verdicts.\n` +
-        `3. NORMAL DAY-TO-DAY WORDS ONLY: Do the astrology silently using the data below, then hide ALL technical jargon. NEVER use Sanskrit or astrology words (no Lagna, Rasi, Dasa, Bhukti, Nakshatra, Yoga, Shadvarga, Arudha, Upapada, Saham, House 7, House 10, Jupiter, Saturn, Mars, Rahu, Ketu, Mercury, Venus, etc.). Translate everything into plain real-life results (e.g., "Best career fit: ...", "Strongest growth window: Nov 2026 – Aug 2027", "Watch out for: ...").\n` +
-        `4. SPECIFIC TIMING: Always cite exact Month–Year windows from CURRENT & UPCOMING TIMING when answering timing questions.`;
+      return `LANGUAGE & SCRIPT MIRRORING (CRITICAL): Understand questions written in English, Hinglish (Hindi in English letters), or ANY other language written in English/Latin letters (such as Odia, Bengali, Marathi, Gujarati, Punjabi, Tamil, Telugu, Kannada, Malayalam, or Urdu written in Roman script). ALWAYS reply in the EXACT same language and script the user wrote in. Address the user by their first name only if needed.`;
     }
 
+    function getModeFormattingInstructions(mode = getAstroReadingMode()) {
+      const languageRule = getChatLanguageDirective() + "\n";
+         
+      if (mode === "astrologer") {
+        return `MODE: ASTROLOGER MODE (CLASSICAL JYOTISH & SAMUDRIKA)\n` +
+          `1. ${languageRule}` +
+          `2. BULLET POINTS ONLY: Never write long paragraphs. Present all findings as crisp, structured bullet points ("- ...") grouped under short headings.\n` +
+          `3. FULL CLASSICAL PRECISION: Cite the exact Lagna, Bhavas (Houses 1–12), Rasis, Nakshatra Padas, Navamsa (D-9), Arudha Padas (AL/UL), Chara Karakas, Yogas, exact Vimshottari Mahadasa/Bhukti Month–Year windows, and Samudrika Rekhas/Parvatas (if palm photo is attached).\n` +
+          `4. STRICTLY SPECIFIC RESULTS: State concrete outcomes and dates—no vague filler.`;
+      }
+      return `MODE: SIMPLE EVERYDAY LANGUAGE (STRICT RESULTS, ZERO JARGON)\n` +
+        `1. ${languageRule}` +
+        `2. BULLET POINTS ONLY — NO PARAGRAPHS: Every single line of your answer MUST be a short bullet point ("- ..."). Never write narrative paragraphs.\n` +
+        `3. STRICTLY RESULTS ONLY: No greetings, no introductory sentence, no closing fluff, no generic horoscope advice ("stay positive", "ups and downs", "hard work pays off"). Give direct, concrete verdicts.\n` +
+        `4. NORMAL DAY-TO-DAY WORDS ONLY: Do the astrology silently using the data below, then hide ALL technical jargon. NEVER use Sanskrit or astrology words (no Lagna, Rasi, Dasa, Bhukti, Nakshatra, Yoga, Shadvarga, Arudha, Upapada, Saham, House 7, House 10, Jupiter, Saturn, Mars, Rahu, Ketu, Mercury, Venus, etc.). Translate everything into plain real-life results.\n` +
+        `5. SPECIFIC TIMING: Always cite exact Month–Year windows from CURRENT & UPCOMING TIMING when answering timing questions.`;
+    }
+       
     function buildCompleteAstrologySystemContext() {
       const dataBlock = buildStructuredChartDataBlock();
       const modeRules = getModeFormattingInstructions(getAstroReadingMode());
@@ -4213,10 +4573,11 @@ if (lastChatExchange.bubbleEl && lastChatExchange.bubbleEl.isConnected && lastCh
         });
 
         const activeMode = getAstroReadingMode();
+    const langDirective = getChatLanguageDirective();
         const turnStyleOverride = activeMode === "simple"
-          ? "[STYLE OVERRIDE: Reply ONLY in short bullet points using plain everyday English. ZERO Sanskrit words or planet/house jargon.]"
-          : "[STYLE OVERRIDE: Reply in Classical Astrologer Mode as bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Vimshottari Dasa/Bhuktis.]";
-
+          ? `[STYLE OVERRIDE: ${langDirective} Reply ONLY in short bullet points using everyday words. ZERO Sanskrit or astrology jargon.]`
+          : `[STYLE OVERRIDE: ${langDirective} Reply in Classical Astrologer Mode as bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Vimshottari Dasa/Bhuktis.]`;
+           
         const currentParts = [{ text: `${question}\n\n${turnStyleOverride}` }];
         if (palmImageBase64 && palmImageMime) {
           currentParts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
@@ -4501,6 +4862,17 @@ let statusToastTimer = null;
         if (searchDrop && !searchDrop.classList.contains('hidden') && !searchDrop.contains(e.target) && e.target !== searchInput) {
           searchDrop.classList.add('hidden');
         }
+        const placeDrop = document.getElementById('birthPlaceSuggestions');
+        const placeInput = document.getElementById('birthPlaceName');
+        if (placeDrop && !placeDrop.classList.contains('hidden') && !placeDrop.contains(e.target) && e.target !== placeInput) {
+          placeDrop.classList.add('hidden');
+        }
+      });
+    });
+        const searchInput = document.getElementById('headerCaseSearch');
+        if (searchDrop && !searchDrop.classList.contains('hidden') && !searchDrop.contains(e.target) && e.target !== searchInput) {
+          searchDrop.classList.add('hidden');
+        }
       });
     });
 
@@ -4739,15 +5111,19 @@ let isAuthOrExternalActionActive = false;
       }
     }
 
-    function rememberDeviceAccount(email, displayName = '', photoURL = '') {
+function rememberDeviceAccount(email, displayName = '', photoURL = '') {
       const norm = normalizeEmail(email);
       if (!norm || !norm.includes('@') || norm === window.BANNED_RESIDUE_EMAIL) return;
       const list = getSavedDeviceAccounts();
       const idx = list.findIndex(a => normalizeEmail(a.email) === norm);
+      const isSignedInOwner = Boolean(
+        isCurrentUserAdmin() && norm === normalizeEmail(currentGoogleUser?.email)
+      );
       const entry = {
         email: norm,
         name: displayName || (idx >= 0 ? list[idx].name : '') || norm.split('@')[0],
         photo: photoURL || (idx >= 0 ? list[idx].photo : '') || DEFAULT_AVATAR_SVG,
+        isOwner: isSignedInOwner || (idx >= 0 ? Boolean(list[idx].isOwner) : false),
         lastSeen: new Date().toISOString()
       };
       if (idx >= 0) list[idx] = entry;
@@ -4783,18 +5159,20 @@ let isAuthOrExternalActionActive = false;
       const { enabled, allowedSet } = await fetchWebsiteAllowedEmailsSet();
       const deviceAccounts = getSavedDeviceAccounts();
 
-      // Match device accounts that exist in the website's allowed list (or all device accounts if Private Mode is off)
+// Match device accounts that exist in the website's allowed list (or all device accounts if Private Mode is off)
       const matchedAccounts = deviceAccounts.filter(acc => {
         const em = normalizeEmail(acc.email);
-        return !enabled || allowedSet.has(em);
+        return !enabled || Boolean(acc.isOwner) || allowedSet.has(em);
       });
 
- const buildAccountCardsHtml = (accounts) => accounts.map(acc => {
+      const buildAccountCardsHtml = (accounts) => accounts.map(acc => {
         const safeEmail = escapeHtml(acc.email);
         const safeName = escapeHtml(acc.name);
         const safePhoto = escapeHtml(acc.photo || DEFAULT_AVATAR_SVG);
-        const isOwner = normalizeEmail(acc.email) === normalizeEmail(window.ADMIN_OWNER_EMAIL);
-        const badgeText = isOwner ? 'Owner ★' : '✓ In Website';
+        const isOwner = Boolean(acc.isOwner) || (
+          Boolean(window.ADMIN_OWNER_EMAIL) && normalizeEmail(acc.email) === normalizeEmail(window.ADMIN_OWNER_EMAIL)
+        );
+        const badgeText = isOwner ? 'Owner' : '✓ In Website';
         return `
           <div onclick="signInWithGoogle('${safeEmail}')" class="group cursor-pointer flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-blue-950/70 border border-slate-700 hover:border-blue-400 transition-all">
             <div class="flex items-center gap-2.5 overflow-hidden">
@@ -5040,15 +5418,18 @@ async function continueSignupWithSelectedAccount() {
       const utrInput = document.getElementById('upiUtrInput');
       if (utrInput) utrInput.value = '';
          
-    const qrBox = document.getElementById('upiQrCodeImg')?.closest('.bg-slate-50');
-    if (!window.MERCHANT_UPI_ID) {
-      if (qrBox) qrBox.classList.add('hidden');
-      const vpaBadge = document.getElementById('upiVpaDisplayBadge');
-      if (vpaBadge) vpaBadge.textContent = 'Checkout via Razorpay Payment Page';
-      return;
-    } else if (qrBox) {
-      qrBox.classList.remove('hidden');
-    }
+  const qrBox = document.getElementById('upiQrCodeImg')?.closest('.bg-slate-50');
+      const mobileAppsBox = document.getElementById('upiMobileAppsSection');
+      if (!window.MERCHANT_UPI_ID) {
+        if (qrBox) qrBox.classList.add('hidden');
+        if (mobileAppsBox) mobileAppsBox.classList.add('hidden');
+        const vpaBadge = document.getElementById('upiVpaDisplayBadge');
+        if (vpaBadge) vpaBadge.textContent = 'Checkout via Razorpay Payment Page';
+        return;
+      } else {
+        if (qrBox) qrBox.classList.remove('hidden');
+        if (mobileAppsBox) mobileAppsBox.classList.remove('hidden');
+      }
       const pa = encodeURIComponent(window.MERCHANT_UPI_ID);
       const pn = encodeURIComponent(window.MERCHANT_UPI_NAME);
       const am = encodeURIComponent(window.ANNUAL_PLAN_AMOUNT_INR);
@@ -5399,7 +5780,7 @@ async function handleMedicoLogout() {
       activeSessionKey = '';
       sessionStorage.removeItem('jyotish_active_session_key');
       localStorage.removeItem('jyotish_working_draft_v1');
-  currentUserSubscriptionState = { profileLocked: false, resetsRemaining: 0, lockedProfile: null, expiresAtISO: "", awaitingRenewalChoice: false };
+      currentUserSubscriptionState = { hasActivePlan: false, isExpired: false, profileLocked: false, resetsRemaining: 0, lockedProfile: null, expiresAtISO: "", awaitingRenewalChoice: false };
       lastSynthesisCache = { key: '', simple: '', astrologer: '' };
       lastDoubtCache = { key: '', question: '', simple: '', astrologer: '' };
       resetAstroChatUIOnly();
