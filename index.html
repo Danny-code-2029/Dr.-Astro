@@ -1196,15 +1196,15 @@
 <!-- VIEW 5: STEP 10 — DEDICATED GEMINI API KEY GENERATION & SAVE PAGE -->
     <div id="signupStep4ApiKeyView" class="hidden max-w-lg w-full mx-auto px-4 py-10 flex-1 flex items-center">
       <div class="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 w-full space-y-5 text-xs">
-        <div class="flex items-center justify-between text-[11px] font-bold text-indigo-700 uppercase tracking-wider">
-          <span>Final Setup • Link Your Gemini AI Key</span>
-          <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">✓ Plan Active</span>
+      <div class="flex items-center justify-between text-[11px] font-bold text-indigo-700 uppercase tracking-wider">
+          <span>Step 1 • Link Your Free Gemini AI Key</span>
+          <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-full">Free Setup</span>
         </div>
 
         <div class="space-y-1">
           <h2 class="text-lg font-extrabold text-slate-900">🔑 Generate &amp; Save Your Free Gemini API Key</h2>
           <p class="text-xs text-slate-500 leading-relaxed">
-            Account <strong id="apiPageEmailBadge" class="text-blue-700 font-clinical-mono">--</strong> is active. Link your personal Google AI Studio key once so Dr. Astro can compute charts and answer your Jyotish &amp; Palm questions privately.
+            Signed in as <strong id="apiPageEmailBadge" class="text-blue-700 font-clinical-mono">--</strong>. Link your free Google AI Studio key once, then proceed to enter your birth &amp; palm details for free.
           </p>
         </div>
 
@@ -1667,46 +1667,23 @@
             <input id="birthTime" type="time" step="1" value="09:00:00" onchange="computeFullHoroscope()" class="w-full border rounded p-2 text-sm font-clinical-mono" />
           </div>
 
-   <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold mb-1">Place of Birth (Select Preset or Type Any City &amp; State — Auto-Sets Timezone)</label>
-            <div class="flex gap-2">
-              <select id="cityPresetSelect" onchange="applyCityCoordinates(this.value)" class="w-1/2 border rounded p-2 text-xs">
-                <option value="New Delhi, Delhi, India|28.6139|77.2090|5.5|Asia/Kolkata">New Delhi, India (IST +5:30)</option>
-                <option value="Mumbai, Maharashtra, India|18.9388|72.8354|5.5|Asia/Kolkata">Mumbai, Maharashtra (IST +5:30)</option>
-                <option value="Bengaluru, Karnataka, India|12.9716|77.5946|5.5|Asia/Kolkata">Bengaluru, Karnataka (IST +5:30)</option>
-                <option value="Kolkata, West Bengal, India|22.5726|88.3639|5.5|Asia/Kolkata">Kolkata, West Bengal (IST +5:30)</option>
-                <option value="Chennai, Tamil Nadu, India|13.0827|80.2707|5.5|Asia/Kolkata">Chennai, Tamil Nadu (IST +5:30)</option>
-                <option value="Varanasi, Uttar Pradesh, India|25.3176|82.9739|5.5|Asia/Kolkata">Varanasi, UP (IST +5:30)</option>
-                <option value="Ujjain, Madhya Pradesh, India|23.1765|75.7885|5.5|Asia/Kolkata">Ujjain, MP (IST +5:30)</option>
-                <option value="Bhubaneswar, Odisha, India|20.2961|85.8245|5.5|Asia/Kolkata">Bhubaneswar, Odisha (IST +5:30)</option>
-                <option value="Puri, Odisha, India|19.8135|85.8312|5.5|Asia/Kolkata">Puri, Odisha (IST +5:30)</option>
-                <option value="Cuttack, Odisha, India|20.4625|85.8830|5.5|Asia/Kolkata">Cuttack, Odisha (IST +5:30)</option>
-                <option value="Bhilai / Durg, Chhattisgarh, India|21.1938|81.3509|5.5|Asia/Kolkata">Bhilai / Durg, CG (IST +5:30)</option>
-                <option value="Raipur, Chhattisgarh, India|21.2514|81.6296|5.5|Asia/Kolkata">Raipur, CG (IST +5:30)</option>
-                <option value="Kathmandu, Bagmati, Nepal|27.7172|85.3240|5.75|Asia/Kathmandu">Kathmandu, Nepal (NPT +5:45)</option>
-                <option value="Dubai, UAE|25.2048|55.2708|4|Asia/Dubai">Dubai, UAE (GST +4:00)</option>
-                <option value="Singapore|1.3521|103.8198|8|Asia/Singapore">Singapore (SGT +8:00)</option>
-                <option value="London, England, UK|51.5072|-0.1276|0|Europe/London">London, UK (GMT/BST)</option>
-                <option value="New York, New York, USA|40.7128|-74.0060|-5|America/New_York">New York, USA (EST/EDT)</option>
-                <option value="San Francisco, California, USA|37.7749|-122.4194|-8|America/Los_Angeles">San Francisco, USA (PST/PDT)</option>
-                <option value="Toronto, Ontario, Canada|43.6532|-79.3832|-5|America/Toronto">Toronto, Canada (EST/EDT)</option>
-                <option value="Sydney, NSW, Australia|-33.8688|151.2093|10|Australia/Sydney">Sydney, Australia (AEST/AEDT)</option>
-              </select>
-              <div class="relative w-1/2">
-                <input
-                  id="birthPlaceName"
-                  type="text"
-                  value="New Delhi, India"
-                  autocomplete="off"
-                  oninput="handleBirthPlaceTyping(this.value)"
-                  placeholder="Type City, State (e.g. Jaipur, Rajasthan)"
-                  class="w-full border rounded p-2 text-xs"
-                />
-                <div id="birthPlaceSuggestions" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
-              </div>
+  <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold mb-1">Place of Birth (Type City &amp; State — Auto-Selects Coordinates &amp; Timezone)</label>
+            <div class="relative w-full">
+              <input
+                id="birthPlaceName"
+                type="text"
+                value="New Delhi, India"
+                autocomplete="off"
+                onfocus="handleBirthPlaceFocus()"
+                oninput="handleBirthPlaceTyping(this.value)"
+                onkeydown="if(event.key==='Enter'){ event.preventDefault(); selectBestBirthPlaceMatch(); }"
+                placeholder="Type any City, State (e.g., Ambikapur, Chhattisgarh or London, UK)"
+                class="w-full border rounded p-2 text-sm"
+              />
+              <div id="birthPlaceSuggestions" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50 max-h-72 overflow-y-auto"></div>
             </div>
-          </div>
-          <div>
+          </div>          <div>
             <label class="block text-xs font-semibold mb-1">Lat (°N), Lon (°E) &amp; Timezone (Auto)</label>
             <div class="grid grid-cols-3 gap-1">
               <input id="birthLat" type="number" step="0.01" value="28.61" oninput="computeFullHoroscope()" class="border rounded p-2 text-xs font-clinical-mono" title="Latitude (+N)" />
@@ -2858,7 +2835,9 @@
       companionHidePayments: true,
       defaultGeminiModel: "gemini-4-hydrogen"
     };
-      let currentUserSubscriptionState = {
+let currentUserSubscriptionState = {
+      hasActivePlan: false,
+      isExpired: false,
       profileLocked: false,
       resetsRemaining: 0,
       lockedProfile: null,
@@ -2866,9 +2845,109 @@
       awaitingRenewalChoice: false
     };
 
+    function buildCurrentInputProfilePayload() {
+      return {
+        nativeName: (document.getElementById("nativeName")?.value || "").trim(),
+        nativeGender: document.getElementById("nativeGender")?.value || "Male (Purusha Jataka)",
+        birthDate: document.getElementById("birthDate")?.value || "",
+        birthTime: document.getElementById("birthTime")?.value || "",
+        birthPlaceName: (document.getElementById("birthPlaceName")?.value || "").trim(),
+        birthLat: parseFloat(document.getElementById("birthLat")?.value || "28.61"),
+        birthLon: parseFloat(document.getElementById("birthLon")?.value || "77.21"),
+        birthTzOffset: document.getElementById("birthTzOffset")?.value || "5.5",
+        timeAccuracyMode: document.getElementById("timeAccuracyMode")?.value || "EXACT",
+        palmHandType: document.getElementById("palmHandType")?.value || "",
+        palmElementShape: document.getElementById("palmElementShape")?.value || "",
+        palmMountsNotes: (document.getElementById("palmMountsNotes")?.value || "").trim(),
+        palmCustomQuestion: (document.getElementById("palmCustomQuestion")?.value || "").trim(),
+        palmDataUrl: (palmImageBase64 && palmImageMime) ? `data:${palmImageMime};base64,${palmImageBase64}` : ""
+      };
+    }
+
+    async function saveUnpaidDraftProfileToServer(user = currentGoogleUser) {
+      if (!user || !user.uid) return null;
+      const profile = buildCurrentInputProfilePayload();
+      const emailKey = normalizeEmail(user.email || "");
+      try {
+        localStorage.setItem("jyotish_unpaid_draft_" + emailKey, JSON.stringify(profile));
+        if (profile.palmDataUrl) {
+          localStorage.setItem("jyotish_saved_palm_" + emailKey, profile.palmDataUrl);
+        }
+      } catch (e) {}
+
+      // Save directly to Firestore user_horoscopes/{uid}/draft_profile/current (preserved even if user does not pay)
+      try {
+        await db.collection("user_horoscopes")
+          .doc(user.uid)
+          .collection("draft_profile")
+          .doc("current")
+          .set({
+            email: emailKey,
+            ...profile,
+            savedAtISO: new Date().toISOString(),
+            paymentStatus: currentUserSubscriptionState.hasActivePlan ? "paid" : "pending_payment"
+          }, { merge: true });
+      } catch (e) {}
+      return profile;
+    }
+
+    async function loadUnpaidDraftProfileFromServer(user = currentGoogleUser) {
+      if (!user || !user.uid || isCurrentUserAdmin(user) || currentUserSubscriptionState.profileLocked) return false;
+      const emailKey = normalizeEmail(user.email || "");
+      let draft = null;
+      try {
+        const snap = await db.collection("user_horoscopes")
+          .doc(user.uid)
+          .collection("draft_profile")
+          .doc("current")
+          .get();
+        if (snap.exists) draft = snap.data();
+      } catch (e) {}
+      if (!draft) {
+        try { draft = JSON.parse(localStorage.getItem("jyotish_unpaid_draft_" + emailKey) || "null"); } catch {}
+      }
+      if (!draft || !draft.nativeName) return false;
+
+      [...LOCKED_BIRTH_FIELD_IDS, ...LOCKED_PALM_FIELD_IDS].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && draft[id] !== undefined && draft[id] !== null && draft[id] !== "") {
+          el.value = draft[id];
+        }
+      });
+      if (draft.palmDataUrl) restoreSavedPalmImage(draft.palmDataUrl);
+      computeFullHoroscope();
+      return true;
+    }
+
+    // Section 2 "Next" for Unpaid Users: Saves data to server first, then opens Payment Window
+    async function saveDataToServerAndOpenPayment() {
+      if (!currentGoogleUser) { alert("Please sign in first."); return; }
+      const profile = buildCurrentInputProfilePayload();
+      if (!profile.nativeName || !profile.birthDate || !profile.birthTime) {
+        alert("Please go back to Section 1 and enter your Full Name, Date of Birth, and Time of Birth first.");
+        switchToOrbitSection(0);
+        return;
+      }
+
+      showStatusToast("☁️ Saving your birth & palm details to server...");
+      await saveUnpaidDraftProfileToServer(currentGoogleUser);
+
+      // If user already has an active paid plan, lock & jump straight into Chat
+      if (isCurrentUserAdmin() || currentUserSubscriptionState.hasActivePlan) {
+        await confirmAndLockBirthProfile();
+        return;
+      }
+
+      // Open Payment Window (data is already safely saved on the server even if user closes this page)
+      const emailKey = normalizeEmail(currentGoogleUser.email);
+      const purpose = currentUserSubscriptionState.isExpired ? "renewal" : "new";
+      populateUpiPaymentStep(emailKey, purpose);
+      showPublicSubView("signupStep3PaymentView");
+    }
+
 const LOCKED_BIRTH_FIELD_IDS = [
       "nativeName", "nativeGender", "birthDate", "birthTime",
-      "cityPresetSelect", "birthPlaceName", "birthLat", "birthLon", "timeAccuracyMode"
+      "birthPlaceName", "birthLat", "birthLon", "birthTzOffset", "timeAccuracyMode"
     ];
 
     const LOCKED_PALM_FIELD_IDS = [
@@ -2893,7 +2972,7 @@ function syncHeaderControlsForRole() {
       }
     }
 
-    function startNewVolunteerEntry() {
+   function startNewVolunteerEntry() {
       if (!isCurrentUserAdmin()) return;
       stopAstroAudioReadout();
       localStorage.removeItem('jyotish_working_draft_v1');
@@ -2901,13 +2980,11 @@ function syncHeaderControlsForRole() {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
-      clearPalmImage(true);
-      clearCaseSearch();
       if (document.getElementById('birthDate')) document.getElementById('birthDate').value = '1995-05-15';
       if (document.getElementById('birthTime')) document.getElementById('birthTime').value = '09:00:00';
-      if (document.getElementById('cityPresetSelect')) document.getElementById('cityPresetSelect').selectedIndex = 0;
-      applyCityCoordinates(document.getElementById('cityPresetSelect')?.value || 'New Delhi, Delhi, India|28.6139|77.2090|5.5|Asia/Kolkata');
-      computeFullHoroscope();
+      clearPalmImage(true);
+      clearCaseSearch();
+      applyCityCoordinates('New Delhi, Delhi, India|28.6139|77.2090|5.5|Asia/Kolkata');
       startNewAstroChatSession(false);
       refreshAstroChatHeaderContext();
       enterQuestionnaireWorkspace(true);
@@ -3020,6 +3097,7 @@ async function syncAnnualProfileLockFromServer(user) {
 
 if (data) {
         currentUserSubscriptionState = {
+          ...currentUserSubscriptionState,
           profileLocked: Boolean(data.profileLocked),
           resetsRemaining: 0,
           lockedProfile: data.lockedProfile || null,
@@ -3028,6 +3106,7 @@ if (data) {
         };
       } else {
         currentUserSubscriptionState = {
+          ...currentUserSubscriptionState,
           profileLocked: false,
           resetsRemaining: 0,
           lockedProfile: null,
@@ -5075,8 +5154,22 @@ try {
         showStatusToast('✅ Reset unlocked! Enter your corrected birth & palm details.');
         return;
       }
+currentUserSubscriptionState.hasActivePlan = true;
+      currentUserSubscriptionState.isExpired = false;
+
       if (currentPaymentPurpose === 'renewal' && currentUserSubscriptionState.lockedProfile) {
         openRenewalDataChoiceView();
+        return;
+      }
+
+      // If user already entered Section 1 & 2 before paying, lock it and open the Chatting Window immediately
+      const draftReady = Boolean(
+        (document.getElementById('nativeName')?.value || '').trim() &&
+        (document.getElementById('birthDate')?.value || '').trim() &&
+        (document.getElementById('birthTime')?.value || '').trim()
+      );
+      if (draftReady && !currentUserSubscriptionState.profileLocked) {
+        await confirmAndLockBirthProfile();
         return;
       }
 
@@ -5092,15 +5185,15 @@ try {
       showPublicSubView('renewalDataChoiceView');
     }
 
-    async function routeAfterAccessConfirmed(user) {
-      const emailKey = normalizeEmail(user?.email || '');
-      const hasApiKey = Boolean(getActiveJyotishGeminiKey());
-
-      if (!isCurrentUserAdmin(user) && currentUserSubscriptionState.awaitingRenewalChoice && currentUserSubscriptionState.lockedProfile) {
-        openRenewalDataChoiceView();
+async function routeAfterAccessConfirmed(user) {
+      if (!user || !user.email) {
+        showPublicSubView('landingHomeView');
         return;
       }
+      const emailKey = normalizeEmail(user.email);
+      const hasApiKey = Boolean(getActiveJyotishGeminiKey());
 
+      // Step 1: API Key Generation & Paste Page (Before Data Entry)
       if (!hasApiKey) {
         const badge = document.getElementById('apiPageEmailBadge');
         if (badge) badge.textContent = emailKey;
@@ -5108,7 +5201,28 @@ try {
         return;
       }
 
-      enterQuestionnaireWorkspace(false);
+      // Owner goes straight to workspace
+      if (isCurrentUserAdmin(user)) {
+        enterQuestionnaireWorkspace(false);
+        return;
+      }
+
+      // Post-renewal choice if renewed user already has previous locked data
+      if (currentUserSubscriptionState.hasActivePlan && currentUserSubscriptionState.awaitingRenewalChoice && currentUserSubscriptionState.lockedProfile) {
+        openRenewalDataChoiceView();
+        return;
+      }
+
+      // Paid + Locked -> Open Chatting Window directly
+      if (currentUserSubscriptionState.hasActivePlan && currentUserSubscriptionState.profileLocked) {
+        enterQuestionnaireWorkspace(false);
+        return;
+      }
+
+      // Paid + Not yet locked -> If they already saved Section 1/2 draft before paying, open Chat or let them review
+      // Unpaid -> Open FREE Data Entry (Section 1 -> Next -> Section 2 -> Next -> Payment)
+      await loadUnpaidDraftProfileFromServer(user);
+      enterQuestionnaireWorkspace(true);
     }
 
     async function saveOnboardingApiKeyAndEnter() {
@@ -5130,6 +5244,8 @@ try {
       const emailKey = normalizeEmail(user.email);
 
       if (isCurrentUserAdmin(user)) {
+        currentUserSubscriptionState.hasActivePlan = true;
+        currentUserSubscriptionState.isExpired = false;
         pendingSignupAuthMode = null;
         return true;
       }
@@ -5148,55 +5264,28 @@ try {
       const isExpired = Boolean(subData && subData.expiresAtMs && nowMs > subData.expiresAtMs);
       const hasActiveSub = Boolean(subData && subData.status === 'active' && subData.expiresAtMs && nowMs <= subData.expiresAtMs);
 
-      if (isExpired) {
-        if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
-          alert('Your 1-Year Dr. Astro pass has expired. Your saved data is safe—please renew on the web portal to continue.');
-          showPublicSubView('landingHomeView');
-        } else {
-          populateUpiPaymentStep(emailKey, 'renewal');
-          showPublicSubView('signupStep3PaymentView');
-        }
-        return false;
-      }
-
-      if (hasActiveSub || allowedSet.has(emailKey)) {
-        pendingSignupAuthMode = null;
-        return true;
-      }
-
-      if (isPlayStoreCompanionApp() && window.MONETIZATION_CONFIG.companionHidePayments) {
-        alert('No active Dr. Astro access found for ' + emailKey + '.');
-        showPublicSubView('landingHomeView');
-        return false;
-      }
-
-      const permBadge = document.getElementById('permStepEmailBadge');
-      if (permBadge) permBadge.textContent = emailKey;
-      const selTxt = document.getElementById('signupSelectedEmailText');
-      if (selTxt) selTxt.textContent = emailKey;
-      document.getElementById('signupSelectedEmailCard')?.classList.remove('hidden');
-      showPublicSubView('signupStep2PermissionsView');
-      return false;
+      currentUserSubscriptionState.isExpired = isExpired;
+      currentUserSubscriptionState.hasActivePlan = !isExpired && (hasActiveSub || allowedSet.has(emailKey));
+      pendingSignupAuthMode = null;
+      return true;
     }
 
     async function handlePublicLoginClick() {
       pendingSignupAuthMode = 'login';
-      // Always open the Google account selector so users can switch accounts if needed
       await signInWithGoogle('');
     }
 
-auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged(async (user) => {
       currentGoogleUser = user;
-     if (isCurrentUserAdmin(user) && user?.email) {
-     window.ADMIN_OWNER_EMAIL = normalizeEmail(user.email);
-   }
+      if (isCurrentUserAdmin(user) && user?.email) {
+        window.ADMIN_OWNER_EMAIL = normalizeEmail(user.email);
+      }
       if (user && user.email) {
         rememberDeviceAccount(user.email, user.displayName, user.photoURL);
       }
       renderForensicWatermark();
       injectPrivacySettingsUI();
       syncHeaderControlsForRole();
-      await enforcePrivateAccessGate(user);
       await renderDeviceAccountMatchers();
 
       const statusBox = document.getElementById('vaultSyncStatus');
@@ -5212,7 +5301,6 @@ auth.onAuthStateChanged(async (user) => {
       await claimSingleDeviceSessionSlot(user);
       if (statusBox) statusBox.textContent = `🔄 Signed in as ${user.email} — Checking Dr. Astro Vault...`;
 
-      // Load saved API key BEFORE routing so Step 10 knows whether to show API Key page
       let loadedKey = '';
       try {
         const docSnap = await db.collection('jyotish_vault').doc(user.uid).get();
@@ -5240,12 +5328,10 @@ auth.onAuthStateChanged(async (user) => {
         updateAuthUI('needs_key');
       }
 
-      // Check existing account / subscription and route cleanly through Steps 4 -> 11
-      const hasAccess = await verifyOneYearSubscriptionAndRoute(user);
-      if (hasAccess) {
-        await syncAnnualProfileLockFromServer(user);
-        await routeAfterAccessConfirmed(user);
-      }
+      // Check subscription state (never blocks free Data Entry) then route: API Key -> Data Entry -> Payment -> Chat
+      await verifyOneYearSubscriptionAndRoute(user);
+      await syncAnnualProfileLockFromServer(user);
+      await routeAfterAccessConfirmed(user);
     });
 
 async function signInWithGoogle(hintEmail = '') {
@@ -6097,7 +6183,21 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
     let birthPlaceLookupTimer = null;
     let birthPlaceLookupResults = [];
 
-    // Computes exact UTC offset (including historical DST) for any IANA timezone & birth date
+    const POPULAR_BIRTH_CITIES = [
+      { name: "New Delhi", admin1: "Delhi", country: "India", latitude: 28.6139, longitude: 77.2090, timezone: "Asia/Kolkata" },
+      { name: "Mumbai", admin1: "Maharashtra", country: "India", latitude: 18.9388, longitude: 72.8354, timezone: "Asia/Kolkata" },
+      { name: "Bengaluru", admin1: "Karnataka", country: "India", latitude: 12.9716, longitude: 77.5946, timezone: "Asia/Kolkata" },
+      { name: "Kolkata", admin1: "West Bengal", country: "India", latitude: 22.5726, longitude: 88.3639, timezone: "Asia/Kolkata" },
+      { name: "Chennai", admin1: "Tamil Nadu", country: "India", latitude: 13.0827, longitude: 80.2707, timezone: "Asia/Kolkata" },
+      { name: "Bhubaneswar", admin1: "Odisha", country: "India", latitude: 20.2961, longitude: 85.8245, timezone: "Asia/Kolkata" },
+      { name: "Bhilai / Durg", admin1: "Chhattisgarh", country: "India", latitude: 21.1938, longitude: 81.3509, timezone: "Asia/Kolkata" },
+      { name: "Raipur", admin1: "Chhattisgarh", country: "India", latitude: 21.2514, longitude: 81.6296, timezone: "Asia/Kolkata" },
+      { name: "Kathmandu", admin1: "Bagmati", country: "Nepal", latitude: 27.7172, longitude: 85.3240, timezone: "Asia/Kathmandu" },
+      { name: "Dubai", admin1: "Dubai", country: "UAE", latitude: 25.2048, longitude: 55.2708, timezone: "Asia/Dubai" },
+      { name: "London", admin1: "England", country: "UK", latitude: 51.5072, longitude: -0.1276, timezone: "Europe/London" },
+      { name: "New York", admin1: "New York", country: "USA", latitude: 40.7128, longitude: -74.0060, timezone: "America/New_York" }
+    ];
+
     function getUtcOffsetHoursForIanaTz(ianaTz, dobStr = '1995-05-15', tobStr = '09:00:00') {
       if (!ianaTz) return null;
       try {
@@ -6155,19 +6255,15 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
       document.getElementById('birthLat').value = parseFloat(lat).toFixed(2);
       document.getElementById('birthLon').value = parseFloat(lon).toFixed(2);
       selectedBirthIanaTz = ianaTz || '';
-      if (selectedBirthIanaTz) {
-        syncTimezoneFromSelectedIana();
-      } else if (tz) {
-        setTimezoneOffsetSelect(parseFloat(tz));
-      }
+      if (selectedBirthIanaTz) syncTimezoneFromSelectedIana();
+      else if (tz) setTimezoneOffsetSelect(parseFloat(tz));
       document.getElementById('birthPlaceSuggestions')?.classList.add('hidden');
       computeFullHoroscope();
     }
 
-    // Offline fallback if user types a known Indian state or country without clicking dropdown
     function inferOfflineTimezoneFromPlaceText(rawText) {
       const t = (rawText || '').toLowerCase();
-      if (/(india|odisha|orissa|chhattisgarh|maharashtra|karnataka|tamil nadu|west bengal|delhi|uttar pradesh|madhya pradesh|rajasthan|gujarat|kerala|punjab|haryana|bihar|jharkhand|assam|telangana|andhra|goa|uttarakhand|himachal|kashmir|bhilai|durg|raipur|bhubaneswar|puri|cuttack|mumbai|pune|hyderabad|chennai|kolkata|bengaluru|bangalore|jaipur|lucknow|varanasi|ahmedabad|surat|indore|bhopal|patna|nagpur|kochi)/i.test(t)) {
+      if (/(india|odisha|orissa|chhattisgarh|maharashtra|karnataka|tamil nadu|west bengal|delhi|uttar pradesh|madhya pradesh|rajasthan|gujarat|kerala|punjab|haryana|bihar|jharkhand|assam|telangana|andhra|goa|uttarakhand|himachal|kashmir|tripura|meghalaya|manipur|nagaland|sikkim|arunachal|mizoram|bhilai|durg|raipur|ambikapur|bilaspur|bhubaneswar|puri|cuttack|mumbai|pune|hyderabad|chennai|kolkata|bengaluru|bangalore|jaipur|lucknow|varanasi|ahmedabad|surat|indore|bhopal|patna|nagpur|kochi)/i.test(t)) {
         return { iana: 'Asia/Kolkata', offset: 5.5 };
       }
       if (/(nepal|kathmandu|pokhara)/i.test(t)) return { iana: 'Asia/Kathmandu', offset: 5.75 };
@@ -6176,12 +6272,38 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
       if (/(london|manchester|birmingham|england|scotland|uk|united kingdom)/i.test(t)) return { iana: 'Europe/London', offset: 0 };
       if (/(new york|boston|miami|atlanta|washington|florida|virginia|new jersey|toronto|ontario)/i.test(t)) return { iana: 'America/New_York', offset: -5 };
       if (/(chicago|texas|dallas|houston|austin|illinois)/i.test(t)) return { iana: 'America/Chicago', offset: -6 };
-      if (/(los angeles|san francisco|seattle|california|oregon|washington state|vancouver)/i.test(t)) return { iana: 'America/Los_Angeles', offset: -8 };
+      if (/(los angeles|san francisco|seattle|california|oregon|vancouver)/i.test(t)) return { iana: 'America/Los_Angeles', offset: -8 };
       if (/(sydney|melbourne|brisbane|australia)/i.test(t)) return { iana: 'Australia/Sydney', offset: 10 };
       if (/(bangladesh|dhaka)/i.test(t)) return { iana: 'Asia/Dhaka', offset: 6 };
       if (/(sri lanka|colombo)/i.test(t)) return { iana: 'Asia/Colombo', offset: 5.5 };
       if (/(pakistan|karachi|lahore|islamabad)/i.test(t)) return { iana: 'Asia/Karachi', offset: 5 };
       return null;
+    }
+
+    function renderBirthPlaceSuggestionsList(items) {
+      const box = document.getElementById('birthPlaceSuggestions');
+      if (!box) return;
+      birthPlaceLookupResults = items || [];
+      if (birthPlaceLookupResults.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+      box.innerHTML = birthPlaceLookupResults.map((item, idx) => {
+        const label = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
+        const tzLabel = item.timezone || 'UTC';
+        return `<div onclick="selectGeocodedBirthPlace(${idx})" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer flex items-center justify-between gap-2 text-xs">
+          <span class="font-bold truncate">${escapeHtml(label)}</span>
+          <span class="text-[10px] font-clinical-mono text-blue-600 dark:text-blue-400 shrink-0">${escapeHtml(tzLabel)}</span>
+        </div>`;
+      }).join('');
+      box.classList.remove('hidden');
+    }
+
+    function handleBirthPlaceFocus() {
+      const q = (document.getElementById('birthPlaceName')?.value || '').trim();
+      if (q.length < 2) {
+        renderBirthPlaceSuggestionsList(POPULAR_BIRTH_CITIES);
+      }
     }
 
     function handleBirthPlaceTyping(rawQuery) {
@@ -6193,10 +6315,11 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
       if (offlineGuess) {
         selectedBirthIanaTz = offlineGuess.iana;
         syncTimezoneFromSelectedIana();
+        computeFullHoroscope();
       }
 
-      if (q.length < 3) {
-        if (box) box.classList.add('hidden');
+      if (q.length < 2) {
+        renderBirthPlaceSuggestionsList(POPULAR_BIRTH_CITIES);
         return;
       }
 
@@ -6206,9 +6329,8 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
           const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(searchCity)}&count=6&language=en&format=json`);
           const data = await res.json();
           const list = Array.isArray(data?.results) ? data.results : [];
-          // Prefer results whose state/country matches anything typed after a comma
           const stateFilter = (q.split(',').slice(1).join(' ') || '').trim().toLowerCase();
-          birthPlaceLookupResults = stateFilter
+          const sorted = stateFilter
             ? [...list].sort((a, b) => {
                 const aMatch = `${a.admin1 || ''} ${a.country || ''}`.toLowerCase().includes(stateFilter) ? 1 : 0;
                 const bMatch = `${b.admin1 || ''} ${b.country || ''}`.toLowerCase().includes(stateFilter) ? 1 : 0;
@@ -6216,24 +6338,27 @@ let selectedBirthIanaTz = 'Asia/Kolkata';
               })
             : list;
 
-          if (!box) return;
-          if (birthPlaceLookupResults.length === 0) {
-            box.classList.add('hidden');
-            return;
+          // Auto-select timezone & coordinates immediately from the top match even before clicking
+          if (sorted.length > 0 && sorted[0].timezone) {
+            selectedBirthIanaTz = sorted[0].timezone;
+            document.getElementById('birthLat').value = Number(sorted[0].latitude).toFixed(2);
+            document.getElementById('birthLon').value = Number(sorted[0].longitude).toFixed(2);
+            syncTimezoneFromSelectedIana();
+            computeFullHoroscope();
           }
-          box.innerHTML = birthPlaceLookupResults.map((item, idx) => {
-            const label = [item.name, item.admin1, item.country].filter(Boolean).join(', ');
-            const tzLabel = item.timezone || 'UTC';
-            return `<div onclick="selectGeocodedBirthPlace(${idx})" class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-slate-700 cursor-pointer flex items-center justify-between gap-2 text-xs">
-              <span class="font-bold truncate">${escapeHtml(label)}</span>
-              <span class="text-[10px] font-clinical-mono text-blue-600 dark:text-blue-400 shrink-0">${escapeHtml(tzLabel)}</span>
-            </div>`;
-          }).join('');
-          box.classList.remove('hidden');
+          renderBirthPlaceSuggestionsList(sorted);
         } catch (e) {
           if (box) box.classList.add('hidden');
         }
-      }, 320);
+      }, 300);
+    }
+
+    function selectBestBirthPlaceMatch() {
+      if (birthPlaceLookupResults.length > 0) {
+        selectGeocodedBirthPlace(0);
+      } else {
+        document.getElementById('birthPlaceSuggestions')?.classList.add('hidden');
+      }
     }
 
     function selectGeocodedBirthPlace(index) {
@@ -7649,9 +7774,12 @@ function formatCrispSectionTitle(rawText) {
           ? `<button type="button" onclick="navigateMainSection(${idx}, -1)" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">⬅ Prev</button>`
           : `<span></span>`;
 let nextBtn = '';
-        if (idx === 1 && !isCurrentUserAdmin() && !currentUserSubscriptionState.profileLocked) {
-          // End of Data Collection (Section 2: Palm Vision) -> Save Data (One-Time) & Open Chat
-          nextBtn = `<button type="button" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-5 py-2.5 shadow-lg font-bold">💾 Save Data (One-Time) &amp; Open Chat ➔</button>`;
+          if (idx === 1 && !isCurrentUserAdmin() && !currentUserSubscriptionState.profileLocked) {
+          if (!currentUserSubscriptionState.hasActivePlan) {
+            nextBtn = `<button type="button" onclick="saveDataToServerAndOpenPayment()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-5 py-2.5 shadow-lg font-bold">Next: Save &amp; Unlock Chat (₹11/Yr) ➔</button>`;
+          } else {
+            nextBtn = `<button type="button" onclick="confirmAndLockBirthProfile()" class="chrome-pill-btn text-xs gemini-chrome-fab text-white px-5 py-2.5 shadow-lg font-bold">💾 Save Data (One-Time) &amp; Open Chat ➔</button>`;
+          }
         } else if (idx < lastVisibleIdx) {
           nextBtn = `<button type="button" onclick="navigateMainSection(${idx}, 1)" class="chrome-pill-btn text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 shadow">Next ➔</button>`;
         } else {
@@ -7676,10 +7804,14 @@ let nextBtn = '';
       if (targetIndex === currentOrbitSectionIndex || targetIndex < 0 || targetIndex >= sections.length || isOrbitAnimating) return;
       // Allow moving freely between Section 1 (Birth Data) and Section 2 (Palm Vision) during Data Collection,
       // and require One-Time Save before opening Charts/Chat (Sections 3+)
-      if (!isCurrentUserAdmin() && targetIndex > 1 && !currentUserSubscriptionState.profileLocked) {
-        showStatusToast('💾 Save your birth & palm details (one-time) first to unlock charts & AI chat.');
-        return;
-      }
+if (!isCurrentUserAdmin() && targetIndex > 1 && (!currentUserSubscriptionState.hasActivePlan || !currentUserSubscriptionState.profileLocked)) {
+    showStatusToast(
+      !currentUserSubscriptionState.hasActivePlan
+        ? '🔒 Complete Section 2 & ₹11 payment to unlock your AI Chat & Charts.'
+        : '💾 Save your birth & palm details (one-time) first to unlock charts & AI chat.'
+    );
+    return;
+  }
       const oldSec = sections[currentOrbitSectionIndex];
       const newSec = sections[targetIndex];
       if (!oldSec || !newSec) return;
