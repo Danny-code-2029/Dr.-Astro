@@ -1668,8 +1668,7 @@
         <span>1. Birth &amp; Terrestrial Data</span>
         <span class="text-xs text-blue-600 font-normal">Tap to collapse/expand</span>
       </summary>
-      <div class="p-4 space-y-4">
- <div class="p-4 space-y-4">
+<div class="p-4 space-y-4">
         <div id="setupProgressBarSec1" class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-bold no-print">
           <div class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">✓ 1. Free Key</div>
           <div class="px-2 py-1 rounded-full bg-blue-600 text-white shadow-xs">2. Your Details</div>
@@ -1677,8 +1676,7 @@
         </div>
         <!-- Strict Personal Use Notice + 1 Plan = 1 Payment = 1 Data Input Chance Lock -->
         <div id="annualLockNoticeBar" class="bg-amber-50 border border-amber-300 text-amber-950 p-3.5 rounded-2xl text-xs space-y-2.5">
-        <div id="annualLockNoticeBar" class="bg-amber-50 border border-amber-300 text-amber-950 p-3.5 rounded-2xl text-xs space-y-2.5">
-          <div class="flex flex-wrap items-start justify-between gap-2">
+             <div class="flex flex-wrap items-start justify-between gap-2">
             <div class="space-y-1 flex-1">
               <div class="font-extrabold text-amber-900 flex items-center gap-1.5">
                 <span>⚠️ 1 Plan = 1 Payment = 1 Data Input Chance (Personal Use Only)</span>
@@ -2607,56 +2605,21 @@
             </button>
           </div>
         </div>
-     <div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2.5">
-          <label class="block font-bold text-sm">🌐 Chat Language &amp; Voice Selection</label>
-
-          <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
-            <div>
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">1. Chat Reply Language</label>
-              <select id="userChatLanguageSelect" onchange="saveUserPreferredChatLanguage(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
-                <option value="AUTO_MATCH">✨ Auto-Match My Language (English, Hinglish &amp; Regional)</option>
-                <option value="English">🇬🇧 English</option>
-                <option value="Hinglish (Hindi written in English letters)">🇮🇳 Hinglish (Hindi in English letters)</option>
-                <option value="Hindi (Devanagari script)">🇮🇳 Hindi (हिंदी)</option>
-                <option value="Odia written in English letters">🇮🇳 Odia (in English letters)</option>
-                <option value="Odia (Odia script)">🇮🇳 Odia (ଓଡ଼ିଆ)</option>
-                <option value="Bengali written in English letters">🇮🇳 Bengali (in English letters)</option>
-                <option value="Marathi written in English letters">🇮🇳 Marathi (in English letters)</option>
-                <option value="Tamil written in English letters">🇮🇳 Tamil (in English letters)</option>
-                <option value="Telugu written in English letters">🇮🇳 Telugu (in English letters)</option>
-                <option value="Gujarati written in English letters">🇮🇳 Gujarati (in English letters)</option>
-                <option value="Punjabi written in English letters">🇮🇳 Punjabi (in English letters)</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">2. Audio Voice Model</label>
-              <div class="flex gap-2 items-center">
-                <select id="userTtsVoiceSelect" onchange="saveUserPreferredVoice(this.value)" class="flex-1 border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
-                  <option value="AUTO_SMART">✨ Auto Smart (Matches English &amp; Hinglish)</option>
-                </select>
-                <button type="button" onclick="previewSelectedTtsVoice()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 text-xs shrink-0">
-                  🔊 Test
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">3. Audio Speaking Speed</label>
-              <select id="userTtsSpeedSelect" onchange="saveUserTtsSpeed(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
-                <option value="0.65">🐢 0.65x — Slow &amp; Very Clear</option>
-                <option value="0.75" selected>✨ 0.75x — Calm (Recommended)</option>
-                <option value="0.9">🚶 0.90x — Natural Pace</option>
-                <option value="1">⚡ 1.00x — Normal Speed</option>
-              </select>
-            </div>
-
-            <p class="text-[10px] text-slate-400 leading-relaxed">
-              Choose <strong>Auto-Match</strong> to reply in whatever language you type (including Hinglish), or lock your favorite language above.
-            </p>
-          </div>
+<div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-1.5">
+          <label class="block font-bold text-sm">🧠 Gemini AI Model Engine</label>
+          <select id="userGeminiModelSelect" onchange="saveUserPreferredModel(this.value)" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
+            <option value="gemini-4-hydrogen">✨ Gemini 4 Hydrogen (Recommended — Free &amp; Paid Keys)</option>
+            <option value="gemini-3.8-flash">💨 Gemini 3.8 Flash (Fast Stable — Free &amp; Paid Keys)</option>
+            <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite (Ultra-Fast Fallback)</option>
+            <option value="gemini-4-neon">🔮 Gemini 4 Neon (Fast Pro Reasoning — Paid Key)</option>
+            <option value="gemini-4-carbon">🚀 Gemini 4 Carbon (Flagship Pro Reasoning — Paid Key)</option>
+          </select>
+          <p class="text-[10px] text-slate-400 leading-relaxed">
+            Free AI Studio keys work best on <strong>Gemini 4 Hydrogen</strong>. If you select a Pro/Carbon model on a free key, Dr. Astro automatically falls back to Gemini 4 Hydrogen.
+          </p>
         </div>
-<div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2.5">
+
+        <div class="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2.5">
           <label class="block font-bold text-sm">🌐 Reading Mode, Language &amp; Voice</label>
 
           <div class="bg-slate-50 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2.5">
@@ -2707,22 +2670,9 @@
                 <option value="1">⚡ 1.00x — Normal Speed</option>
               </select>
             </div>
-          </div>
-        </div>
-           
-           <label for="userTtsVoiceSelect" class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-1">Audio Voice Model (TTS)</label>
-              <div class="flex gap-2 items-center">
-                <select id="userTtsVoiceSelect" onchange="saveUserPreferredVoice(this.value)" class="flex-1 border rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-900">
-                  <option value="AUTO_SMART">✨ Auto Smart (Matches English &amp; Hinglish)</option>
-                </select>
-                <button type="button" onclick="previewSelectedTtsVoice()" class="chrome-pill-btn bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 text-xs shrink-0">
-                  🔊 Test
-                </button>
-              </div>
-            </div>
 
             <p class="text-[10px] text-slate-400 leading-relaxed">
-              <strong>Auto-Match</strong> mirrors whatever language or Romanized script you type. Pick a fixed language above if you always want replies in that language.
+              <strong>Auto-Match</strong> replies in whatever language you type (including Hinglish). Pick a fixed language above if you always want replies in one language.
             </p>
           </div>
         </div>
@@ -3538,10 +3488,16 @@ function applyAnnualProfileLockUI() {
       }
     }
 
-    // Step 14 -> Step 15: 1 Plan = 1 Payment = 1 Data Input Chance -> Save & Open Chat
+// Step 14 -> Step 15: 1 Plan = 1 Payment = 1 Data Input Chance -> Save & Open Chat
     async function confirmAndLockBirthProfile() {
       if (!currentGoogleUser) { alert("Please sign in first."); return; }
       const profile = buildCurrentInputProfilePayload();
+
+      if (!profile.nativeName || !profile.birthDate || !profile.birthTime) {
+        alert("Please enter your Full Name, Date of Birth, and Time of Birth before saving.");
+        switchToOrbitSection(0);
+        return;
+      }
 
       if (isCurrentUserAdmin()) {
         computeFullHoroscope();
@@ -4279,44 +4235,11 @@ function getFirstName(rawName) {
         }
         return `<div class="my-1">${formatted}</div>`;
       }).join("");
-    }
-// Multi-Voice, Language Preference & Hinglish/Regional-Aware TTS Engine
+    }// Multi-Voice, Language Preference & Hinglish/Regional-Aware TTS Engine
     let activeTtsBtn = null;
     let activeTtsToken = 0;
 
-    const LANGUAGE_DIRECTIVE_MAP = {
-      AUTO_MIRROR:
-        "Understand questions written in English, Hinglish (Hindi in English letters), or ANY other language written in English/Latin letters (such as Odia, Bengali, Marathi, Gujarati, Punjabi, Tamil, Telugu, Kannada, Malayalam, or Urdu in Roman script). ALWAYS reply in the EXACT same language and script the user wrote in.",
-      ENGLISH: "ALWAYS reply in clear, natural English regardless of the input language.",
-      HINGLISH: "ALWAYS reply in natural Hinglish (conversational Hindi written strictly in English/Latin letters, e.g., 'Aapka best career window...').",
-      HINDI: "ALWAYS reply in natural Hindi written in Devanagari script (हिन्दी).",
-      ODILISH: "ALWAYS reply in natural Odia written strictly in English/Latin letters (Romanized Odia, e.g., 'Tuma pain ei samaya bhala rahiba...').",
-      ODIA: "ALWAYS reply in natural Odia written in Odia script (ଓଡ଼ିଆ).",
-      BANGLISH: "ALWAYS reply in natural Bengali written strictly in English/Latin letters (Romanized Bengali).",
-      MARATHI_ROMAN: "ALWAYS reply in natural Marathi written strictly in English/Latin letters (Romanized Marathi).",
-      TAMIL_ROMAN: "ALWAYS reply in natural Tamil written strictly in English/Latin letters (Romanized Tamil).",
-      TELUGU_ROMAN: "ALWAYS reply in natural Telugu written strictly in English/Latin letters (Romanized Telugu).",
-      GUJARATI_ROMAN: "ALWAYS reply in natural Gujarati written strictly in English/Latin letters (Romanized Gujarati)."
-    };
-
-    function getPreferredChatLanguage() {
-      const saved = localStorage.getItem("jyotish_chat_lang_v1") || "AUTO_MIRROR";
-      return LANGUAGE_DIRECTIVE_MAP[saved] ? saved : "AUTO_MIRROR";
-    }
-
-    function getLanguageDirectiveText() {
-      return LANGUAGE_DIRECTIVE_MAP[getPreferredChatLanguage()] || LANGUAGE_DIRECTIVE_MAP.AUTO_MIRROR;
-    }
-
-    function saveUserPreferredLanguage(langCode) {
-      const clean = LANGUAGE_DIRECTIVE_MAP[langCode] ? langCode : "AUTO_MIRROR";
-      localStorage.setItem("jyotish_chat_lang_v1", clean);
-      syncLanguageAndVoiceSettingsUI();
-      const label = document.getElementById("userChatLanguageSelect")?.selectedOptions?.[0]?.textContent || clean;
-      showStatusToast(`🌐 Language set to ${label}`);
-    }
-
-function getAstroTtsSpeed() {
+    function getAstroTtsSpeed() {
       const saved = parseFloat(localStorage.getItem("jyotish_tts_speed_v1"));
       return Number.isFinite(saved) ? saved : 0.75;
     }
@@ -4355,11 +4278,14 @@ function getAstroTtsSpeed() {
       if (speedSel && Array.from(speedSel.options).some(o => o.value === savedSpeed)) {
         speedSel.value = savedSpeed;
       }
+      syncAstroModeToggleUI();
     }
 
     function getPreferredVoiceId() {
       return localStorage.getItem("jyotish_tts_voice_v1") || "AUTO_SMART";
-    }    function saveUserPreferredVoice(voiceId) {
+    }
+
+    function saveUserPreferredVoice(voiceId) {
       const cleanId = (voiceId || "AUTO_SMART").trim();
       localStorage.setItem("jyotish_tts_voice_v1", cleanId);
       ["userTtsVoiceSelect", "chatVoiceQuickSelect"].forEach(id => {
@@ -4865,8 +4791,7 @@ function getChatLanguageDirective() {
           contents.push({ role: turn.role, parts: [{ text: turn.text }] });
         });
 
-        const activeMode = getAstroReadingMode();
-    const langDirective = getChatLanguageDirective();
+const activeMode = getAstroReadingMode();
         const langDirective = getChatLanguageDirective();
         const turnStyleOverride = activeMode === "simple"
           ? `[STYLE OVERRIDE: ${langDirective} Reply ONLY in short bullet points using everyday words. ZERO Sanskrit or astrology jargon.]`
@@ -4878,13 +4803,6 @@ function getChatLanguageDirective() {
         }
         if (kundaliFileBase64 && kundaliFileMime) {
           currentParts.push({ inline_data: { mime_type: kundaliFileMime, data: kundaliFileBase64 } });
-        }
-          ? `[STYLE OVERRIDE: ${langDirective} Reply ONLY in short bullet points using everyday words. ZERO Sanskrit or astrology jargon.]`
-          : `[STYLE OVERRIDE: ${langDirective} Reply in Classical Astrologer Mode as bullet points citing Lagna, Bhavas, D-1/D-9, Yogas, and Vimshottari Dasa/Bhuktis.]`;
-           
-        const currentParts = [{ text: `${question}\n\n${turnStyleOverride}` }];
-        if (palmImageBase64 && palmImageMime) {
-          currentParts.push({ inline_data: { mime_type: palmImageMime, data: palmImageBase64 } });
         }
         contents.push({ role: "user", parts: currentParts });
 
@@ -5166,19 +5084,13 @@ let statusToastTimer = null;
         if (searchDrop && !searchDrop.classList.contains('hidden') && !searchDrop.contains(e.target) && e.target !== searchInput) {
           searchDrop.classList.add('hidden');
         }
-        const placeDrop = document.getElementById('birthPlaceSuggestions');
+const placeDrop = document.getElementById('birthPlaceSuggestions');
         const placeInput = document.getElementById('birthPlaceName');
         if (placeDrop && !placeDrop.classList.contains('hidden') && !placeDrop.contains(e.target) && e.target !== placeInput) {
           placeDrop.classList.add('hidden');
-             }
+        }
         if (!e.target.closest('.chat-item-menu-popup')) {
           closeAllChatItemMenus();
-        }
-      });
-    });
-        const searchInput = document.getElementById('headerCaseSearch');
-        if (searchDrop && !searchDrop.classList.contains('hidden') && !searchDrop.contains(e.target) && e.target !== searchInput) {
-          searchDrop.classList.add('hidden');
         }
       });
     });
@@ -5848,7 +5760,17 @@ const serverResetUnlocked = currentPaymentPurpose === 'reset' && Boolean(
         prevSubData && prevSubData.status === 'active' && prevSubData.expiresAtMs && prevSubData.expiresAtMs > nowMs
       ));
 
-      if (!serverAlreadyActive) {
+ if (!serverAlreadyActive) {
+        const usingRazorpay = Boolean((window.MONETIZATION_CONFIG?.webGatewayPaymentUrl || '').trim());
+        if (usingRazorpay) {
+          alert(
+            '⏳ Payment not detected yet.\n\n' +
+            '1. If you have not paid yet, tap "Pay ₹11 Securely via Razorpay" above.\n' +
+            '2. If you just paid, wait 10 seconds and tap Verify again.\n' +
+            '3. Still waiting? Email your Gmail (' + emailKey + ') and payment receipt to dr.astro.support@gmail.com for quick activation.'
+          );
+          return;
+        }
         if (!/^[a-zA-Z0-9]{8,22}$/.test(utrVal)) {
           alert('Please complete the ₹11 UPI payment and enter your valid 12-digit UPI Ref / UTR number to verify & activate.');
           return;
